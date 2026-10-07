@@ -4,6 +4,7 @@ import { use, useEffect, useState, useCallback } from "react";
 import { Aside } from "@/app/components/Aside";
 import { Header } from "@/app/components/Header";
 import { TradeDetails } from "../components/TradeDetails";
+import { EscrowTransactionLinks } from "../components/EscrowTransactionLinks";
 import dynamic from "next/dynamic";
 const TradeEvidenceUploader = dynamic(() => import("../components/TradeEvidenceUploader").then((mod) => mod.TradeEvidenceUploader), { ssr: false });
 const EvidencePreview = dynamic(() => import("../components/EvidencePreview").then((mod) => mod.EvidencePreview), { ssr: false });
@@ -384,6 +385,10 @@ export default function TradePage({ params }: PageProps) {
                                     
                                 </div>
                             )}
+                            <EscrowTransactionLinks
+                                txHashLock={order.escrow?.txHashLock}
+                                txHashRelease={order.escrow?.txHashRelease}
+                            />
                         </div>
                     </div>
 
