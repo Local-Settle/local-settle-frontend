@@ -2,7 +2,7 @@
 
 LocalSettle is an open-source Stellar wallet app for peer-to-peer stablecoin trades against local payment methods. Users can browse offers, coordinate orders and payment evidence, track escrow status, send USDC to a wallet or alias, and review transactions.
 
-This repository contains the Next.js frontend. The NestJS API and integration services live in the companion [`iKash-backend` repository](https://github.com/iKa-h/iKash-backend).
+This repository contains the Next.js frontend. The NestJS API and integration services live in the companion [LocalSettle backend repository](https://github.com/Local-Settle/local-settle-backend).
 
 ## Product flows
 
