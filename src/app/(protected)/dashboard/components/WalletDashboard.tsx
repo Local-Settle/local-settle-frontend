@@ -32,16 +32,16 @@ export function WalletDashboard() {
     const [isSendModalOpen, setIsSendModalOpen] = useState(sendParam === "true" || !!walletParam);
 
     const circleButton =
-        "inline-flex items-center justify-center w-11 h-11 rounded-full shrink-0 border border-[#2E2E32] text-[#8F8389] " +
-        "hover:text-[#BCED09] hover:border-[#BCED09] hover:bg-[#BCED09]/10 focus-visible:outline-none " +
-        "focus-visible:ring-2 focus-visible:ring-[#BCED09]/60 transition-colors";
+        "inline-flex items-center justify-center w-11 h-11 rounded-full shrink-0 border border-[#263949] text-[#9BABB7] " +
+        "hover:text-[#55D6BE] hover:border-[#55D6BE] hover:bg-[#55D6BE]/10 focus-visible:outline-none " +
+        "focus-visible:ring-2 focus-visible:ring-[#55D6BE]/60 transition-colors";
 
     const actions = (
         <div className="flex items-center justify-between gap-4 flex-wrap">
             <button
                 type="button"
                 onClick={() => setIsCreateOfferModalOpen(true)}
-                className="flex items-center gap-3 bg-[#BCED09] hover:bg-[#d4f53a] text-black text-sm font-bold pl-6 pr-5 py-3.5 rounded-full transition-colors shrink-0"
+                className="flex items-center gap-3 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-sm font-bold pl-6 pr-5 py-3.5 rounded-full transition-colors shrink-0"
             >
                 Create Offer
                 <Plus className="w-4 h-4" strokeWidth={2.5} aria-hidden="true" />

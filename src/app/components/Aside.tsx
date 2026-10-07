@@ -29,9 +29,9 @@ export function Aside() {
     return (
         <>
             {/* Desktop sidebar — unchanged */}
-            <aside aria-label="Sidebar Navigation" className="hidden md:flex w-[288px] sticky top-0 h-screen self-start shrink-0 overflow-y-auto bg-[#343434] flex-col p-8">
+            <aside aria-label="Sidebar Navigation" className="hidden md:flex w-[288px] sticky top-0 h-screen self-start shrink-0 overflow-y-auto bg-[#0D1D2C] flex-col p-8">
                 <div className="pl-3 pt-4">
-                    <Image src='/iKash.svg' width={80} height={30} alt='iKash logo' />
+                    <Image src='/localsettle-wordmark.svg' width={180} height={42} alt='LocalSettle' />
                 </div>
 
                 <nav aria-label="Main Navigation" className="flex flex-col gap-7.5 pt-20">
@@ -43,7 +43,7 @@ export function Aside() {
                                 key={link.href}
                                 href={link.href}
                                 className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 ease-in-out
-                                ${isActive ? 'text-[#BCED09] font-semibold' : 'text-[#8F8389] font-medium hover:bg-[#161618] hover:text-white'}`}
+                                ${isActive ? 'text-[#55D6BE] font-semibold' : 'text-[#9BABB7] font-medium hover:bg-[#11212E] hover:text-white'}`}
                             >
                                 <IconComponent size={18} strokeWidth={isActive ? 2.5 : 2} />
                                 <span className='text-[18px]'>{link.label}</span>
@@ -57,7 +57,7 @@ export function Aside() {
                     <Link
                         href="/settings"
                         className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 ease-in-out ${
-                            pathname.startsWith('/settings') ? 'text-[#BCED09] font-semibold' : 'text-[#8F8389] font-medium hover:bg-[#161618] hover:text-white'
+                            pathname.startsWith('/settings') ? 'text-[#55D6BE] font-semibold' : 'text-[#9BABB7] font-medium hover:bg-[#0D1D2C] hover:text-white'
                         }`}
                     >
                         <Settings size={18} strokeWidth={pathname.startsWith('/settings') ? 2.5 : 2} />
@@ -65,7 +65,7 @@ export function Aside() {
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="flex items-center gap-3 px-3 py-2 rounded-md text-[#8F8389] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#161618] hover:text-white"
+                        className="flex items-center gap-3 px-3 py-2 rounded-md text-[#9BABB7] cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#0D1D2C] hover:text-white"
                     >
                         <Image src='/logout-icon.svg' width={20} height={20} alt='logout' />
                         <span className='text-[18px]'>Logout</span>

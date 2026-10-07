@@ -10,7 +10,7 @@ export function MetricCard({ icon, badge, label, value, unit }: MetricCardProps)
     return (
         <div className="bg-[#1A1A1A99] border border-[#FFFFFF0D] rounded-xl p-5 flex flex-col justify-between w-full h-full min-h-[163px]">
             <div className="flex items-start justify-between">
-                <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-lime-400">
+                <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[#55D6BE]">
                     {icon}
                 </div>
                 {badge}

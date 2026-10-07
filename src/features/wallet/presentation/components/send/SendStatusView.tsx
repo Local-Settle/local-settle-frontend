@@ -43,14 +43,14 @@ export function SendStatusView({
     return (
       <div className="flex flex-col items-center justify-center py-12 px-4 gap-6 text-center">
         <div className="relative flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full border-2 border-[#BCED09]/20 border-t-[#BCED09] animate-spin" />
-          <Loader2 className="w-8 h-8 text-[#BCED09] absolute animate-pulse" />
+          <div className="w-16 h-16 rounded-full border-2 border-[#55D6BE]/20 border-t-[#55D6BE] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#55D6BE] absolute animate-pulse" />
         </div>
         <div className="flex flex-col gap-1.5 max-w-sm">
           <h3 className="text-white text-lg font-bold uppercase tracking-wide">
             {info.title}
           </h3>
-          <p className="text-[#8F8389] text-xs leading-relaxed">
+          <p className="text-[#9BABB7] text-xs leading-relaxed">
             {info.subtitle}
           </p>
         </div>
@@ -68,7 +68,7 @@ export function SendStatusView({
           <h3 className="text-white text-lg font-bold uppercase tracking-wide">
             Transaction Declined
           </h3>
-          <p className="text-[#8F8389] text-xs leading-relaxed">
+          <p className="text-[#9BABB7] text-xs leading-relaxed">
             You rejected or cancelled the transaction prompt in your wallet.
           </p>
         </div>
@@ -78,7 +78,7 @@ export function SendStatusView({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-[#1C2128] hover:bg-[#2a2a2a] text-white text-xs font-bold uppercase px-4 py-3 rounded-xl transition-all border border-[#2a2a2a] cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1.5 bg-[#11212E] hover:bg-[#172B3A] text-white text-xs font-bold uppercase px-4 py-3 rounded-xl transition-all border border-[#172B3A] cursor-pointer"
             >
               <X size={14} /> Cancel
             </button>
@@ -86,7 +86,7 @@ export function SendStatusView({
           <button
             type="button"
             onClick={onRetry}
-            className="flex-1 flex items-center justify-center gap-1.5 bg-[#BCED09] hover:bg-[#d4f53a] text-black text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition-all cursor-pointer shadow-md"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition-all cursor-pointer shadow-md"
           >
             <RotateCcw size={14} /> Try Again
           </button>
@@ -115,7 +115,7 @@ export function SendStatusView({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-[#1C2128] hover:bg-[#2a2a2a] text-white text-xs font-bold uppercase px-4 py-3 rounded-xl transition-all border border-[#2a2a2a] cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-1.5 bg-[#11212E] hover:bg-[#172B3A] text-white text-xs font-bold uppercase px-4 py-3 rounded-xl transition-all border border-[#172B3A] cursor-pointer"
             >
               <X size={14} /> Close
             </button>
@@ -123,7 +123,7 @@ export function SendStatusView({
           <button
             type="button"
             onClick={onRetry}
-            className="flex-1 flex items-center justify-center gap-1.5 bg-[#BCED09] hover:bg-[#d4f53a] text-black text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition-all cursor-pointer shadow-md"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-4 py-3 rounded-xl transition-all cursor-pointer shadow-md"
           >
             <RotateCcw size={14} /> Try Again
           </button>

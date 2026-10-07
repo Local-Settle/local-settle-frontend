@@ -111,7 +111,7 @@ function SendContent() {
     }
 
     if (!isStellarAddress(trimmed) && !isPotentialAlias(trimmed)) {
-      setInputError("Please enter a valid Stellar address (G...) or iKa$h alias");
+      setInputError("Please enter a valid Stellar address (G...) or LocalSettle alias");
       return;
     }
 
@@ -143,7 +143,7 @@ function SendContent() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-[#010308] text-white">
+    <div className="flex min-h-screen w-full bg-[#081521] text-white">
       <Aside />
 
       <div className="flex flex-col flex-1 min-w-0 pb-20 md:pb-0">
@@ -156,8 +156,8 @@ function SendContent() {
         <main className="flex-1 px-4 md:px-12 py-8 max-w-7xl w-full mx-auto">
           {!isConnected ? (
             /* Wallet Not Connected State */
-            <div className="max-w-xl mx-auto mt-8 bg-[#161618] border border-[#1F2937] rounded-3xl p-8 text-center flex flex-col items-center gap-6 shadow-2xl">
-              <div className="w-16 h-16 rounded-2xl bg-[#BCED09]/10 border border-[#BCED09]/30 flex items-center justify-center text-[#BCED09]">
+            <div className="max-w-xl mx-auto mt-8 bg-[#0D1D2C] border border-[#263949] rounded-3xl p-8 text-center flex flex-col items-center gap-6 shadow-2xl">
+              <div className="w-16 h-16 rounded-2xl bg-[#55D6BE]/10 border border-[#55D6BE]/30 flex items-center justify-center text-[#55D6BE]">
                 <Wallet size={32} />
               </div>
 
@@ -165,8 +165,8 @@ function SendContent() {
                 <h2 className="text-2xl font-black uppercase tracking-tight text-white">
                   Connect Your Wallet
                 </h2>
-                <p className="text-[#8F8389] text-sm max-w-md leading-relaxed">
-                  To send Stellar assets or iKa$h transfers, please connect a supported Stellar wallet.
+                <p className="text-[#9BABB7] text-sm max-w-md leading-relaxed">
+                  To send Stellar assets or LocalSettle transfers, please connect a supported Stellar wallet.
                 </p>
               </div>
 
@@ -176,7 +176,7 @@ function SendContent() {
                     key={option.id}
                     onClick={() => connect(option.id)}
                     disabled={isWalletLoading}
-                    className="w-full flex items-center justify-between px-5 py-4 bg-[#1F1F25] hover:bg-[#25252c] border border-[#2a2a35] hover:border-[#BCED09]/50 rounded-2xl transition-all cursor-pointer group"
+                    className="w-full flex items-center justify-between px-5 py-4 bg-[#11212E] hover:bg-[#172B3A] border border-[#263949] hover:border-[#55D6BE]/50 rounded-2xl transition-all cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
                       {option.icon && (
@@ -188,15 +188,15 @@ function SendContent() {
                         />
                       )}
                       <div className="text-left">
-                        <p className="text-white font-bold text-sm group-hover:text-[#BCED09] transition-colors">
+                        <p className="text-white font-bold text-sm group-hover:text-[#55D6BE] transition-colors">
                           {option.name}
                         </p>
-                        <p className="text-[#8F8389] text-xs">{option.description}</p>
+                        <p className="text-[#9BABB7] text-xs">{option.description}</p>
                       </div>
                     </div>
                     <ArrowUpRight
                       size={18}
-                      className="text-[#8F8389] group-hover:text-[#BCED09] transition-colors"
+                      className="text-[#9BABB7] group-hover:text-[#55D6BE] transition-colors"
                     />
                   </button>
                 ))}
@@ -207,21 +207,21 @@ function SendContent() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Primary Send Card (7 Cols) */}
               <div className="lg:col-span-7 flex flex-col gap-6">
-                <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+                <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
                   {/* Subtle top-right gradient glow */}
                   <div
                     className="absolute top-0 right-0 w-48 h-48 rounded-full opacity-10 pointer-events-none"
                     style={{
-                      background: "radial-gradient(circle, #BCED09 0%, transparent 70%)",
+                      background: "radial-gradient(circle, #55D6BE 0%, transparent 70%)",
                       transform: "translate(30%, -30%)",
                     }}
                   />
 
                   {/* Card Header */}
-                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#1F2937]">
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#263949]">
                     <div className="flex flex-col">
                       <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white flex items-center gap-2">
-                        <Zap size={22} className="text-[#BCED09]" />
+                        <Zap size={22} className="text-[#55D6BE]" />
                         {state.step === "form" && "New Transfer"}
                         {state.step === "confirm" && "Review Transaction"}
                         {state.step === "success" && "Success"}
@@ -232,7 +232,7 @@ function SendContent() {
                         {state.step === "error" && "Error"}
                         {state.step === "cancelled" && "Declined"}
                       </h2>
-                      <p className="text-[#8F8389] text-xs uppercase tracking-wider font-semibold mt-1">
+                      <p className="text-[#9BABB7] text-xs uppercase tracking-wider font-semibold mt-1">
                         {state.step === "form" && "Direct On-Chain Transfer"}
                         {state.step === "confirm" && "Check details & sign"}
                         {state.step === "success" && "Transfer finalized on ledger"}
@@ -242,12 +242,12 @@ function SendContent() {
                     </div>
 
                     {state.step === "form" && (
-                      <span className="px-3 py-1 bg-[#BCED09]/10 border border-[#BCED09]/20 rounded-full text-[10px] font-extrabold uppercase text-[#BCED09] tracking-wider">
+                      <span className="px-3 py-1 bg-[#55D6BE]/10 border border-[#55D6BE]/20 rounded-full text-[10px] font-extrabold uppercase text-[#55D6BE] tracking-wider">
                         Step 1 of 2
                       </span>
                     )}
                     {state.step === "confirm" && (
-                      <span className="px-3 py-1 bg-[#BCED09]/10 border border-[#BCED09]/20 rounded-full text-[10px] font-extrabold uppercase text-[#BCED09] tracking-wider">
+                      <span className="px-3 py-1 bg-[#55D6BE]/10 border border-[#55D6BE]/20 rounded-full text-[10px] font-extrabold uppercase text-[#55D6BE] tracking-wider">
                         Step 2 of 2
                       </span>
                     )}
@@ -297,7 +297,7 @@ function SendContent() {
                             parseFloat(amount) <= 0 ||
                             isTransacting
                           }
-                          className="w-full bg-[#BCED09] hover:bg-[#d4f53a] text-black text-sm font-black uppercase tracking-wider px-6 py-4 rounded-2xl transition-all shadow-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                          className="w-full bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-sm font-black uppercase tracking-wider px-6 py-4 rounded-2xl transition-all shadow-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                         >
                           <Zap size={18} className="stroke-[2.5]" />
                           Review & Send
@@ -351,13 +351,13 @@ function SendContent() {
               {/* Sidebar Info & Balances (5 Cols) */}
               <div className="lg:col-span-5 flex flex-col gap-6">
                 {/* Available Assets Card */}
-                <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 shadow-xl">
+                <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 shadow-xl">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-                      <Layers size={16} className="text-[#BCED09]" />
+                      <Layers size={16} className="text-[#55D6BE]" />
                       Wallet Assets
                     </h3>
-                    <span className="text-[11px] text-[#8F8389]">
+                    <span className="text-[11px] text-[#9BABB7]">
                       {balances.length} {balances.length === 1 ? "Asset" : "Assets"}
                     </span>
                   </div>
@@ -368,8 +368,8 @@ function SendContent() {
                         Loading balances...
                       </p>
                     ) : balances.length === 0 ? (
-                      <div className="p-4 rounded-xl bg-[#0D1117] border border-[#1C2128] text-center">
-                        <p className="text-xs text-[#8F8389]">
+                      <div className="p-4 rounded-xl bg-[#081521] border border-[#11212E] text-center">
+                        <p className="text-xs text-[#9BABB7]">
                           No funded balances found on this account.
                         </p>
                       </div>
@@ -383,12 +383,12 @@ function SendContent() {
                             onClick={() => setSelectedAssetCode(code)}
                             className={`flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer ${
                               isCurrent
-                                ? "bg-[#1f2a1a]/60 border-[#BCED09]/40"
-                                : "bg-[#0D1117] border-[#1C2128] hover:border-[#2a2a2a] hover:bg-[#12161d]"
+                                ? "bg-[#172B3A]/60 border-[#55D6BE]/40"
+                                : "bg-[#081521] border-[#11212E] hover:border-[#172B3A] hover:bg-[#12161d]"
                             }`}
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-[#1a2a3a] border border-[#2a2a2a] flex items-center justify-center overflow-hidden">
+                              <div className="w-8 h-8 rounded-full bg-[#1a2a3a] border border-[#172B3A] flex items-center justify-center overflow-hidden">
                                 <span className="text-[11px] font-bold text-white">
                                   {code.slice(0, 3)}
                                 </span>
@@ -397,7 +397,7 @@ function SendContent() {
                                 <span className="text-xs font-bold text-white">
                                   {code}
                                 </span>
-                                <span className="text-[10px] text-[#8F8389] uppercase">
+                                <span className="text-[10px] text-[#9BABB7] uppercase">
                                   {asset.asset_type === "native"
                                     ? "Native Lumens"
                                     : "Stellar Asset"}
@@ -410,7 +410,7 @@ function SendContent() {
                                 {getFormattedBalance(asset)}
                               </span>
                               {isCurrent && (
-                                <span className="text-[9px] text-[#BCED09] font-bold uppercase tracking-wider">
+                                <span className="text-[9px] text-[#55D6BE] font-bold uppercase tracking-wider">
                                   Selected
                                 </span>
                               )}
@@ -423,36 +423,36 @@ function SendContent() {
                 </div>
 
                 {/* Information Card */}
-                <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 shadow-xl flex flex-col gap-4">
+                <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 shadow-xl flex flex-col gap-4">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-                    <ShieldCheck size={16} className="text-[#BCED09]" />
+                    <ShieldCheck size={16} className="text-[#55D6BE]" />
                     Transfer Guarantee
                   </h3>
 
-                  <div className="space-y-3 text-xs text-[#8F8389] leading-relaxed">
+                  <div className="space-y-3 text-xs text-[#9BABB7] leading-relaxed">
                     <div className="flex items-start gap-2.5">
-                      <CheckCircle2 size={15} className="text-[#BCED09] shrink-0 mt-0.5" />
+                      <CheckCircle2 size={15} className="text-[#55D6BE] shrink-0 mt-0.5" />
                       <p>
                         <strong className="text-white">Sub-second Finality:</strong> Transactions settle directly on the Stellar network in 3-5 seconds.
                       </p>
                     </div>
 
                     <div className="flex items-start gap-2.5">
-                      <CheckCircle2 size={15} className="text-[#BCED09] shrink-0 mt-0.5" />
+                      <CheckCircle2 size={15} className="text-[#55D6BE] shrink-0 mt-0.5" />
                       <p>
-                        <strong className="text-white">Low Fixed Fee:</strong> Transparent 0.3% iKa$h network fee per transaction.
+                        <strong className="text-white">Low Fixed Fee:</strong> Transparent 0.3% LocalSettle network fee per transaction.
                       </p>
                     </div>
 
                     <div className="flex items-start gap-2.5">
-                      <CheckCircle2 size={15} className="text-[#BCED09] shrink-0 mt-0.5" />
+                      <CheckCircle2 size={15} className="text-[#55D6BE] shrink-0 mt-0.5" />
                       <p>
                         <strong className="text-white">Alias Resolution:</strong> Send seamlessly using either raw public keys or human-readable names.
                       </p>
                     </div>
                   </div>
 
-                  <div className="p-3 bg-[#0D1117] border border-[#1C2128] rounded-xl flex items-center gap-2 mt-2">
+                  <div className="p-3 bg-[#081521] border border-[#11212E] rounded-xl flex items-center gap-2 mt-2">
                     <Info size={14} className="text-blue-400 shrink-0" />
                     <span className="text-[10px] text-gray-400">
                       Need help? Ensure the recipient address is active on Stellar.
@@ -472,8 +472,8 @@ export default function SendPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center min-h-screen bg-[#010308]">
-          <div className="w-8 h-8 border-4 border-[#BCED09] border-t-transparent rounded-full animate-spin" />
+        <div className="flex items-center justify-center min-h-screen bg-[#081521]">
+          <div className="w-8 h-8 border-4 border-[#55D6BE] border-t-transparent rounded-full animate-spin" />
         </div>
       }
     >

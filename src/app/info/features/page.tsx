@@ -1,62 +1,46 @@
-import { BookOpen } from "lucide-react";
+import { ArrowLeftRight, MessageCircle, ShieldCheck, Wallet } from "lucide-react";
+
+const features = [
+  {
+    icon: ArrowLeftRight,
+    title: "Offers and orders",
+    body: "Users browse buy and sell offers, create orders with fiat and asset amounts, and review their active and completed trades.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Escrow coordination",
+    body: "The API asks Trustless Work to deploy a multi-release escrow on Stellar, records the contract reference, and returns an unsigned funding transaction for the seller’s wallet. Stellar events are polled to synchronize escrow and order status.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Order chat and evidence",
+    body: "Buyers and sellers can communicate in an order-scoped chat. The app also supports uploading payment evidence during the fiat settlement step.",
+  },
+  {
+    icon: Wallet,
+    title: "Wallet transfers",
+    body: "Users can resolve a LocalSettle alias or Stellar address, review a prepared USDC transfer and fee, sign the transaction in their wallet, and submit it to Stellar.",
+  },
+];
 
 export default function PlatformFeaturesPage() {
   return (
-    <div className="space-y-12 animate-[fadeInUp_0.3s_ease-out_forwards]">
-      {/* Title Header */}
-      <div className="flex flex-col gap-4 border-b border-[#ffffff08] pb-8">
-        <div className="flex items-center gap-2 text-[#BCED09]">
-          <BookOpen className="w-5 h-5" />
-          <span className="text-xs font-black uppercase tracking-[1.5px]">Platform Docs</span>
-        </div>
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white">
-          Platform Features
-        </h1>
-        <p className="text-gray-400 text-sm font-light leading-relaxed max-w-3xl">
-          Core operational flows and external service integrations that power the P2P exchange mechanics and smart contract escrows.
-        </p>
+    <div className="space-y-10">
+      <header className="space-y-4 border-b border-white/10 pb-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#55D6BE]">Product flows</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">How LocalSettle works</h1>
+        <p className="max-w-3xl text-sm leading-7 text-slate-400">The frontend is a wallet-connected client. The backend coordinates marketplace data, order state, integrations, and transaction preparation.</p>
+      </header>
+      <div className="grid gap-4 md:grid-cols-2">
+        {features.map(({ icon: Icon, title, body }) => (
+          <article key={title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-6 md:p-8">
+            <Icon className="h-5 w-5 text-[#55D6BE]" />
+            <h2 className="mt-5 text-lg font-semibold text-white">{title}</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-400">{body}</p>
+          </article>
+        ))}
       </div>
-
-      <div className="space-y-10">
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">Decentralized Escrow Lifecycle</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              The platform utilizes Trustless Work to manage the lifecycle of decentralized smart contract escrows directly on the Stellar network. When a buyer and seller are matched, the backend requests the deployment of a multi-release milestone escrow contract via the Trustless Work REST API.
-            </p>
-            <p>
-              This integration ensures a strict boundary between coordination and custody. The backend orchestrates the state transitions—creating the escrow entry, tracking its status, and notifying counterparties—while Trustless Work enforces the cryptographic rules of the trade. Because these contracts are immutable and self-executing, funds can only be locked or released upon receiving authorized on-chain signatures from the legitimate counterparties.
-            </p>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">P2P Workflow and Fund Operations</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              The transaction lifecycle begins when a seller accepts an existing offer. The backend constructs an unsigned XDR transaction required to fund the newly deployed escrow. The frontend receives this XDR, requests the seller to authorize it locally via their connected wallet, and submits the signed transaction. This firmly places the seller as the actor who locks the cryptocurrency into the escrow.
-            </p>
-            <p>
-              Following the on-chain funding, the fiat settlement occurs as an off-chain interaction. The buyer transfers the agreed fiat amount to the seller&apos;s registered payment method (e.g., bank transfer or local payment rails) and uploads the confirmation receipt to the platform. 
-            </p>
-            <p>
-              In the final phase, upon verifying receipt of the fiat funds in their personal account, the seller authorizes the release of the escrowed crypto. The backend obtains an unsigned release XDR from Trustless Work, the seller signs it client-side, and the backend broadcasts the signature, triggering the smart contract to transfer the locked assets to the buyer&apos;s wallet.
-            </p>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">Wallet Accessibility Layer</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              To accommodate a diverse user base without enforcing a single wallet provider, the frontend application integrates the Stellar Wallet Kit (SWK). SWK acts as a unified interface layer, allowing users to connect using their preferred Stellar-compatible browser extensions (such as Freighter, Albedo, or LOBSTR).
-            </p>
-            <p>
-              This integration abstracts the specific wallet connection logic while preserving the platform&apos;s non-custodial guarantee. Irrespective of the wallet chosen, the private keys remain secured within the user&apos;s local environment, and all cryptographic signatures requested by the iKash backend are executed securely within that isolated context.
-            </p>
-          </div>
-        </section>
-      </div>
+      <p className="text-xs leading-6 text-slate-500">Escrow operations currently accept USDC. Fiat payments happen between users outside the Stellar ledger. Always review the amount, asset, recipient, and network in your wallet before signing.</p>
     </div>
   );
 }

@@ -86,9 +86,9 @@ export const transactionExportService = {
     ): Promise<void> {
         const records = this.mapOrdersToExportRecords(orders, currentUserId);
         
-        // Generate filename prefix with current date: e.g. ikash-transactions-2026-07-14
+        // Generate filename prefix with current date: e.g. localsettle-transactions-2026-07-14
         const todayStr = new Date().toISOString().split("T")[0];
-        const filename = `ikash-transactions-${todayStr}.${format}`;
+        const filename = `localsettle-transactions-${todayStr}.${format}`;
 
         if (format === "csv") {
             exportTransactionsCsv(records, filename);

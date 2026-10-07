@@ -42,7 +42,7 @@ function FilterSelect({
 }) {
     return (
         <div className="flex flex-col gap-1.5">
-            <label htmlFor={id} className="text-[#8F8389] text-[10px] font-bold tracking-widest uppercase">
+            <label htmlFor={id} className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">
                 {label}
             </label>
             <div className="relative">
@@ -50,14 +50,14 @@ function FilterSelect({
                     id={id}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    className="appearance-none w-full bg-[#1a1a1c] border border-[#2D2D2D] rounded-xl px-4 pr-8 py-2.5
+                    className="appearance-none w-full bg-[#1a1a1c] border border-[#263949] rounded-xl px-4 pr-8 py-2.5
                                text-white text-sm font-medium cursor-pointer
-                               focus:outline-none focus:ring-2 focus:ring-[#BCED09]/40 focus:border-[#BCED09]/60
-                               hover:border-[#BCED09]/30 transition-colors duration-200"
+                               focus:outline-none focus:ring-2 focus:ring-[#55D6BE]/40 focus:border-[#55D6BE]/60
+                               hover:border-[#55D6BE]/30 transition-colors duration-200"
                 >
-                    <option value="" className="bg-[#161618]">{placeholder}</option>
+                    <option value="" className="bg-[#0D1D2C]">{placeholder}</option>
                     {options.map((opt) => (
-                        <option key={opt} value={opt} className="bg-[#161618]">{opt}</option>
+                        <option key={opt} value={opt} className="bg-[#0D1D2C]">{opt}</option>
                     ))}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
@@ -88,7 +88,7 @@ function AmountInput({
 }) {
     return (
         <div className="flex flex-col gap-1.5">
-            <label htmlFor={id} className="text-[#8F8389] text-[10px] font-bold tracking-widest uppercase">
+            <label htmlFor={id} className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">
                 {label}
             </label>
             <input
@@ -106,7 +106,7 @@ function AmountInput({
                             [&::-webkit-inner-spin-button]:appearance-none
                             ${error
                                 ? "border-red-500/60 focus:ring-2 focus:ring-red-500/30"
-                                : "border-[#2D2D2D] hover:border-[#BCED09]/30 focus:ring-2 focus:ring-[#BCED09]/40 focus:border-[#BCED09]/60"
+                                : "border-[#263949] hover:border-[#55D6BE]/30 focus:ring-2 focus:ring-[#55D6BE]/40 focus:border-[#55D6BE]/60"
                             }`}
             />
             {error && (
@@ -139,7 +139,7 @@ function UncontrolledAmountInput({
 }) {
     return (
         <div className="flex flex-col gap-1.5">
-            <label htmlFor={id} className="text-[#8F8389] text-[10px] font-bold tracking-widest uppercase">
+            <label htmlFor={id} className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">
                 {label}
             </label>
             <input
@@ -158,7 +158,7 @@ function UncontrolledAmountInput({
                             [&::-webkit-inner-spin-button]:appearance-none
                             ${error
                                 ? "border-red-500/60 focus:ring-2 focus:ring-red-500/30"
-                                : "border-[#2D2D2D] hover:border-[#BCED09]/30 focus:ring-2 focus:ring-[#BCED09]/40 focus:border-[#BCED09]/60"
+                                : "border-[#263949] hover:border-[#55D6BE]/30 focus:ring-2 focus:ring-[#55D6BE]/40 focus:border-[#55D6BE]/60"
                             }`}
             />
             {error && (
@@ -235,7 +235,7 @@ function DesktopFilterBar({
                 onChange={handleMaxChange}
             />
             <div className="flex flex-col gap-1.5">
-                <label className="text-[#8F8389] text-[10px] font-bold tracking-widest uppercase">Sort By</label>
+                <label className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">Sort By</label>
                 <OfferSortSelect
                     value={filters.sort}
                     onChange={(v) => onFilterChange("sort", v)}
@@ -274,7 +274,7 @@ function MobileFilterDrawer({
 
             {/* Sheet */}
             <div
-                className="relative z-10 w-full bg-[#0D1117] border-t border-[#1F2937] rounded-t-3xl p-6 pb-8 flex flex-col gap-5"
+                className="relative z-10 w-full bg-[#081521] border-t border-[#263949] rounded-t-3xl p-6 pb-8 flex flex-col gap-5"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between mb-1">
@@ -287,7 +287,7 @@ function MobileFilterDrawer({
                 </div>
 
                 {/* Drag handle */}
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-[#2D2D2D]" />
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-[#263949]" />
 
                 <FilterSelect
                     id="mobile-payment-method"
@@ -324,7 +324,7 @@ function MobileFilterDrawer({
                     />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                    <span className="text-[#8F8389] text-[10px] font-bold tracking-widest uppercase">Sort By</span>
+                    <span className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">Sort By</span>
                     <OfferSortSelect
                         value={draftFilters.sort}
                         onChange={(v) => onDraftFilterChange("sort", v)}
@@ -334,15 +334,15 @@ function MobileFilterDrawer({
                 <div className="flex gap-3 mt-2">
                     <button
                         onClick={() => { onClearFilters(); onClose(); }}
-                        className="flex-1 py-3 rounded-xl border border-[#2D2D2D] text-[#8F8389] text-sm font-bold
-                                   hover:border-[#BCED09]/30 hover:text-white transition-colors duration-200"
+                        className="flex-1 py-3 rounded-xl border border-[#263949] text-[#9BABB7] text-sm font-bold
+                                   hover:border-[#55D6BE]/30 hover:text-white transition-colors duration-200"
                     >
                         Clear All
                     </button>
                     <button
                         onClick={() => { onApplyDraft(); onClose(); }}
-                        className="flex-[2] py-3 rounded-xl bg-[#BCED09] text-black text-sm font-bold
-                                   hover:bg-[#d4f53a] transition-colors duration-200
+                        className="flex-[2] py-3 rounded-xl bg-[#55D6BE] text-black text-sm font-bold
+                                   hover:bg-[#55D6BE] transition-colors duration-200
                                    disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={Object.keys(errors).length > 0}
                     >
@@ -395,8 +395,8 @@ export function OfferFilters({
                     id="mobile-filter-trigger"
                     onClick={() => setIsDrawerOpen(true)}
                     className="md:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl
-                               bg-[#1a1a1c] border border-[#2D2D2D] text-white text-sm font-bold
-                               hover:border-[#BCED09]/40 transition-colors duration-200 relative"
+                               bg-[#1a1a1c] border border-[#263949] text-white text-sm font-bold
+                               hover:border-[#55D6BE]/40 transition-colors duration-200 relative"
                     aria-label={`Open filters${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ""}`}
                 >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -404,7 +404,7 @@ export function OfferFilters({
                     </svg>
                     Filters
                     {activeFilterCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#BCED09] text-black text-[10px] font-bold flex items-center justify-center">
+                        <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#55D6BE] text-black text-[10px] font-bold flex items-center justify-center">
                             {activeFilterCount}
                         </span>
                     )}
@@ -415,7 +415,7 @@ export function OfferFilters({
                     <button
                         id="clear-filters-btn"
                         onClick={onClearFilters}
-                        className="hidden md:flex items-center gap-1.5 text-[#8F8389] hover:text-[#BCED09]
+                        className="hidden md:flex items-center gap-1.5 text-[#9BABB7] hover:text-[#55D6BE]
                                    text-xs font-bold tracking-wide transition-colors duration-200"
                     >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

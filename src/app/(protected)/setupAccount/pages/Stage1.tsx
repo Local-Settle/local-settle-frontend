@@ -35,7 +35,7 @@ export default function Stage1({ onNext }: Stage1Props) {
 
     return (
         <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
-            <div className="bg-[#12141A] rounded-2xl p-6 flex flex-col gap-6 w-150">
+            <div className="bg-[#0D1D2C] rounded-2xl p-6 flex flex-col gap-6 w-150">
                 <div className="flex items-center gap-2">
                     <Image
                         src={userIcon}
@@ -50,7 +50,7 @@ export default function Stage1({ onNext }: Stage1Props) {
                     <div className="flex justify-between items-center">
                         <label className="text-[#CBD5E1] font-semibold text-sm">Username</label>
                         {isAvailable !== null && alias && (
-                            <span className={`text-xs font-medium ${isAvailable ? 'text-[#BCED09]' : 'text-red-400'}`}>
+                            <span className={`text-xs font-medium ${isAvailable ? 'text-[#55D6BE]' : 'text-red-400'}`}>
                                 {isAvailable ? '✓ Available' : '✗ Already taken'}
                             </span>
                         )}
@@ -60,8 +60,8 @@ export default function Stage1({ onNext }: Stage1Props) {
                         value={alias}
                         onChange={(e) => setAlias(e.target.value)}
                         placeholder="e.g. Satoshi_Master"
-                        className={`bg-[#01030880] text-[#F1F5F9] text-[16px] rounded-xl px-4 py-3 outline-none border transition-colors ${
-                            isAvailable === false ? 'border-red-400' : 'border-[#343434] focus:border-[#BCED09]'
+                        className={`bg-[#08152180] text-[#F1F5F9] text-[16px] rounded-xl px-4 py-3 outline-none border transition-colors ${
+                            isAvailable === false ? 'border-red-400' : 'border-[#263949] focus:border-[#55D6BE]'
                         }`}
                         required
                     />
@@ -73,8 +73,8 @@ export default function Stage1({ onNext }: Stage1Props) {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="name@ika$h.io"
-                        className="bg-[#01030880] text-[#F1F5F9] text-[16px] rounded-xl px-4 py-3 outline-none border border-[#343434] focus:border-[#BCED09]"
+                        placeholder="name@localsettle.example"
+                        className="bg-[#08152180] text-[#F1F5F9] text-[16px] rounded-xl px-4 py-3 outline-none border border-[#263949] focus:border-[#55D6BE]"
                         required
                     />
                 </div>

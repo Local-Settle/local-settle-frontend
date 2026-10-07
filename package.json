@@ -1,5 +1,5 @@
 {
-  "name": "ikash-frontend",
+  "name": "localsettle-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -49,5 +49,6 @@
       "ip-address": "10.2.0",
       "undici-types": "7.28.0"
     }
-  }
+  },
+  "description": "LocalSettle web app for Stellar wallet transfers and peer-to-peer settlement."
 }

@@ -55,14 +55,14 @@ function OrdersSkeleton() {
           className="grid grid-cols-1 md:grid-cols-[1.5fr_1.2fr_1fr_1.2fr_1fr_40px] gap-4 p-6 border-b border-[rgba(22,22,24,0.05)] items-center animate-pulse"
         >
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-[#2a2a2a]" />
-            <div className="h-4 w-32 bg-[#2a2a2a] rounded" />
+            <div className="w-10 h-10 rounded-full bg-[#172B3A]" />
+            <div className="h-4 w-32 bg-[#172B3A] rounded" />
           </div>
-          <div className="h-4 w-24 bg-[#2a2a2a] rounded" />
-          <div className="h-4 w-20 bg-[#2a2a2a] rounded" />
-          <div className="h-4 w-16 bg-[#2a2a2a] rounded ml-auto" />
-          <div className="h-6 w-20 bg-[#2a2a2a] rounded-full mx-auto" />
-          <div className="h-4 w-4 bg-[#2a2a2a] rounded ml-auto" />
+          <div className="h-4 w-24 bg-[#172B3A] rounded" />
+          <div className="h-4 w-20 bg-[#172B3A] rounded" />
+          <div className="h-4 w-16 bg-[#172B3A] rounded ml-auto" />
+          <div className="h-6 w-20 bg-[#172B3A] rounded-full mx-auto" />
+          <div className="h-4 w-4 bg-[#172B3A] rounded ml-auto" />
         </div>
       ))}
     </div>
@@ -113,7 +113,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-[#010308] text-white font-space">
+    <div className="flex min-h-screen w-full bg-[#081521] text-white font-space">
       <Aside />
       <div className="flex flex-col flex-1 min-w-0 pb-20 md:pb-0">
         <Header description="trading floor" title="p2p marketplace" />
@@ -128,7 +128,7 @@ export default function OrdersPage() {
             </h2>
 
             {/* Caja de Filtros Principal */}
-            <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 flex flex-col gap-6">
+            <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 flex flex-col gap-6">
               
               {/* Campo Operations */}
               <div className="flex flex-col gap-3">
@@ -139,7 +139,7 @@ export default function OrdersPage() {
                   <select
                     value={operationFilter}
                     onChange={(e) => setOperationFilter(e.target.value)}
-                    className="w-full bg-[#1F1F25] text-white border-none rounded-lg p-3 text-sm font-bold uppercase cursor-pointer appearance-none focus:outline-none"
+                    className="w-full bg-[#11212E] text-white border-none rounded-lg p-3 text-sm font-bold uppercase cursor-pointer appearance-none focus:outline-none"
                   >
                     <option value="All">All Ops</option>
                     <option value="Buy">Buy Only</option>
@@ -165,10 +165,10 @@ export default function OrdersPage() {
                         type="button"
                         aria-pressed={isActive}
                         onClick={() => setStatusFilter(status)}
-                        className={`text-[10px] font-bold p-[6px_16px] rounded-lg transition-colors cursor-pointer uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CEF100] focus-visible:ring-offset-2 focus-visible:ring-offset-[#161618] ${
+                        className={`text-[10px] font-bold p-[6px_16px] rounded-lg transition-colors cursor-pointer uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1D2C] ${
                           isActive
-                            ? "bg-[#CEF100] text-black"
-                            : "bg-[#1F1F25] text-[#E4E1E9] hover:bg-gray-800"
+                            ? "bg-[#55D6BE] text-black"
+                            : "bg-[#11212E] text-[#D7E0E6] hover:bg-gray-800"
                         }`}
                       >
                         {status}
@@ -181,7 +181,7 @@ export default function OrdersPage() {
             </div>
 
             {/* Caja de Date Range */}
-            <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 flex flex-col gap-3">
+            <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 flex flex-col gap-3">
               <label className="text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase">
                 Date Range
               </label>
@@ -194,10 +194,10 @@ export default function OrdersPage() {
           </div>
 
           {/* SECCIÓN TABLA DE ORDENES (Columna Derecha) */}
-          <div className="w-full flex-1 bg-[#161618] border border-[#1F2937] rounded-[24px] overflow-hidden mt-4 lg:mt-12">
+          <div className="w-full flex-1 bg-[#0D1D2C] border border-[#263949] rounded-[24px] overflow-hidden mt-4 lg:mt-12">
             
             {/* Headers de la Tabla */}
-            <div className="hidden md:grid grid-cols-[1.5fr_1.2fr_1fr_1.2fr_1fr_40px] bg-[#0E0E13] p-4 border-b border-[rgba(69,73,50,0.1)] text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase select-none">
+            <div className="hidden md:grid grid-cols-[1.5fr_1.2fr_1fr_1.2fr_1fr_40px] bg-[#081521] p-4 border-b border-[rgba(69,73,50,0.1)] text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase select-none">
               <div>Asset & Type</div>
               <div>Counterparty</div>
               <div>Date</div>
@@ -221,7 +221,7 @@ export default function OrdersPage() {
                   <button
                     type="button"
                     onClick={handleRetry}
-                    className="mt-4 bg-[#CEF100] text-black text-sm font-bold px-5 py-2 rounded-lg cursor-pointer"
+                    className="mt-4 bg-[#55D6BE] text-black text-sm font-bold px-5 py-2 rounded-lg cursor-pointer"
                   >
                     Retry
                   </button>
@@ -252,7 +252,7 @@ export default function OrdersPage() {
                         className={`w-10 h-10 rounded-full flex items-center justify-center border ${
                           o.isBuy
                             ? "bg-[rgba(249,115,22,0.1)] border-[rgba(249,115,22,0.2)] text-[#F97316]"
-                            : "bg-[rgba(218,255,0,0.1)] border-[rgba(218,255,0,0.2)] text-[#DAFF00]"
+                            : "bg-[rgba(218,255,0,0.1)] border-[rgba(218,255,0,0.2)] text-[#55D6BE]"
                         }`}
                       >
                         {o.isBuy ? (
@@ -263,7 +263,7 @@ export default function OrdersPage() {
                       </div>
                       <div className="flex flex-col gap-0.5">
                         <span className="text-sm font-extrabold uppercase tracking-tight">
-                          <span className={o.isBuy ? "text-[#CEF100]" : "text-[#CEF100]"}>
+                          <span className={o.isBuy ? "text-[#55D6BE]" : "text-[#55D6BE]"}>
                             {o.isBuy ? "Buying" : "Selling"}{" "}
                           </span>
                           {o.assetAmount} {o.assetCode}
@@ -301,12 +301,12 @@ export default function OrdersPage() {
                     {/* STATUS PILL */}
                     <div className="flex justify-center">
                       {o.status === "pending" && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider border border-[#BCED09] text-[#BCED09] p-[4px_12px] rounded-full">
+                        <span className="text-[9px] font-bold uppercase tracking-wider border border-[#55D6BE] text-[#55D6BE] p-[4px_12px] rounded-full">
                           Pending
                         </span>
                       )}
                       {o.status === "completed" && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider bg-[#BCED09] text-[#010308] p-[4px_12px] rounded-full">
+                        <span className="text-[9px] font-bold uppercase tracking-wider bg-[#55D6BE] text-[#081521] p-[4px_12px] rounded-full">
                           Completed
                         </span>
                       )}

@@ -249,22 +249,22 @@ export function ProfileTab() {
         <div className="mx-auto w-full max-w-[1540px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             <div className="grid gap-6 2xl:grid-cols-[minmax(0,1.6fr)_420px] xl:items-start">
                 <section className="space-y-6">
-                    <div className="overflow-hidden rounded-[22px] border border-[#1A1F26] bg-[linear-gradient(180deg,rgba(10,13,20,0.98)_0%,rgba(7,10,16,0.98)_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
-                        <div className="border-b border-[#1A1F26] px-5 py-5 sm:px-7 sm:py-6">
+                    <div className="overflow-hidden rounded-[22px] border border-[#172B3A] bg-[linear-gradient(180deg,rgba(10,13,20,0.98)_0%,rgba(7,10,16,0.98)_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
+                        <div className="border-b border-[#172B3A] px-5 py-5 sm:px-7 sm:py-6">
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="space-y-2">
                                     <h3 className="text-[1.6rem] font-bold tracking-tight text-[#F8FAFC] sm:text-[1.9rem]">
                                         Profile Settings
                                     </h3>
                                     <p className="max-w-2xl text-sm leading-7 text-[#F8FAFC] sm:text-[15px]">
-                                        Refresh your public profile, update your contact details, and keep your account presentation polished across iKa$h.
+                                        Refresh your public profile, update your contact details, and keep your account presentation polished across LocalSettle.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                         <form onSubmit={handleSaveProfile} className="space-y-6 px-5 py-5 sm:px-7 sm:py-7">
-                            <div className="rounded-[18px] border border-[#1A1F26] bg-[linear-gradient(180deg,rgba(9,12,18,0.98),rgba(5,7,12,0.92))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] sm:p-5">
+                            <div className="rounded-[18px] border border-[#172B3A] bg-[linear-gradient(180deg,rgba(9,12,18,0.98),rgba(5,7,12,0.92))] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] sm:p-5">
                                 <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-center">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                                         <div className="relative flex h-28 w-28 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-[#2B3320] bg-[#11151D] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
@@ -277,7 +277,7 @@ export function ProfileTab() {
                                                     onError={() => setProfileImageHasError(true)}
                                                 />
                                             ) : (
-                                                <span className="text-3xl font-bold text-[#BCED09]">
+                                                <span className="text-3xl font-bold text-[#55D6BE]">
                                                     {initials}
                                                 </span>
                                             )}
@@ -299,7 +299,7 @@ export function ProfileTab() {
                                                 JPEG, PNG, or WEBP up to 5MB
                                             </p>
                                             {selectedProfileImage && (
-                                                <p className="max-w-full truncate text-sm font-medium text-[#BCED09]">
+                                                <p className="max-w-full truncate text-sm font-medium text-[#55D6BE]">
                                                     Ready to upload: {selectedProfileImage.name}
                                                 </p>
                                             )}
@@ -317,7 +317,7 @@ export function ProfileTab() {
                                         <button
                                             type="button"
                                             onClick={() => fileInputRef.current?.click()}
-                                            className="inline-flex items-center justify-center gap-2 rounded-[8px] border border-[#2A3342] bg-[#11151D] px-4 py-3 text-sm font-semibold text-[#F1F5F9] transition hover:border-[#BCED09] hover:text-white"
+                                            className="inline-flex items-center justify-center gap-2 rounded-[8px] border border-[#2A3342] bg-[#11151D] px-4 py-3 text-sm font-semibold text-[#F1F5F9] transition hover:border-[#55D6BE] hover:text-white"
                                         >
                                             <Camera className="h-4 w-4" />
                                             Choose Image
@@ -326,7 +326,7 @@ export function ProfileTab() {
                                             type="button"
                                             onClick={handleUploadProfileImage}
                                             disabled={!selectedProfileImage || isUploadingProfileImage}
-                                            className="rounded-[8px] bg-[#BCED09] px-4 py-3 text-sm font-bold text-[#010308] transition hover:bg-[#d4f53a] disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="rounded-[8px] bg-[#55D6BE] px-4 py-3 text-sm font-bold text-[#081521] transition hover:bg-[#55D6BE] disabled:cursor-not-allowed disabled:opacity-50"
                                         >
                                             {isUploadingProfileImage ? "Uploading..." : "Upload Photo"}
                                         </button>
@@ -339,7 +339,7 @@ export function ProfileTab() {
                                             <p className="text-sm text-red-400">{profileImageError}</p>
                                         )}
                                         {profileImageMessage && (
-                                            <p className="text-sm text-[#BCED09]">{profileImageMessage}</p>
+                                            <p className="text-sm text-[#55D6BE]">{profileImageMessage}</p>
                                         )}
                                     </div>
                                 )}
@@ -365,7 +365,7 @@ export function ProfileTab() {
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="Enter display name"
-                                            className="mt-2.5 h-14 w-full rounded-[12px] border border-[#1A1F26] bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#BCED09]"
+                                            className="mt-2.5 h-14 w-full rounded-[12px] border border-[#172B3A] bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#55D6BE]"
                                         />
                                     </div>
 
@@ -382,7 +382,7 @@ export function ProfileTab() {
                                                 className={`h-14 w-full rounded-[12px] border bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] ${
                                                     aliasError
                                                         ? "border-red-500 focus:border-red-500"
-                                                        : "border-[#1A1F26] focus:border-[#BCED09]"
+                                                        : "border-[#172B3A] focus:border-[#55D6BE]"
                                                 }`}
                                             />
                                             {aliasError && (
@@ -400,7 +400,7 @@ export function ProfileTab() {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Enter email address"
-                                            className="mt-2.5 h-14 w-full rounded-[12px] border border-[#1A1F26] bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#BCED09]"
+                                            className="mt-2.5 h-14 w-full rounded-[12px] border border-[#172B3A] bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#55D6BE]"
                                         />
                                     </div>
                                 </div>
@@ -425,7 +425,7 @@ export function ProfileTab() {
                                         onChange={(e) => setBio(e.target.value)}
                                         placeholder="Write a short description about yourself..."
                                         rows={5}
-                                        className="mt-2 w-full resize-none rounded-[12px] border border-[#1A1F26] bg-[#05070C] px-4 py-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#BCED09]"
+                                        className="mt-2 w-full resize-none rounded-[12px] border border-[#172B3A] bg-[#05070C] px-4 py-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#55D6BE]"
                                     />
                                 </div>
                             </div>
@@ -433,7 +433,7 @@ export function ProfileTab() {
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                                 <div className="flex min-h-6 items-center">
                                     {saveMessage && (
-                                        <span className="text-sm font-medium text-[#BCED09]">
+                                        <span className="text-sm font-medium text-[#55D6BE]">
                                             {saveMessage}
                                         </span>
                                     )}
@@ -442,7 +442,7 @@ export function ProfileTab() {
                                 <button
                                     type="submit"
                                     disabled={isSaving || !!aliasError}
-                                    className="w-full rounded-[8px] bg-[#BCED09] px-6 py-3.5 text-sm font-bold text-[#010308] transition-all duration-200 hover:bg-[#d4f53a] disabled:opacity-50 sm:w-auto"
+                                    className="w-full rounded-[8px] bg-[#55D6BE] px-6 py-3.5 text-sm font-bold text-[#081521] transition-all duration-200 hover:bg-[#55D6BE] disabled:opacity-50 sm:w-auto"
                                 >
                                     {isSaving ? "Saving..." : "Save Changes"}
                                 </button>
@@ -452,8 +452,8 @@ export function ProfileTab() {
                 </section>
 
                 <aside className="xl:sticky xl:top-6">
-                    <div className="overflow-hidden rounded-[22px] border border-[#1A1F26] bg-[linear-gradient(180deg,rgba(10,13,20,0.98)_0%,rgba(7,10,16,0.98)_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
-                        <div className="border-b border-[#1A1F26] px-5 py-5 sm:px-6 sm:py-6">
+                    <div className="overflow-hidden rounded-[22px] border border-[#172B3A] bg-[linear-gradient(180deg,rgba(10,13,20,0.98)_0%,rgba(7,10,16,0.98)_100%)] shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
+                        <div className="border-b border-[#172B3A] px-5 py-5 sm:px-6 sm:py-6">
                             <h3 className="text-[1.45rem] font-bold tracking-tight text-[#F8FAFC]">
                                 Identity Verification
                             </h3>
@@ -464,8 +464,8 @@ export function ProfileTab() {
 
                         {currentUser?.kycStatus === "approved" ? (
                             <div className="p-5 sm:p-6">
-                                <div className="rounded-[10px] border border-[#2A3A1F] bg-[radial-gradient(circle_at_top,rgba(188,237,9,0.12),transparent_32%),#0F1A0C] p-5 sm:p-6">
-                                    <div className="mx-auto inline-flex items-center gap-2 rounded-[8px] border border-[#bcf557]/20 bg-[#1A2D0F] px-4 py-2 text-[#BCED09]">
+                                <div className="rounded-[10px] border border-[#2A3A1F] bg-[radial-gradient(circle_at_top,rgba(85,214,190,0.12),transparent_32%),#0F1A0C] p-5 sm:p-6">
+                                    <div className="mx-auto inline-flex items-center gap-2 rounded-[8px] border border-[#bcf557]/20 bg-[#1A2D0F] px-4 py-2 text-[#55D6BE]">
                                         <CheckCircle2 className="h-4 w-4" />
                                         <span className="text-sm font-semibold">Account Verified</span>
                                     </div>
@@ -485,14 +485,14 @@ export function ProfileTab() {
                                                               year: "numeric",
                                                           })
                                                         : "the verified date"}
-                                                    . You have full access to all iKa$h features, including high-volume P2P trades and instant withdrawals.
+                                                    . You have full access to all LocalSettle features, including high-volume P2P trades and instant withdrawals.
                                                 </p>
                                             </div>
                                         </div>
 
                                         <button
                                             type="button"
-                                            className="mt-6 w-full rounded-[14px] border border-[#2F431F] bg-[#162915] px-5 py-3.5 text-sm font-semibold text-[#F7FFDF] transition hover:border-[#BCED09] hover:bg-[#1A2F10]"
+                                            className="mt-6 w-full rounded-[14px] border border-[#2F431F] bg-[#162915] px-5 py-3.5 text-sm font-semibold text-[#F7FFDF] transition hover:border-[#55D6BE] hover:bg-[#1A2F10]"
                                         >
                                             View Details
                                         </button>
@@ -501,21 +501,21 @@ export function ProfileTab() {
                             </div>
                         ) : (
                             <div className="p-5 sm:p-6">
-                                <div className="rounded-[20px] border border-[#1A1F26] bg-[#010308]/60 p-6 text-center">
-                                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#8F8389]/10">
-                                        <UserCheck className="h-8 w-8 text-[#8F8389]" />
+                                <div className="rounded-[20px] border border-[#172B3A] bg-[#081521]/60 p-6 text-center">
+                                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#9BABB7]/10">
+                                        <UserCheck className="h-8 w-8 text-[#9BABB7]" />
                                     </div>
 
                                     <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
                                         <span className="text-base font-bold text-[#F1F5F9]">
                                             Verification Status
                                         </span>
-                                        <span className="rounded bg-[#8F8389]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#8F8389]">
+                                        <span className="rounded bg-[#9BABB7]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#9BABB7]">
                                             {currentUser?.kycStatus || "NOT VERIFIED"}
                                         </span>
                                     </div>
 
-                                    <p className="mx-auto max-w-[385px] text-sm leading-6 text-[#8F8389]">
+                                    <p className="mx-auto max-w-[385px] text-sm leading-6 text-[#9BABB7]">
                                         To ensure security and comply with regulations, please provide a valid government issued ID and a live selfie.
                                     </p>
 
@@ -523,7 +523,7 @@ export function ProfileTab() {
                                         type="button"
                                         onClick={handleStartKyc}
                                         disabled={kycLoading}
-                                        className="mt-6 flex w-full items-center justify-center gap-2 rounded-[16px] bg-[#BCED09] py-3.5 text-sm font-bold text-[#010308] transition-all duration-200 hover:bg-[#d4f53a] disabled:opacity-50"
+                                        className="mt-6 flex w-full items-center justify-center gap-2 rounded-[16px] bg-[#55D6BE] py-3.5 text-sm font-bold text-[#081521] transition-all duration-200 hover:bg-[#55D6BE] disabled:opacity-50"
                                     >
                                         <CheckCircle2 className="h-4 w-4" />
                                         {kycLoading ? "Opening tab..." : "Verify Now"}
@@ -532,7 +532,7 @@ export function ProfileTab() {
                                         <p className="mt-3 text-xs text-red-400">{kycError}</p>
                                     )}
 
-                                    <div className="mt-5 flex items-center justify-center gap-6 text-xs text-[#8F8389]">
+                                    <div className="mt-5 flex items-center justify-center gap-6 text-xs text-[#9BABB7]">
                                         <div className="flex items-center gap-1.5">
                                             <ShieldCheck className="h-3.5 w-3.5" />
                                             <span>Secure</span>

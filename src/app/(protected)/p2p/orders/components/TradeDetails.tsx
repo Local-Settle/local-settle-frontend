@@ -66,7 +66,7 @@ export function TradeDetails({
     // ==========================================
     if (!isBuyer) {
         return (
-            <div className="bg-[#1F1F25] w-full h-full rounded-xl flex flex-col justify-between p-8 font-space shrink-0 select-none border border-white/[0.02]">
+            <div className="bg-[#11212E] w-full h-full rounded-xl flex flex-col justify-between p-8 font-space shrink-0 select-none border border-white/[0.02]">
                 <div className="flex flex-col w-full h-full justify-between">
                     {/* Header y Bloque de Conversión */}
                     <div className="flex flex-col gap-6">
@@ -80,14 +80,14 @@ export function TradeDetails({
                                 <h2 className="text-white font-bold text-[36px] leading-10 tracking-[-0.9px]">
                                     {amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </h2>
-                                <span className="text-[#DAFF00] font-bold text-[18px] leading-7">
+                                <span className="text-[#55D6BE] font-bold text-[18px] leading-7">
                                     {assetCode}
                                 </span>
                             </div>
 
                             {/* Intercambio Icon */}
                             <div className="flex items-center justify-center w-[30px] h-[27px]">
-                                <ArrowLeftRight className="w-7 h-7 text-[#DAFF00]" />
+                                <ArrowLeftRight className="w-7 h-7 text-[#55D6BE]" />
                             </div>
 
                             {/* Fiat Side */}
@@ -121,7 +121,7 @@ export function TradeDetails({
                                     {counterpartyName}
                                 </span>
                                 {counterpartyKyc && (
-                                    <span className="w-4 h-4 rounded-full bg-[#DAFF00] flex items-center justify-center shrink-0">
+                                    <span className="w-4 h-4 rounded-full bg-[#55D6BE] flex items-center justify-center shrink-0">
                                         <Check className="w-2.5 h-2.5 text-black stroke-[4px]" />
                                     </span>
                                 )}
@@ -157,7 +157,7 @@ export function TradeDetails({
     // VISTA DE COMPRADOR (image_9a25b1.png)
     // ==========================================
     return (
-        <div className="bg-[#161618] w-[616.2px] h-[571.5px] border-l-4 border-[#DAFF00] rounded-r-[12px] flex flex-col justify-between p-8 font-space shrink-0 select-none">
+        <div className="bg-[#0D1D2C] w-[616.2px] h-[571.5px] border-l-4 border-[#55D6BE] rounded-r-[12px] flex flex-col justify-between p-8 font-space shrink-0 select-none">
             {/* Top row */}
             <div className="flex flex-row justify-between items-start w-full h-[60px] shrink-0">
                 <div className="flex flex-col gap-1">
@@ -172,7 +172,7 @@ export function TradeDetails({
                     <p className="text-[#C2C7D0] text-[12px] leading-4 tracking-[1.2px] uppercase font-normal text-right">
                         ASSET AMOUNT
                     </p>
-                    <h2 className="text-[#DAFF00] font-extrabold text-[36px] leading-[40px] tracking-[-1.8px] text-right">
+                    <h2 className="text-[#55D6BE] font-extrabold text-[36px] leading-[40px] tracking-[-1.8px] text-right">
                         {amount.toLocaleString(undefined, { minimumFractionDigits: 2 })} {assetCode}
                     </h2>
                 </div>
@@ -182,10 +182,10 @@ export function TradeDetails({
             <div className="flex flex-col gap-4 flex-grow justify-center mt-2 shrink-0">
                 {/* Unit Price */}
                 <div className="flex flex-col gap-1.5">
-                    <p className="text-[#8F9378] text-[10px] font-bold tracking-[1px] uppercase">
+                    <p className="text-[#9BABB7] text-[10px] font-bold tracking-[1px] uppercase">
                         UNIT PRICE
                     </p>
-                    <div className="bg-[#0E0E13] text-white w-full h-[62px] px-4 flex items-center justify-between font-bold rounded-none border border-[rgba(69,73,50,0.2)]">
+                    <div className="bg-[#081521] text-white w-full h-[62px] px-4 flex items-center justify-between font-bold rounded-none border border-[rgba(69,73,50,0.2)]">
                         <span className="text-[20px] leading-7 font-bold text-white">
                             {unitPrice.toFixed(4)}
                         </span>
@@ -197,11 +197,11 @@ export function TradeDetails({
                 
                 {/* Total Asset Value */}
                 <div className="flex flex-col gap-1.5">
-                    <p className="text-[#8F9378] text-[10px] font-bold tracking-[1px] uppercase">
+                    <p className="text-[#9BABB7] text-[10px] font-bold tracking-[1px] uppercase">
                         TOTAL ASSET VALUE
                     </p>
-                    <div className="bg-[#0E0E13] text-[#DAFF00] w-full h-[62px] px-4 flex items-center justify-between font-bold rounded-none border border-[rgba(69,73,50,0.2)]">
-                        <span className="text-[20px] leading-7 font-bold text-[#DAFF00]">
+                    <div className="bg-[#081521] text-[#55D6BE] w-full h-[62px] px-4 flex items-center justify-between font-bold rounded-none border border-[rgba(69,73,50,0.2)]">
+                        <span className="text-[20px] leading-7 font-bold text-[#55D6BE]">
                             {total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </span>
                         <span className="text-[#C2C7D0] text-[12px] font-bold leading-4">
@@ -212,7 +212,7 @@ export function TradeDetails({
 
                 {/* Counterparty Block */}
                 <div className="flex flex-col gap-1.5">
-                    <p className="text-[#8F9378] text-[10px] font-bold tracking-[1px] uppercase">
+                    <p className="text-[#9BABB7] text-[10px] font-bold tracking-[1px] uppercase">
                         COUNTERPARTY
                     </p>
                     <div className="flex items-center gap-3 h-[40px]">
@@ -229,12 +229,12 @@ export function TradeDetails({
                                     {counterpartyName}
                                 </span>
                                 {counterpartyKyc && (
-                                    <span className="w-3.5 h-3.5 rounded-full bg-[#DAFF00] flex items-center justify-center shrink-0">
+                                    <span className="w-3.5 h-3.5 rounded-full bg-[#55D6BE] flex items-center justify-center shrink-0">
                                         <Check className="w-2.5 h-2.5 text-black stroke-[4px]" />
                                     </span>
                                 )}
                             </div>
-                            <span className="text-[#BCED09] text-[10px] font-bold leading-[15px] tracking-[0.5px] uppercase">
+                            <span className="text-[#55D6BE] text-[10px] font-bold leading-[15px] tracking-[0.5px] uppercase">
                                 Verified Merchant • {counterpartyRate} completion
                             </span>
                         </div>
@@ -243,12 +243,12 @@ export function TradeDetails({
 
                 {/* Payment Method - Accordion Collapsible Box */}
                 <div className="flex flex-col gap-1.5">
-                    <p className="text-[#8F9378] text-[10px] font-bold tracking-[1px] uppercase">
+                    <p className="text-[#9BABB7] text-[10px] font-bold tracking-[1px] uppercase">
                         PAYMENT METHOD
                     </p>
                     <div 
                         onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-                        className={`bg-[#1F1F25] text-white w-full flex flex-col font-medium rounded-none border border-white/[0.02] cursor-pointer transition-all duration-300 ${
+                        className={`bg-[#11212E] text-white w-full flex flex-col font-medium rounded-none border border-white/[0.02] cursor-pointer transition-all duration-300 ${
                             isAccordionOpen ? "p-4 gap-3.5" : "h-[52px] px-4 flex-row items-center justify-between"
                         }`}
                     >
@@ -256,7 +256,7 @@ export function TradeDetails({
                         <div className={`flex items-center justify-between w-full ${isAccordionOpen ? "" : "h-full"}`}>
                             <div className="flex items-center gap-3">
                                 {renderPaymentIcon()}
-                                <span className="text-[14px] leading-5 text-[#E4E1E9] font-medium font-manrope">
+                                <span className="text-[14px] leading-5 text-[#D7E0E6] font-medium font-manrope">
                                     {paymentMethod}
                                 </span>
                             </div>
@@ -270,8 +270,8 @@ export function TradeDetails({
                                 >
                                     {copied ? (
                                         <>
-                                            <span className="text-[9px] text-[#DAFF00] uppercase font-extrabold tracking-wider">Copied!</span>
-                                            <Check className="w-4 h-4 text-[#DAFF00] stroke-[3px]" />
+                                            <span className="text-[9px] text-[#55D6BE] uppercase font-extrabold tracking-wider">Copied!</span>
+                                            <Check className="w-4 h-4 text-[#55D6BE] stroke-[3px]" />
                                         </>
                                     ) : (
                                         <Copy className="w-4 h-4 text-[#C2C7D0] hover:text-white transition-colors" />
@@ -290,16 +290,16 @@ export function TradeDetails({
                             <div className="border-t border-[rgba(69,73,50,0.15)] pt-3 flex flex-col gap-3 animate-fadeIn">
                                 {/* Account Identifier */}
                                 <div className="flex flex-col gap-1">
-                                    <p className="text-[#8F9378] text-[9px] font-bold tracking-[1px] uppercase">
+                                    <p className="text-[#9BABB7] text-[9px] font-bold tracking-[1px] uppercase">
                                         ACCOUNT IDENTIFIER
                                     </p>
-                                    <span className="text-white text-[12px] font-mono select-all bg-[#0E0E13] px-3 py-2 border border-white/[0.03] rounded">
+                                    <span className="text-white text-[12px] font-mono select-all bg-[#081521] px-3 py-2 border border-white/[0.03] rounded">
                                         {accountIdentifier}
                                     </span>
                                 </div>
                                 {/* Account Owner */}
                                 <div className="flex flex-col gap-1">
-                                    <p className="text-[#8F9378] text-[9px] font-bold tracking-[1px] uppercase">
+                                    <p className="text-[#9BABB7] text-[9px] font-bold tracking-[1px] uppercase">
                                         ACCOUNT OWNER
                                     </p>
                                     <span className="text-white text-[12px] font-semibold pl-1">

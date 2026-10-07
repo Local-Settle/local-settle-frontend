@@ -9,22 +9,22 @@ export function TradingVolume() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-white font-black text-[20px] tracking-[-0.6px] uppercase">Trading Volume</h3>
-          <p className="text-xs text-[#8F8389] mt-0.5">24h performance</p>
+          <p className="text-xs text-[#9BABB7] mt-0.5">24h performance</p>
         </div>
-        <div className="flex items-center gap-1.5 bg-[#161618] border border-[#1F2937] hover:border-[#343434] text-xs text-white font-bold px-3 py-1.5 rounded-xl cursor-pointer transition-colors">
+        <div className="flex items-center gap-1.5 bg-[#0D1D2C] border border-[#263949] hover:border-[#263949] text-xs text-white font-bold px-3 py-1.5 rounded-xl cursor-pointer transition-colors">
           <span>Daily</span>
-          <span className="text-[#8F8389] text-[10px]">▼</span>
+          <span className="text-[#9BABB7] text-[10px]">▼</span>
         </div>
       </div>
 
       {/* SVG Chart Card */}
-      <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 flex flex-col gap-4">
+      <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 flex flex-col gap-4">
         <div className="w-full h-[150px] relative mt-2">
           <svg className="w-full h-[110px]" viewBox="0 0 300 100" preserveAspectRatio="none">
             <defs>
               <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#BCED09" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#BCED09" stopOpacity="0" />
+                <stop offset="0%" stopColor="#55D6BE" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#55D6BE" stopOpacity="0" />
               </linearGradient>
             </defs>
             {/* The Gradient Area under the curve */}
@@ -36,7 +36,7 @@ export function TradingVolume() {
             <path
               d="M 0 65 Q 40 65 70 30 T 110 70 T 170 75 T 230 70 Q 260 50 300 10"
               fill="none"
-              stroke="#BCED09"
+              stroke="#55D6BE"
               strokeWidth="3.5"
               strokeLinecap="round"
             />

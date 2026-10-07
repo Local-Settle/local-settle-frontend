@@ -25,15 +25,15 @@ export function ConnectedWalletCard() {
         : "";
 
     return (
-        <div className="rounded-xl border border-[#1A1F26] bg-[#0E121B]/60 p-6 backdrop-blur-sm">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1A1F26] pb-4">
+        <div className="rounded-xl border border-[#172B3A] bg-[#0E121B]/60 p-6 backdrop-blur-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#172B3A] pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#BCED09]/10 text-[#BCED09]">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#55D6BE]/10 text-[#55D6BE]">
                         <Wallet className="h-5 w-5" />
                     </div>
                     <div>
                         <h2 className="text-[17px] font-semibold text-white">Connected Wallet</h2>
-                        <p className="text-xs text-[#8F8389]">
+                        <p className="text-xs text-[#9BABB7]">
                             Stellar account managing your on-chain assets and escrows
                         </p>
                     </div>
@@ -58,8 +58,8 @@ export function ConnectedWalletCard() {
                 {isConnected && publicKey ? (
                     <div className="space-y-4">
                         <div>
-                            <span className="text-xs font-medium text-[#8F8389]">Stellar Public Key</span>
-                            <div className="mt-1.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-[#1A1F26] bg-[#05070B] p-3.5">
+                            <span className="text-xs font-medium text-[#9BABB7]">Stellar Public Key</span>
+                            <div className="mt-1.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-[#172B3A] bg-[#081521] p-3.5">
                                 <div className="font-mono text-sm text-white break-all select-all">
                                     {showFullAddress ? publicKey : shortenedAddress}
                                 </div>
@@ -67,7 +67,7 @@ export function ConnectedWalletCard() {
                                     <button
                                         type="button"
                                         onClick={() => setShowFullAddress((prev) => !prev)}
-                                        className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-[#8F8389] hover:bg-[#1A1F26] hover:text-white transition cursor-pointer"
+                                        className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-[#9BABB7] hover:bg-[#172B3A] hover:text-white transition cursor-pointer"
                                         aria-label={showFullAddress ? "Hide full address" : "View full address"}
                                     >
                                         {showFullAddress ? (
@@ -85,7 +85,7 @@ export function ConnectedWalletCard() {
                                     <button
                                         type="button"
                                         onClick={handleCopy}
-                                        className="inline-flex items-center gap-1 rounded-md bg-[#BCED09]/15 px-3 py-1.5 text-xs font-medium text-[#BCED09] hover:bg-[#BCED09]/25 transition cursor-pointer"
+                                        className="inline-flex items-center gap-1 rounded-md bg-[#55D6BE]/15 px-3 py-1.5 text-xs font-medium text-[#55D6BE] hover:bg-[#55D6BE]/25 transition cursor-pointer"
                                         aria-label="Copy wallet address"
                                     >
                                         {copied ? (
@@ -105,17 +105,17 @@ export function ConnectedWalletCard() {
                         </div>
 
                         {walletId && (
-                            <div className="text-xs text-[#8F8389]">
+                            <div className="text-xs text-[#9BABB7]">
                                 Wallet Provider: <span className="font-medium text-white capitalize">{walletId}</span>
                             </div>
                         )}
 
-                        <div className="rounded-lg bg-[#BCED09]/5 border border-[#BCED09]/10 p-3 text-xs text-[#8F8389]">
-                            🔒 <strong className="text-white">Security Note:</strong> Only your public key is stored for authentication and escrow routing. Your private keys never leave your wallet.
+                        <div className="rounded-lg bg-[#55D6BE]/5 border border-[#55D6BE]/10 p-3 text-xs text-[#9BABB7]">
+                            🔒 <strong className="text-white">Security Note:</strong> Your connected wallet keeps its own private keys. The platform also uses a separately configured operator key for escrow deployment.
                         </div>
                     </div>
                 ) : (
-                    <div className="py-6 text-center text-sm text-[#8F8389]">
+                    <div className="py-6 text-center text-sm text-[#9BABB7]">
                         No Stellar wallet is currently connected.
                     </div>
                 )}

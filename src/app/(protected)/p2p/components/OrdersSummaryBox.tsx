@@ -54,7 +54,7 @@ export function OrdersSummaryBox() {
         <h3 className="text-white font-black text-[20px] tracking-[-0.6px] uppercase">My Orders</h3>
         <button 
           onClick={() => router.push("/p2p/orders")}
-          className="text-[#8F8389] hover:text-white transition-colors cursor-pointer"
+          className="text-[#9BABB7] hover:text-white transition-colors cursor-pointer"
         >
           <ExternalLink className="w-5 h-5" />
         </button>
@@ -70,21 +70,21 @@ export function OrdersSummaryBox() {
             <div
               key={order.orderId}
               onClick={() => handleItemClick(order.orderId)}
-              className="group flex items-center justify-between bg-[#161618] border border-[#1F2937] hover:border-[#BCED09]/40 hover:shadow-[0_0_15px_rgba(188,237,9,0.15)] rounded-3xl p-5 cursor-pointer transition-all duration-300 select-none"
+              className="group flex items-center justify-between bg-[#0D1D2C] border border-[#263949] hover:border-[#55D6BE]/40 hover:shadow-[0_0_15px_rgba(85,214,190,0.15)] rounded-3xl p-5 cursor-pointer transition-all duration-300 select-none"
             >
               <div className="flex items-center gap-4">
                 {/* Icon Container */}
                 <div 
                   className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${
                     isPending
-                      ? "bg-[#1C1F10] border border-[#BCED09]/20"
+                      ? "bg-[#1C1F10] border border-[#55D6BE]/20"
                       : isCompleted
                       ? "bg-[#0B1E13] border border-[#10B981]/10"
-                      : "bg-[#1F1F25]"
+                      : "bg-[#11212E]"
                   }`}
                 >
                   {isPending ? (
-                    <ShoppingCart className="w-5 h-5 text-[#BCED09]" />
+                    <ShoppingCart className="w-5 h-5 text-[#55D6BE]" />
                   ) : isCompleted ? (
                     <Check className="w-5 h-5 text-[#10B981]" />
                   ) : (
@@ -126,7 +126,7 @@ export function OrdersSummaryBox() {
       {/* View Full History Button */}
       <button
         onClick={() => router.push("/p2p/orders")}
-        className="w-full bg-[#343434]/40 hover:bg-[#343434]/80 text-white font-bold text-sm py-4 rounded-3xl transition-colors cursor-pointer text-center"
+        className="w-full bg-[#263949]/40 hover:bg-[#263949]/80 text-white font-bold text-sm py-4 rounded-3xl transition-colors cursor-pointer text-center"
       >
         View Full History
       </button>

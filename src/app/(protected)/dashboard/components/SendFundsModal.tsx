@@ -77,7 +77,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
     }
 
     if (!isStellarAddress(trimmed) && !isPotentialAlias(trimmed)) {
-      setInputError("Please enter a valid Stellar public key (G...) or iKa$h alias");
+      setInputError("Please enter a valid Stellar public key (G...) or LocalSettle alias");
       return;
     }
 
@@ -123,7 +123,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
         aria-modal="true"
         aria-labelledby="send-funds-title"
         tabIndex={-1}
-        className="bg-[#0D1117F2] h-full w-full max-w-md p-8 border-l md:border-r border-white/10 flex flex-col overflow-y-auto"
+        className="bg-[#081521F2] h-full w-full max-w-md p-8 border-l md:border-r border-white/10 flex flex-col overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -147,7 +147,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
           )}
         </div>
 
-        <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #BCED0900, #BCED09, #BCED0900)' }} />
+        <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #55D6BE00, #55D6BE, #55D6BE00)' }} />
 
         {/* Form */}
         {state.step === "form" && (
@@ -186,7 +186,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
                 type="button"
                 onClick={handleReviewSend}
                 disabled={!recipientInput.trim() || !amount || parseFloat(amount) <= 0}
-                className="w-full bg-[#BCED09] hover:bg-[#d4f53a] text-black font-bold uppercase tracking-wider px-4 py-3.5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-lg hover:scale-[1.01] active:scale-[0.99]"
+                className="w-full bg-[#55D6BE] hover:bg-[#55D6BE] text-black font-bold uppercase tracking-wider px-4 py-3.5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-lg hover:scale-[1.01] active:scale-[0.99]"
               >
                 Review & Send
               </button>

@@ -26,7 +26,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="flex min-h-screen w-full bg-[#010308]">
+        <div className="flex min-h-screen w-full bg-[#081521]">
             <Aside />
             <div className="flex min-w-0 flex-1 flex-col">
                 <Header title="SETTINGS" showUser={false} />
@@ -34,7 +34,7 @@ export default function SettingsPage() {
                 <div
                     role="tablist"
                     aria-label="Settings sections"
-                    className="border-b border-[#1A1F26] bg-[#0A0D14]/30 px-4 pt-4 sm:px-6 lg:px-8 lg:pt-6"
+                    className="border-b border-[#172B3A] bg-[#0A0D14]/30 px-4 pt-4 sm:px-6 lg:px-8 lg:pt-6"
                 >
                     {tabs.map((tab, index) => (
                         <button
@@ -47,10 +47,10 @@ export default function SettingsPage() {
                             tabIndex={activeTab === tab.id ? 0 : -1}
                             onClick={() => setActiveTab(tab.id)}
                             onKeyDown={(event) => handleTabKeyDown(event, index)}
-                            className={`pb-4 pr-6 text-[15px] font-medium transition-colors cursor-pointer sm:text-[16px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BCED09] focus-visible:ring-offset-2 focus-visible:ring-offset-[#010308] ${
+                            className={`pb-4 pr-6 text-[15px] font-medium transition-colors cursor-pointer sm:text-[16px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081521] ${
                                 activeTab === tab.id
-                                    ? "border-b-2 border-[#BCED09] font-semibold text-[#BCED09]"
-                                    : "border-b-2 border-transparent text-[#8F8389] hover:text-white"
+                                    ? "border-b-2 border-[#55D6BE] font-semibold text-[#55D6BE]"
+                                    : "border-b-2 border-transparent text-[#9BABB7] hover:text-white"
                             }`}
                         >
                             {tab.label}
@@ -63,17 +63,17 @@ export default function SettingsPage() {
                     role="tabpanel"
                     aria-labelledby={`settings-tab-${activeTab}`}
                     tabIndex={0}
-                    className="flex-1 overflow-y-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#BCED09]"
+                    className="flex-1 overflow-y-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#55D6BE]"
                 >
                     {activeTab === "profile" && <ProfileTab />}
                     {activeTab === "security" && <SecurityTab />}
                     {activeTab === "wallets" && (
-                        <div className="px-4 py-16 text-[#8F8389] md:px-12">
+                        <div className="px-4 py-16 text-[#9BABB7] md:px-12">
                             Wallets settings configuration pending MVP integration.
                         </div>
                     )}
                     {activeTab === "payments" && (
-                        <div className="px-4 py-16 text-[#8F8389] md:px-12">
+                        <div className="px-4 py-16 text-[#9BABB7] md:px-12">
                             Payments settings configuration pending MVP integration.
                         </div>
                     )}

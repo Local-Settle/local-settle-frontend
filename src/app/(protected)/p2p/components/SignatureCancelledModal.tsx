@@ -21,7 +21,7 @@ export function SignatureCancelledModal({ onRetry, onCancel }: SignatureCancelle
             </style>
 
             <div
-                className="bg-[#0E0E13] border border-[#454932]/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-[480px] flex flex-col overflow-hidden animate-slideUpCenter"
+                className="bg-[#081521] border border-[#263949]/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-[480px] flex flex-col overflow-hidden animate-slideUpCenter"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="flex flex-col items-center p-8 gap-6">
@@ -32,10 +32,10 @@ export function SignatureCancelledModal({ onRetry, onCancel }: SignatureCancelle
                     </div>
 
                     <div className="text-center space-y-2">
-                        <h3 className="text-[#E4E1E9] font-bold text-2xl font-space">
+                        <h3 className="text-[#D7E0E6] font-bold text-2xl font-space">
                             Signature Cancelled
                         </h3>
-                        <p className="text-[#8F8389] text-sm font-space leading-relaxed max-w-[360px]">
+                        <p className="text-[#9BABB7] text-sm font-space leading-relaxed max-w-[360px]">
                             You cancelled the wallet signature request. The transaction has not been signed yet. You can retry signing or cancel the operation entirely.
                         </p>
                     </div>
@@ -44,7 +44,7 @@ export function SignatureCancelledModal({ onRetry, onCancel }: SignatureCancelle
                         <button
                             type="button"
                             onClick={onRetry}
-                            className="w-full bg-[#DAFF00] hover:bg-[#d4f53a] text-[#181E00] font-bold text-lg py-4 rounded-lg shadow-[0_0_30px_rgba(218,255,0,0.15)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 font-space"
+                            className="w-full bg-[#55D6BE] hover:bg-[#55D6BE] text-[#181E00] font-bold text-lg py-4 rounded-lg shadow-[0_0_30px_rgba(218,255,0,0.15)] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 font-space"
                         >
                             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                                 <path d="M1 4v6h6M23 20v-6h-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -55,7 +55,7 @@ export function SignatureCancelledModal({ onRetry, onCancel }: SignatureCancelle
                         <button
                             type="button"
                             onClick={onCancel}
-                            className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#E4E1E9] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer font-space"
+                            className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#D7E0E6] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer font-space"
                         >
                             Cancel Operation
                         </button>

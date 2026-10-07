@@ -397,31 +397,31 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
             {isSubmitting ? (
                 <div className="flex flex-col items-center justify-center animate-slideUpCenter">
                     <div className="relative flex items-center justify-center w-28 h-28 mb-8">
-                        <div className="absolute w-full h-full border-4 border-[#DAFF00]/10 rounded-full"></div>
-                        <div className="absolute w-full h-full border-4 border-[#DAFF00] rounded-full border-t-transparent animate-spin drop-shadow-[0_0_20px_rgba(218,255,0,0.6)]"></div>
-                        <div className="absolute w-20 h-20 border-4 border-[#DAFF00]/20 rounded-full border-b-transparent animate-[spin_1.5s_linear_infinite_reverse]"></div>
-                        <div className="absolute w-12 h-12 border-4 border-[#DAFF00]/30 rounded-full border-l-transparent animate-[spin_2s_linear_infinite]"></div>
+                        <div className="absolute w-full h-full border-4 border-[#55D6BE]/10 rounded-full"></div>
+                        <div className="absolute w-full h-full border-4 border-[#55D6BE] rounded-full border-t-transparent animate-spin drop-shadow-[0_0_20px_rgba(218,255,0,0.6)]"></div>
+                        <div className="absolute w-20 h-20 border-4 border-[#55D6BE]/20 rounded-full border-b-transparent animate-[spin_1.5s_linear_infinite_reverse]"></div>
+                        <div className="absolute w-12 h-12 border-4 border-[#55D6BE]/30 rounded-full border-l-transparent animate-[spin_2s_linear_infinite]"></div>
                     </div>
-                    <h3 className="text-[#DAFF00] font-semibold text-2xl tracking-wide animate-pulse mb-3 font-space text-center">
+                    <h3 className="text-[#55D6BE] font-semibold text-2xl tracking-wide animate-pulse mb-3 font-space text-center">
                         Initiating Trade...
                     </h3>
-                    <p className="text-[#E4E1E9]/70 text-sm text-center max-w-[340px] px-4 leading-relaxed font-space">
+                    <p className="text-[#D7E0E6]/70 text-sm text-center max-w-[340px] px-4 leading-relaxed font-space">
                         Please wait. We are creating the order, securing the escrow contract on the blockchain, and syncing the database. This might take a moment.
                     </p>
                 </div>
             ) : (
             <div 
-                className="bg-[#0E0E13] border border-[#454932]/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-[576px] flex flex-col overflow-hidden animate-fadeIn"
+                className="bg-[#081521] border border-[#263949]/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-[576px] flex flex-col overflow-hidden animate-fadeIn"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-[#454932]/10 h-[81px]">
-                    <h2 className="text-[#E4E1E9] font-bold text-2xl font-space">
+                <div className="flex items-center justify-between p-6 border-b border-[#263949]/10 h-[81px]">
+                    <h2 className="text-[#D7E0E6] font-bold text-2xl font-space">
                         {isBuyOperation ? "Confirm Buy Order" : "Confirm Sell Order"}
                     </h2>
                     <button 
                         onClick={onClose}
-                        className="w-8 h-8 rounded-full bg-[#C6C9AC]/10 hover:bg-[#C6C9AC]/20 flex items-center justify-center text-[#C6C9AC] transition-colors cursor-pointer"
+                        className="w-8 h-8 rounded-full bg-[#9BABB7]/10 hover:bg-[#9BABB7]/20 flex items-center justify-center text-[#9BABB7] transition-colors cursor-pointer"
                     >
                         <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <path d="M6 18L18 6M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
@@ -432,9 +432,9 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                 {/* Content Area */}
                 <div className="p-8 flex flex-col gap-8 flex-1 overflow-y-auto">
                     {/* 1. Counterparty Info */}
-                    <div className="bg-[#1F1F25] border-l-4 border-[#CEF100] rounded-lg p-4 flex items-center justify-between h-[80px]">
+                    <div className="bg-[#11212E] border-l-4 border-[#55D6BE] rounded-lg p-4 flex items-center justify-between h-[80px]">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-[#39383F] border border-[#454932]/30 flex items-center justify-center text-[#E4E1E9] font-bold text-lg shrink-0 overflow-hidden shadow-inner">
+                            <div className="w-12 h-12 rounded-full bg-[#39383F] border border-[#263949]/30 flex items-center justify-center text-[#D7E0E6] font-bold text-lg shrink-0 overflow-hidden shadow-inner">
                                 {creator?.profileImageUrl ? (
                                     <img src={creator.profileImageUrl} alt="" className="w-full h-full object-cover" />
                                 ) : (
@@ -443,21 +443,21 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                             </div>
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-1.5">
-                                    <span className="text-[#E4E1E9] font-bold text-lg font-space leading-tight">
+                                    <span className="text-[#D7E0E6] font-bold text-lg font-space leading-tight">
                                         {creator?.alias || "Merchant"}
                                     </span>
-                                    <span className="w-3.5 h-3.5 rounded-full bg-[#DAFF00] flex items-center justify-center text-black text-[9px] font-extrabold shadow-sm">
+                                    <span className="w-3.5 h-3.5 rounded-full bg-[#55D6BE] flex items-center justify-center text-black text-[9px] font-extrabold shadow-sm">
                                         ✓
                                     </span>
                                 </div>
-                                <span className="text-[#8F8389] text-xs font-medium">Verified Merchant</span>
+                                <span className="text-[#9BABB7] text-xs font-medium">Verified Merchant</span>
                             </div>
                         </div>
                         <div className="flex flex-col items-end">
-                            <span className="text-[#DAFF00] font-bold text-base font-space">
+                            <span className="text-[#55D6BE] font-bold text-base font-space">
                                 {completionRate}
                             </span>
-                            <span className="text-[#C6C9AC] text-[10px] tracking-[1px] uppercase mt-0.5">
+                            <span className="text-[#9BABB7] text-[10px] tracking-[1px] uppercase mt-0.5">
                                 COMPLETION RATE
                             </span>
                         </div>
@@ -467,7 +467,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                     <div className="flex flex-col gap-6">
                         {/* Payment Method Select */}
                         <div className="flex flex-col gap-2">
-                            <label id={paymentLabelId} className="text-[#C6C9AC] text-xs font-normal tracking-[1.2px] uppercase font-space">
+                            <label id={paymentLabelId} className="text-[#9BABB7] text-xs font-normal tracking-[1.2px] uppercase font-space">
                                 PAYMENT METHOD
                             </label>
                             <div ref={paymentDropdownRef} className="relative">
@@ -481,7 +481,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                                             aria-expanded={isDropdownOpen}
                                             aria-controls={isDropdownOpen ? paymentListboxId : undefined}
                                             aria-labelledby={`${paymentLabelId} ${paymentTriggerId}`}
-                                            className="w-full bg-[#0D1117] border border-[#1C2128] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-[#DAFF00]/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DAFF00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0E0E13]"
+                                            className="w-full bg-[#081521] border border-[#11212E] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-[#55D6BE]/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081521]"
                                             onClick={() => {
                                                 if (isDropdownOpen) {
                                                     closePaymentDropdown();
@@ -518,15 +518,15 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                                                         tabIndex={activePaymentIndex === index ? 0 : -1}
                                                         onClick={() => selectPaymentMethod(index)}
                                                         onKeyDown={(event) => handlePaymentOptionKeyDown(event, index)}
-                                                        className={`w-full px-5 py-3 text-left text-[16px] cursor-pointer transition-colors flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#DAFF00] ${
+                                                        className={`w-full px-5 py-3 text-left text-[16px] cursor-pointer transition-colors flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#55D6BE] ${
                                                             selectedPaymentId === m.id 
-                                                            ? 'bg-[#DAFF00]/15 text-[#DAFF00] font-bold' 
+                                                            ? 'bg-[#55D6BE]/15 text-[#55D6BE] font-bold' 
                                                             : 'text-[#F1F5F9] hover:bg-white/10'
                                                         }`}
                                                     >
                                                         <span>{m.label} {m.desc ? `(${m.desc})` : ""}</span>
                                                         {selectedPaymentId === m.id && (
-                                                            <span className="text-[#DAFF00] font-bold">✓</span>
+                                                            <span className="text-[#55D6BE] font-bold">✓</span>
                                                         )}
                                                     </button>
                                                 ))}
@@ -534,7 +534,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                                         )}
                                     </>
                                 ) : (
-                                    <div className="bg-[#0D1117] border border-[#1C2128] rounded-xl px-5 py-4 flex items-center">
+                                    <div className="bg-[#081521] border border-[#11212E] rounded-xl px-5 py-4 flex items-center">
                                         <span className="text-[#EF4444] text-sm font-semibold">
                                             ⚠️ No intersecting payment methods available
                                         </span>
@@ -545,26 +545,26 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
 
                         {/* Amount Input */}
                         <div className="flex flex-col gap-2">
-                            <label className="text-[#C6C9AC] text-xs font-normal tracking-[1.2px] uppercase font-space">
+                            <label className="text-[#9BABB7] text-xs font-normal tracking-[1.2px] uppercase font-space">
                                 {isBuyOperation ? "AMOUNT TO PAY" : "AMOUNT TO SELL"}
                             </label>
-                            <div className="bg-[#1B1B21] border border-[#454932]/20 rounded-lg h-[66px] flex items-center justify-between px-4">
+                            <div className="bg-[#0D1D2C] border border-[#263949]/20 rounded-lg h-[66px] flex items-center justify-between px-4">
                                 <input
                                     type="number"
                                     placeholder="0.00"
                                     value={amountToPay}
                                     onChange={e => setAmountToPay(e.target.value)}
-                                    className="bg-transparent text-[#E4E1E9] font-bold text-2xl font-space outline-none w-full placeholder:text-[#39383F] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    className="bg-transparent text-[#D7E0E6] font-bold text-2xl font-space outline-none w-full placeholder:text-[#39383F] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 />
-                                <div className="border-l border-[#454932]/20 pl-4 py-1 flex items-center gap-1.5 shrink-0">
-                                    <span className="text-[#E4E1E9] font-bold text-base font-space">
+                                <div className="border-l border-[#263949]/20 pl-4 py-1 flex items-center gap-1.5 shrink-0">
+                                    <span className="text-[#D7E0E6] font-bold text-base font-space">
                                         {isBuyOperation ? "USD" : offer.assetCode || "BTC"}
                                     </span>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-[#C6C9AC] opacity-75" />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-[#9BABB7] opacity-75" />
                                 </div>
                             </div>
                             <div className="flex items-center justify-between pt-1 px-1 text-xs">
-                                <span className="text-[#C6C9AC] text-[10px] uppercase font-space tracking-wide">
+                                <span className="text-[#9BABB7] text-[10px] uppercase font-space tracking-wide">
                                     LIMIT: {minLimit.toLocaleString()} - {maxLimit.toLocaleString()} USD
                                 </span>
                                 {errorMsg ? (
@@ -581,24 +581,24 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                     </div>
 
                     {/* 3. Conversion Details */}
-                    <div className="bg-[#1F1F25] rounded-lg p-6 flex flex-col gap-4 shadow-sm border border-white/[0.02]">
-                        <div className="flex items-center justify-between pb-4 border-b border-[#454932]/10">
-                            <span className="text-[#C6C9AC] text-[10px] uppercase tracking-[1px] font-space">
+                    <div className="bg-[#11212E] rounded-lg p-6 flex flex-col gap-4 shadow-sm border border-white/[0.02]">
+                        <div className="flex items-center justify-between pb-4 border-b border-[#263949]/10">
+                            <span className="text-[#9BABB7] text-[10px] uppercase tracking-[1px] font-space">
                                 EXCHANGE RATE
                             </span>
-                            <span className="text-[#E4E1E9] font-medium text-sm font-space">
+                            <span className="text-[#D7E0E6] font-medium text-sm font-space">
                                 1 {offer.assetCode || "BTC"} = {priceNum.toLocaleString()} USD
                             </span>
                         </div>
                         <div className="flex flex-col gap-1 pt-1">
-                            <span className="text-[#C6C9AC] text-[10px] uppercase tracking-[1px] font-space">
+                            <span className="text-[#9BABB7] text-[10px] uppercase tracking-[1px] font-space">
                                 AMOUNT TO RECEIVE
                             </span>
                             <div className="flex items-baseline gap-2 mt-1">
-                                <span className="text-[#DAFF00] font-bold text-4xl font-space tracking-tight">
+                                <span className="text-[#55D6BE] font-bold text-4xl font-space tracking-tight">
                                     {amountToReceive}
                                 </span>
-                                <span className="text-[#DAFF00] font-bold text-lg font-space tracking-wide opacity-90">
+                                <span className="text-[#55D6BE] font-bold text-lg font-space tracking-wide opacity-90">
                                     {isBuyOperation ? offer.assetCode || "BTC" : "USD"}
                                 </span>
                             </div>
@@ -611,7 +611,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                             type="button"
                             disabled={isSubmitting || !!errorMsg || !amountToPay || intersectingMethods.length === 0}
                             onClick={handleInitiateOrder}
-                            className="w-full bg-[#DAFF00] hover:bg-[#d4f53a] text-[#181E00] font-bold text-lg py-4 rounded-lg shadow-[0_0_30px_rgba(218,255,0,0.15)] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-space"
+                            className="w-full bg-[#55D6BE] hover:bg-[#55D6BE] text-[#181E00] font-bold text-lg py-4 rounded-lg shadow-[0_0_30px_rgba(218,255,0,0.15)] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-space"
                         >
                             <span>Initiate Order</span>
                             <svg viewBox="0 0 24 24" className="w-5 h-5 ml-1" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -622,7 +622,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                             type="button"
                             onClick={onClose}
                             disabled={isSubmitting}
-                            className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#E4E1E9] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer font-space"
+                            className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#D7E0E6] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer font-space"
                         >
                             Cancel
                         </button>
@@ -630,8 +630,8 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
 
                     {/* Footer Security Note */}
                     <div className="flex items-center justify-center gap-2 pt-1">
-                        <div className="w-2 h-2 rounded-full bg-[#C6C9AC]/60 animate-pulse" />
-                        <span className="text-[#C6C9AC]/60 text-[10px] uppercase tracking-[2px] font-space">
+                        <div className="w-2 h-2 rounded-full bg-[#9BABB7]/60 animate-pulse" />
+                        <span className="text-[#9BABB7]/60 text-[10px] uppercase tracking-[2px] font-space">
                             ESCROW SECURED • ~5 MINS COMPLETION
                         </span>
                     </div>

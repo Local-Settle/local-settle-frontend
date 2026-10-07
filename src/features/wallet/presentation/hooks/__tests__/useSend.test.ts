@@ -43,7 +43,7 @@ describe("useSend hook", () => {
   it("resolves recipient and prepares transaction successfully", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
-      alias: "alex.ikash",
+      alias: "alex.localsettle",
       exists: true,
       hasUsdcTrustline: true,
     };
@@ -71,7 +71,7 @@ describe("useSend hook", () => {
     const { result } = renderHook(() => useSend());
 
     await act(async () => {
-      await result.current.resolveAndPrepare("alex.ikash", "10.00", "USDC");
+      await result.current.resolveAndPrepare("alex.localsettle", "10.00", "USDC");
     });
 
     expect(result.current.state.step).toBe("confirm");
@@ -173,7 +173,7 @@ describe("useSend hook", () => {
   it("signs and submits transaction successfully", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
-      alias: "alex.ikash",
+      alias: "alex.localsettle",
       exists: true,
       hasUsdcTrustline: true,
     };
@@ -212,7 +212,7 @@ describe("useSend hook", () => {
     const { result } = renderHook(() => useSend());
 
     await act(async () => {
-      await result.current.resolveAndPrepare("alex.ikash", "10.00");
+      await result.current.resolveAndPrepare("alex.localsettle", "10.00");
     });
 
     expect(result.current.state.step).toBe("confirm");
@@ -229,7 +229,7 @@ describe("useSend hook", () => {
   it("handles user cancelling or declining signature", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
-      alias: "alex.ikash",
+      alias: "alex.localsettle",
       exists: true,
       hasUsdcTrustline: true,
     };
@@ -250,7 +250,7 @@ describe("useSend hook", () => {
     const { result } = renderHook(() => useSend());
 
     await act(async () => {
-      await result.current.resolveAndPrepare("alex.ikash", "10.00");
+      await result.current.resolveAndPrepare("alex.localsettle", "10.00");
     });
 
     await act(async () => {
@@ -270,7 +270,7 @@ describe("useSend hook", () => {
   it("handles submission network failure", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
-      alias: "alex.ikash",
+      alias: "alex.localsettle",
       exists: true,
       hasUsdcTrustline: true,
     };
@@ -297,7 +297,7 @@ describe("useSend hook", () => {
     const { result } = renderHook(() => useSend());
 
     await act(async () => {
-      await result.current.resolveAndPrepare("alex.ikash", "10.00");
+      await result.current.resolveAndPrepare("alex.localsettle", "10.00");
     });
 
     await act(async () => {
@@ -311,7 +311,7 @@ describe("useSend hook", () => {
   it("resets state back to form on reset()", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
-      alias: "alex.ikash",
+      alias: "alex.localsettle",
       exists: true,
       hasUsdcTrustline: true,
     };
@@ -330,7 +330,7 @@ describe("useSend hook", () => {
     const { result } = renderHook(() => useSend());
 
     await act(async () => {
-      await result.current.resolveAndPrepare("alex.ikash", "10.00");
+      await result.current.resolveAndPrepare("alex.localsettle", "10.00");
     });
 
     expect(result.current.state.step).toBe("confirm");

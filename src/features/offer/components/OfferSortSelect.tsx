@@ -16,7 +16,7 @@ export function OfferSortSelect({ value, onChange }: OfferSortSelectProps) {
                     height="14"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#BCED09"
+                    stroke="#55D6BE"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -28,15 +28,15 @@ export function OfferSortSelect({ value, onChange }: OfferSortSelectProps) {
                 id="offer-sort-select"
                 value={value}
                 onChange={(e) => onChange(e.target.value as SortOption)}
-                className="appearance-none bg-[#161618] border border-[#2D2D2D] rounded-xl pl-9 pr-8 py-2.5
+                className="appearance-none bg-[#0D1D2C] border border-[#263949] rounded-xl pl-9 pr-8 py-2.5
                            text-white text-sm font-medium cursor-pointer
-                           focus:outline-none focus:ring-2 focus:ring-[#BCED09]/40 focus:border-[#BCED09]/60
-                           hover:border-[#BCED09]/40 transition-colors duration-200
+                           focus:outline-none focus:ring-2 focus:ring-[#55D6BE]/40 focus:border-[#55D6BE]/60
+                           hover:border-[#55D6BE]/40 transition-colors duration-200
                            min-w-[200px]"
                 aria-label="Sort offers"
             >
                 {SORT_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value} className="bg-[#161618]">
+                    <option key={opt.value} value={opt.value} className="bg-[#0D1D2C]">
                         {opt.label}
                     </option>
                 ))}

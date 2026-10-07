@@ -9,7 +9,7 @@ import { HanaModule } from "@creit.tech/stellar-wallets-kit/modules/hana";
 // This is the only file in the app allowed to import the kit directly.
 // Every wallet connection, address lookup, and transaction signature goes
 // through here, on Testnet only — the app must never open the kit's own
-// modal (StellarWalletsKit.authModal / createButton), only iKash's.
+// modal (StellarWalletsKit.authModal / createButton), only LocalSettle's.
 
 import type {
     StellarNetwork,
@@ -79,13 +79,13 @@ async function assertExpectedNetwork(): Promise<void> {
         const expCap = expected === "testnet" ? "Testnet" : "Mainnet";
         const curCap = current === "testnet" ? "Testnet" : "Mainnet";
         throw new Error(
-            `Wrong Stellar network detected. iKash is configured for ${expCap}, but your wallet is connected to ${curCap}. Switch your wallet to ${expCap} before continuing.`
+            `Wrong Stellar network detected. LocalSettle is configured for ${expCap}, but your wallet is connected to ${curCap}. Switch your wallet to ${expCap} before continuing.`
         );
     }
 }
 
 // We never call the kit's own authModal()/createButton() (those populate the
-// kit's internal address cache for us). Since iKash's modal drives selection
+// kit's internal address cache for us). Since LocalSettle's modal drives selection
 // directly, every read here must go through fetchAddress() — which actually
 // asks the active module for the address (triggering Freighter's permission
 // popup, etc.) — rather than getAddress(), which only returns whatever is

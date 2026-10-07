@@ -114,20 +114,20 @@ export function TransactionExportMenu({ disabled = false, onExport }: Transactio
                     aria-controls={isOpen ? menuId : undefined}
                     className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold uppercase text-[12px] tracking-wider transition-all duration-200 cursor-pointer ${
                         disabled
-                            ? "bg-[#1F1F25] text-[#4B5563] border border-[#2D3748] cursor-not-allowed"
+                            ? "bg-[#11212E] text-[#4B5563] border border-[#2D3748] cursor-not-allowed"
                             : isExporting
-                            ? "bg-[#1F1F25] text-white border border-[#CEF100]/20"
-                            : "bg-[#1F1F25] text-white border border-[#2A2A2A] hover:border-[#CEF100] hover:bg-[#1C1C24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CEF100] focus-visible:ring-offset-2 focus-visible:ring-offset-[#010308]"
+                            ? "bg-[#11212E] text-white border border-[#55D6BE]/20"
+                            : "bg-[#11212E] text-white border border-[#2A2A2A] hover:border-[#55D6BE] hover:bg-[#1C1C24] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081521]"
                     }`}
                 >
                     {isExporting ? (
                         <>
-                            <Loader2 className="w-4 h-4 animate-spin text-[#CEF100]" />
+                            <Loader2 className="w-4 h-4 animate-spin text-[#55D6BE]" />
                             <span>Exporting...</span>
                         </>
                     ) : (
                         <>
-                            <Download className="w-4 h-4 text-[#CEF100]" />
+                            <Download className="w-4 h-4 text-[#55D6BE]" />
                             <span>Export History</span>
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
                         </>
@@ -140,7 +140,7 @@ export function TransactionExportMenu({ disabled = false, onExport }: Transactio
                         id={menuId}
                         role="menu"
                         aria-labelledby="export-history-btn"
-                        className="absolute right-0 top-14 z-50 w-52 rounded-xl bg-[#161618] border border-[#1F2937] p-1.5 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150"
+                        className="absolute right-0 top-14 z-50 w-52 rounded-xl bg-[#0D1D2C] border border-[#263949] p-1.5 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150"
                     >
                         <button
                             ref={(element) => { itemRefs.current[0] = element; }}
@@ -149,7 +149,7 @@ export function TransactionExportMenu({ disabled = false, onExport }: Transactio
                             role="menuitem"
                             onClick={() => handleExportClick("csv")}
                             onKeyDown={(event) => handleItemKeyDown(event, 0)}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#CBD5E1] hover:bg-[#CEF100] hover:text-black transition-colors cursor-pointer focus-visible:outline-none focus-visible:bg-[#CEF100] focus-visible:text-black"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#CBD5E1] hover:bg-[#55D6BE] hover:text-black transition-colors cursor-pointer focus-visible:outline-none focus-visible:bg-[#55D6BE] focus-visible:text-black"
                         >
                             <FileSpreadsheet className="w-4 h-4" />
                             <span>Export as CSV</span>
@@ -161,7 +161,7 @@ export function TransactionExportMenu({ disabled = false, onExport }: Transactio
                             role="menuitem"
                             onClick={() => handleExportClick("pdf")}
                             onKeyDown={(event) => handleItemKeyDown(event, 1)}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#CBD5E1] hover:bg-[#CEF100] hover:text-black transition-colors cursor-pointer focus-visible:outline-none focus-visible:bg-[#CEF100] focus-visible:text-black"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-xs font-bold uppercase tracking-wider text-[#CBD5E1] hover:bg-[#55D6BE] hover:text-black transition-colors cursor-pointer focus-visible:outline-none focus-visible:bg-[#55D6BE] focus-visible:text-black"
                         >
                             <FileText className="w-4 h-4" />
                             <span>Export as PDF</span>

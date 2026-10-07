@@ -45,14 +45,14 @@ export function SendAmountInput({
           Amount to Send
         </label>
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] text-[#8F8389]">
+          <span className="text-[11px] text-[#9BABB7]">
             Avail: <span className="text-white font-medium">{getFormattedBalance(selectedAsset)}</span>
           </span>
           <button
             type="button"
             onClick={() => handlePercentage(100)}
             disabled={disabled || maxBalanceNum <= 0}
-            className="text-[10px] font-bold text-[#BCED09] hover:text-[#d4f53a] uppercase px-1.5 py-0.5 rounded bg-[#BCED09]/10 hover:bg-[#BCED09]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            className="text-[10px] font-bold text-[#55D6BE] hover:text-[#55D6BE] uppercase px-1.5 py-0.5 rounded bg-[#55D6BE]/10 hover:bg-[#55D6BE]/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             MAX
           </button>
@@ -68,10 +68,10 @@ export function SendAmountInput({
           disabled={disabled}
           onChange={handleInputChange}
           onKeyDown={(e) => ["-", "e", "E", "+"].includes(e.key) && e.preventDefault()}
-          className="bg-[#0D1117] w-full border border-[#1C2128] rounded-xl px-4 py-3.5 pr-20 text-[#F1F5F9] placeholder:text-[#64748B] text-lg font-bold focus:outline-none focus:ring-2 focus:ring-[#BCED09] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="bg-[#081521] w-full border border-[#11212E] rounded-xl px-4 py-3.5 pr-20 text-[#F1F5F9] placeholder:text-[#64748B] text-lg font-bold focus:outline-none focus:ring-2 focus:ring-[#55D6BE] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         />
         <div className="absolute inset-y-0 right-4 flex items-center gap-1.5 pointer-events-none">
-          <span className="text-xs font-bold text-[#BCED09] uppercase px-2 py-1 rounded bg-[#BCED09]/10 border border-[#BCED09]/20 select-none">
+          <span className="text-xs font-bold text-[#55D6BE] uppercase px-2 py-1 rounded bg-[#55D6BE]/10 border border-[#55D6BE]/20 select-none">
             {assetName}
           </span>
         </div>
@@ -85,7 +85,7 @@ export function SendAmountInput({
             type="button"
             onClick={() => handlePercentage(pct)}
             disabled={disabled || maxBalanceNum <= 0}
-            className="flex-1 py-1 text-[10px] font-bold text-gray-400 bg-[#161618] hover:bg-[#1f2a1a] hover:text-[#BCED09] border border-[#1F2937] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 py-1 text-[10px] font-bold text-gray-400 bg-[#0D1D2C] hover:bg-[#172B3A] hover:text-[#55D6BE] border border-[#263949] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           >
             {pct === 100 ? "MAX" : `${pct}%`}
           </button>

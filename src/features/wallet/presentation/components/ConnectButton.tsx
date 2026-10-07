@@ -13,7 +13,7 @@ export function ConnectButton({ label, description, walletId, icon, menuItem = f
                     type="button"
                     role={menuItem ? "menuitem" : undefined}
                     onClick={disconnect}
-                    className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#BCED09]"
+                    className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#55D6BE]"
                 >
                     Disconnect Wallet
                 </button>
@@ -26,7 +26,7 @@ export function ConnectButton({ label, description, walletId, icon, menuItem = f
             <button
                 type="button"
                 role={menuItem ? "menuitem" : undefined}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors duration-100 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#BCED09]"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors duration-100 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#55D6BE]"
                 onClick={() => connect(walletId)} disabled={isLoading}
             >
                 {icon && (

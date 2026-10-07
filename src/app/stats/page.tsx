@@ -52,12 +52,12 @@ export default function StatsPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#010308] text-white flex flex-col font-sans overflow-x-hidden selection:bg-[#BCED09] selection:text-[#010308]">
+        <div className="min-h-screen bg-[#081521] text-white flex flex-col font-sans overflow-x-hidden selection:bg-[#55D6BE] selection:text-[#081521]">
             <Navbar onConnectClick={handleConnectWallet} />
             
             <main className="flex-1 w-full max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 <div className="mb-10">
-                    <h1 className="text-[#BCED09] font-bold text-xl mb-2">
+                    <h1 className="text-[#55D6BE] font-bold text-xl mb-2">
                         STATISTICS & ANALYTICS
                     </h1>
                     <p className="text-[#C0CAAD] text-sm">
@@ -69,18 +69,18 @@ export default function StatsPage() {
                     <MetricCard
                         icon={<UserPlus size={18} />}
                         badge={
-                            <span className="flex items-center gap-1 text-[11px] text-lime-400 font-medium tracking-wide">
+                            <span className="flex items-center gap-1 text-[11px] text-[#55D6BE] font-medium tracking-wide">
                                 <TrendingUp size={11} /> {waitlistBoost}% BOOST
                             </span>
                         }
                         label="Waitlist Interest"
-                        value={<span className="text-[#BCED09]">{stats?.waitlist_member || 0}</span>}
+                        value={<span className="text-[#55D6BE]">{stats?.waitlist_member || 0}</span>}
                         unit="Units"
                     />
                     <MetricCard
                         icon={<Wallet size={20} />}
                         badge={
-                            <span className="flex items-center justify-center gap-1 text-[10px] text-[#BCED09] font-extrabold uppercase">
+                            <span className="flex items-center justify-center gap-1 text-[10px] text-[#55D6BE] font-extrabold uppercase">
                                 Testnet Alpha
                             </span>
                         }
@@ -91,7 +91,7 @@ export default function StatsPage() {
                     <MetricCard
                         icon={<ShieldCheck size={20} />}
                         badge={
-                            <span className="flex items-center justify-center gap-1 text-[10px] text-[#BCED09] font-extrabold uppercase">
+                            <span className="flex items-center justify-center gap-1 text-[10px] text-[#55D6BE] font-extrabold uppercase">
                                 {escrowSuccessRate}% Success
                             </span>
                         }

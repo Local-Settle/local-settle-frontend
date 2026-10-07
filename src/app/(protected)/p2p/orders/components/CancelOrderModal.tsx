@@ -37,7 +37,7 @@ export function CancelOrderModal({ onConfirm, onClose, isCancelling }: CancelOrd
                 aria-modal="true"
                 aria-labelledby="cancel-order-title"
                 tabIndex={-1}
-                className="bg-[#0E0E13] border border-[#454932]/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-[480px] flex flex-col overflow-hidden animate-slideUpCenter"
+                className="bg-[#081521] border border-[#263949]/20 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] rounded-lg w-full max-w-[480px] flex flex-col overflow-hidden animate-slideUpCenter"
                 onClick={e => e.stopPropagation()}
             >
                 <div className="flex flex-col items-center p-8 gap-6">
@@ -48,10 +48,10 @@ export function CancelOrderModal({ onConfirm, onClose, isCancelling }: CancelOrd
                     </div>
 
                     <div className="text-center space-y-2">
-                        <h3 id="cancel-order-title" className="text-[#E4E1E9] font-bold text-2xl font-space">
+                        <h3 id="cancel-order-title" className="text-[#D7E0E6] font-bold text-2xl font-space">
                             Cancel this order?
                         </h3>
-                        <p className="text-[#8F8389] text-sm font-space leading-relaxed max-w-[360px]">
+                        <p className="text-[#9BABB7] text-sm font-space leading-relaxed max-w-[360px]">
                             This action will stop the current trade. You can only cancel while payment has not been marked as completed.
                         </p>
                     </div>
@@ -76,7 +76,7 @@ export function CancelOrderModal({ onConfirm, onClose, isCancelling }: CancelOrd
                             type="button"
                             onClick={onClose}
                             disabled={isCancelling}
-                            className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#E4E1E9] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-space"
+                            className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#D7E0E6] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-space"
                         >
                             Keep Order
                         </button>

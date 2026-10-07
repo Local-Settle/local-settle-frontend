@@ -101,12 +101,12 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 	};
 
 	return (
-		<nav ref={navRef} aria-label="Public Navigation" className="w-full bg-[#010308CC] border-b border-[#FFFFFF1A] backdrop-blur-md sticky top-0 z-50 px-4 md:px-8">
+		<nav ref={navRef} aria-label="Public Navigation" className="w-full bg-[#081521CC] border-b border-[#FFFFFF1A] backdrop-blur-md sticky top-0 z-50 px-4 md:px-8">
 			<div className="max-w-7xl mx-auto flex items-center justify-between h-16">
 				<div className="flex flex-row items-center gap-4">
 					<Image
-						src="/ikashlogotipo.svg"
-						alt="Logo de ikash"
+						src="/localsettle-wordmark.svg"
+						alt="LocalSettle logo"
 						width={100}
 						height={45}
 					/>
@@ -120,7 +120,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 								<Link
 									href={link.href}
 									className={`text-sm transition-colors duration-150 ${isActive
-										? "text-[#BCED09] font-medium"
+										? "text-[#55D6BE] font-medium"
 										: "text-gray-400 hover:text-white font-medium"
 										}`}
 								>
@@ -140,8 +140,8 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 						aria-haspopup={onConnectClick ? "dialog" : "menu"}
 						aria-expanded={onConnectClick ? undefined : dropdownOpen}
 						aria-controls={!onConnectClick && dropdownOpen ? "desktop-wallet-menu" : undefined}
-						className="flex items-center gap-1 justify-center bg-[#BCED09] hover:bg-[#9bc505] active:scale-95 text-[#010308] 
-						text-sm font-bold w-[150.02px] h-10 rounded-full transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#010308]"
+						className="flex items-center gap-1 justify-center bg-[#55D6BE] hover:bg-[#38B99F] active:scale-95 text-[#081521] 
+						text-sm font-bold w-[150.02px] h-10 rounded-full transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#081521]"
 					>
 						Connect Wallet
 						<svg width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -151,7 +151,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 					</button>
 
 					{dropdownOpen && (
-						<div className="absolute right-0 mt-2 w-64 border border-[#BCED09] rounded-xl shadow-2xl overflow-hidden z-50 bg-[#010308]">
+						<div className="absolute right-0 mt-2 w-64 border border-[#55D6BE] rounded-xl shadow-2xl overflow-hidden z-50 bg-[#081521]">
 							<p className="text-xs text-gray-500 px-4 pt-3 pb-2 uppercase tracking-widest">
 								Choose wallet
 							</p>
@@ -171,7 +171,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 							<div className="border-t border-white/10 px-4 py-3">
 								<p className="text-xs text-gray-600 text-center">
 									By connecting you agree to our{" "}
-									<Link href="/terms" className="text-[#c8f135] cursor-pointer hover:underline">Terms</Link>
+									<Link href="/terms" className="text-[#55D6BE] cursor-pointer hover:underline">Terms</Link>
 								</p>
 							</div>
 						</div>
@@ -185,7 +185,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 						aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
 						aria-expanded={mobileMenuOpen}
 						onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-						className="text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BCED09]"
+						className="text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE]"
 					>
 						{mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
 					</button>
@@ -194,7 +194,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 
 			{/* Mobile Menu Dropdown */}
 			{mobileMenuOpen && (
-				<div className="md:hidden absolute top-16 left-0 w-full bg-[#010308] border-b border-[#FFFFFF1A] shadow-2xl z-40 py-4 px-4 flex flex-col gap-6">
+				<div className="md:hidden absolute top-16 left-0 w-full bg-[#081521] border-b border-[#FFFFFF1A] shadow-2xl z-40 py-4 px-4 flex flex-col gap-6">
 					<ul className="flex flex-col gap-4" aria-label="Mobile Navigation Menu">
 						{navLinks.map((link) => {
 							const isActive = pathname === link.href;
@@ -204,7 +204,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 										href={link.href}
 										onClick={() => setMobileMenuOpen(false)}
 										className={`block text-lg transition-colors duration-150 ${isActive
-											? "text-[#BCED09] font-medium"
+											? "text-[#55D6BE] font-medium"
 											: "text-gray-400 hover:text-white font-medium"
 											}`}
 									>
@@ -224,8 +224,8 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 							aria-haspopup={onConnectClick ? "dialog" : "menu"}
 							aria-expanded={onConnectClick ? undefined : dropdownOpen}
 							aria-controls={!onConnectClick && dropdownOpen ? "mobile-wallet-menu" : undefined}
-							className="flex items-center gap-2 justify-center bg-[#BCED09] hover:bg-[#9bc505] active:scale-95 text-[#010308] 
-							text-sm font-bold w-full h-12 rounded-full transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#010308]"
+							className="flex items-center gap-2 justify-center bg-[#55D6BE] hover:bg-[#38B99F] active:scale-95 text-[#081521] 
+							text-sm font-bold w-full h-12 rounded-full transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#081521]"
 						>
 							Connect Wallet
 							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -235,7 +235,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 						</button>
 
 						{dropdownOpen && (
-							<div className="mt-4 w-full border border-[#BCED09] rounded-xl shadow-2xl overflow-hidden bg-[#18181b]/50">
+							<div className="mt-4 w-full border border-[#55D6BE] rounded-xl shadow-2xl overflow-hidden bg-[#11212E]/50">
 								<p className="text-xs text-gray-500 px-4 pt-3 pb-2 uppercase tracking-widest">
 									Choose wallet
 								</p>
@@ -255,7 +255,7 @@ export function Navbar({ onConnectClick }: { onConnectClick?: () => void }) {
 								<div className="border-t border-white/10 px-4 py-3">
 									<p className="text-xs text-gray-600 text-center">
 										By connecting you agree to our{" "}
-										<Link href="/terms" className="text-[#c8f135] cursor-pointer hover:underline">Terms</Link>
+										<Link href="/terms" className="text-[#55D6BE] cursor-pointer hover:underline">Terms</Link>
 									</p>
 								</div>
 							</div>

@@ -204,7 +204,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         if (detected !== expectedNetwork) {
             const expCap = expectedNetwork === "testnet" ? "Testnet" : "Mainnet";
             const curCap = detected === "unknown" ? "unknown network" : detected;
-            throw new Error(`Wrong Stellar network detected. iKash is configured for ${expCap}, but your wallet is connected to ${curCap}. Switch your wallet to ${expCap} before continuing.`);
+            throw new Error(`Wrong Stellar network detected. LocalSettle is configured for ${expCap}, but your wallet is connected to ${curCap}. Switch your wallet to ${expCap} before continuing.`);
         }
         return await walletService.signTransaction(xdr);
     }, []);

@@ -104,7 +104,7 @@ export default function TransactionsPage() {
     };
 
     return (
-        <div className="flex min-h-screen w-full bg-[#010308] text-white font-space">
+        <div className="flex min-h-screen w-full bg-[#081521] text-white font-space">
             <Aside />
             <div className="flex flex-col flex-1 min-w-0 pb-20 md:pb-0">
                 <Header description="history & exports" title="Transactions" />
@@ -117,7 +117,7 @@ export default function TransactionsPage() {
                             Filters
                         </h2>
 
-                        <div className="bg-[#161618] border border-[#1F2937] rounded-3xl p-6 flex flex-col gap-6">
+                        <div className="bg-[#0D1D2C] border border-[#263949] rounded-3xl p-6 flex flex-col gap-6">
                             
                             {/* Operations / Role Filter */}
                             <div className="flex flex-col gap-3">
@@ -128,7 +128,7 @@ export default function TransactionsPage() {
                                     <select
                                         value={operationFilter}
                                         onChange={(e) => setOperationFilter(e.target.value)}
-                                        className="w-full bg-[#1F1F25] text-white border-none rounded-lg p-3 text-sm font-bold uppercase cursor-pointer appearance-none focus:outline-none"
+                                        className="w-full bg-[#11212E] text-white border-none rounded-lg p-3 text-sm font-bold uppercase cursor-pointer appearance-none focus:outline-none"
                                     >
                                         <option value="All">All Ops</option>
                                         <option value="Buy">Buy Only</option>
@@ -154,10 +154,10 @@ export default function TransactionsPage() {
                                                 type="button"
                                                 aria-pressed={isActive}
                                                 onClick={() => setStatusFilter(status)}
-                                                className={`text-[10px] font-bold p-[6px_16px] rounded-lg transition-colors cursor-pointer uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CEF100] focus-visible:ring-offset-2 focus-visible:ring-offset-[#161618] ${
+                                                className={`text-[10px] font-bold p-[6px_16px] rounded-lg transition-colors cursor-pointer uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1D2C] ${
                                                     isActive
-                                                        ? "bg-[#CEF100] text-black"
-                                                        : "bg-[#1F1F25] text-[#E4E1E9] hover:bg-gray-800"
+                                                        ? "bg-[#55D6BE] text-black"
+                                                        : "bg-[#11212E] text-[#D7E0E6] hover:bg-gray-800"
                                                 }`}
                                             >
                                                 {status}
@@ -181,7 +181,7 @@ export default function TransactionsPage() {
                                             type="date"
                                             value={startDateFilter}
                                             onChange={(e) => setStartDateFilter(e.target.value)}
-                                            className="flex-1 bg-[#1F1F25] text-white border-none rounded-lg p-2.5 text-xs font-bold focus:outline-none [color-scheme:dark]"
+                                            className="flex-1 bg-[#11212E] text-white border-none rounded-lg p-2.5 text-xs font-bold focus:outline-none [color-scheme:dark]"
                                         />
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -190,7 +190,7 @@ export default function TransactionsPage() {
                                             type="date"
                                             value={endDateFilter}
                                             onChange={(e) => setEndDateFilter(e.target.value)}
-                                            className="flex-1 bg-[#1F1F25] text-white border-none rounded-lg p-2.5 text-xs font-bold focus:outline-none [color-scheme:dark]"
+                                            className="flex-1 bg-[#11212E] text-white border-none rounded-lg p-2.5 text-xs font-bold focus:outline-none [color-scheme:dark]"
                                         />
                                     </div>
                                     {(startDateFilter || endDateFilter) && (
@@ -222,9 +222,9 @@ export default function TransactionsPage() {
                         </div>
 
                         {/* List / Table container */}
-                        <div className="bg-[#161618] border border-[#1F2937] rounded-[24px] overflow-hidden">
+                        <div className="bg-[#0D1D2C] border border-[#263949] rounded-[24px] overflow-hidden">
                             {/* Column Headers */}
-                            <div className="hidden md:grid grid-cols-[1.5fr_1fr_1.2fr_1fr_1.2fr_40px] bg-[#0E0E13] p-4 border-b border-[rgba(69,73,50,0.1)] text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase select-none">
+                            <div className="hidden md:grid grid-cols-[1.5fr_1fr_1.2fr_1fr_1.2fr_40px] bg-[#081521] p-4 border-b border-[rgba(69,73,50,0.1)] text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase select-none">
                                 <div>Asset & Type</div>
                                 <div>Role</div>
                                 <div>Date</div>
@@ -237,7 +237,7 @@ export default function TransactionsPage() {
                             <div className="flex flex-col">
                                 {loading ? (
                                     <div className="flex flex-col items-center justify-center p-20 text-gray-500">
-                                        <Loader2 className="w-10 h-10 animate-spin text-[#CEF100] mb-4" />
+                                        <Loader2 className="w-10 h-10 animate-spin text-[#55D6BE] mb-4" />
                                         <p className="font-bold">Loading transactions...</p>
                                     </div>
                                 ) : filteredOrders.length === 0 ? (
@@ -285,7 +285,7 @@ export default function TransactionsPage() {
                                                         className={`w-10 h-10 rounded-full flex items-center justify-center border ${
                                                             isBuy
                                                                 ? "bg-[rgba(249,115,22,0.1)] border-[rgba(249,115,22,0.2)] text-[#F97316]"
-                                                                : "bg-[rgba(218,255,0,0.1)] border-[rgba(218,255,0,0.2)] text-[#DAFF00]"
+                                                                : "bg-[rgba(218,255,0,0.1)] border-[rgba(218,255,0,0.2)] text-[#55D6BE]"
                                                         }`}
                                                     >
                                                         {isBuy ? (
@@ -295,7 +295,7 @@ export default function TransactionsPage() {
                                                         )}
                                                     </div>
                                                     <span className="text-sm font-extrabold uppercase tracking-tight">
-                                                        <span className="text-[#CEF100]">{isBuy ? "Buy" : "Sell"}{" "}</span>
+                                                        <span className="text-[#55D6BE]">{isBuy ? "Buy" : "Sell"}{" "}</span>
                                                         {formattedAsset} {assetCode}
                                                     </span>
                                                 </div>
@@ -318,12 +318,12 @@ export default function TransactionsPage() {
                                                 {/* Status */}
                                                 <div className="flex justify-center">
                                                     {cleanStatus === "pending" && (
-                                                        <span className="text-[9px] font-bold uppercase tracking-wider border border-[#BCED09] text-[#BCED09] p-[4px_12px] rounded-full">
+                                                        <span className="text-[9px] font-bold uppercase tracking-wider border border-[#55D6BE] text-[#55D6BE] p-[4px_12px] rounded-full">
                                                             Pending
                                                         </span>
                                                     )}
                                                     {cleanStatus === "completed" && (
-                                                        <span className="text-[9px] font-bold uppercase tracking-wider bg-[#BCED09] text-[#010308] p-[4px_12px] rounded-full">
+                                                        <span className="text-[9px] font-bold uppercase tracking-wider bg-[#55D6BE] text-[#081521] p-[4px_12px] rounded-full">
                                                             Completed
                                                         </span>
                                                     )}

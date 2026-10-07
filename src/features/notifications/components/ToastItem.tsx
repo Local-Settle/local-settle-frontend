@@ -8,9 +8,9 @@ const TYPE_META: Record<NotificationType, { icon: typeof Info; label: string; bo
     success: {
         icon: CheckCircle,
         label: "Success",
-        border: "border-[#BCED09]/40",
-        iconClass: "text-[#BCED09]",
-        labelClass: "text-[#BCED09]",
+        border: "border-[#55D6BE]/40",
+        iconClass: "text-[#55D6BE]",
+        labelClass: "text-[#55D6BE]",
     },
     error: {
         icon: CircleAlert,
@@ -56,7 +56,7 @@ export function ToastItem({ toast, onDismiss }: ToastItemProps) {
             aria-live={isAlert ? "assertive" : "polite"}
             data-testid={`toast-${toast.type}`}
             data-toast-id={toast.id}
-            className={`toast-enter pointer-events-auto flex w-full items-start gap-3 rounded-xl border bg-[#161618] p-4 shadow-2xl ${meta.border}`}
+            className={`toast-enter pointer-events-auto flex w-full items-start gap-3 rounded-xl border bg-[#0D1D2C] p-4 shadow-2xl ${meta.border}`}
         >
             <span className={`mt-0.5 shrink-0 ${meta.iconClass}`}>
                 <Icon className="h-5 w-5" aria-hidden="true" />
@@ -93,7 +93,7 @@ export function ToastItem({ toast, onDismiss }: ToastItemProps) {
                             <Link
                                 href={toast.action.href}
                                 onClick={handleActionClick}
-                                className="text-xs font-bold uppercase tracking-wide text-[#BCED09] transition-colors hover:text-[#d4f53a]"
+                                className="text-xs font-bold uppercase tracking-wide text-[#55D6BE] transition-colors hover:text-[#55D6BE]"
                             >
                                 {toast.action.label}
                             </Link>
@@ -101,7 +101,7 @@ export function ToastItem({ toast, onDismiss }: ToastItemProps) {
                             <button
                                 type="button"
                                 onClick={handleActionClick}
-                                className="text-xs font-bold uppercase tracking-wide text-[#BCED09] transition-colors hover:text-[#d4f53a]"
+                                className="text-xs font-bold uppercase tracking-wide text-[#55D6BE] transition-colors hover:text-[#55D6BE]"
                             >
                                 {toast.action.label}
                             </button>

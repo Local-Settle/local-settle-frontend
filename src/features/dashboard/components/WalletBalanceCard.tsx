@@ -29,7 +29,7 @@ export function WalletBalanceCard({
                 style={{
                     background: [
                         "radial-gradient(70% 115% at 84% 26%, #A8DC0F 0%, rgba(150,200,18,0.72) 26%, rgba(94,124,28,0.34) 48%, rgba(58,64,44,0.12) 66%, rgba(45,45,45,0) 80%)",
-                        "linear-gradient(135deg, #343434 0%, #2E2E2E 60%, #272727 100%)",
+                        "linear-gradient(135deg, #263949 0%, #2E2E2E 60%, #272727 100%)",
                     ].join(", "),
                 }}
             >
@@ -57,7 +57,7 @@ export function WalletBalanceCard({
                                 <button
                                     type="button"
                                     onClick={onRetry}
-                                    className="text-black bg-[#BCED09] hover:bg-[#d4f53a] text-xs font-bold px-4 py-2 rounded-lg tracking-wide transition-colors"
+                                    className="text-black bg-[#55D6BE] hover:bg-[#55D6BE] text-xs font-bold px-4 py-2 rounded-lg tracking-wide transition-colors"
                                 >
                                     Retry
                                 </button>

@@ -90,18 +90,18 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
             onClick={() => { if (!isSubmitting) onClose(); }}
         >
             <div
-                className="bg-[#0D1117F2] h-full w-md p-8 border-r border-white/10 relative overflow-hidden flex flex-col"
+                className="bg-[#081521F2] h-full w-md p-8 border-r border-white/10 relative overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Premium Loading Overlay */}
                 {isSubmitting && (
-                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#0D1117]/80 backdrop-blur-md">
+                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#081521]/80 backdrop-blur-md">
                         <div className="relative flex items-center justify-center w-24 h-24 mb-6">
-                            <div className="absolute w-full h-full border-4 border-[#BCED09]/10 rounded-full"></div>
-                            <div className="absolute w-full h-full border-4 border-[#BCED09] rounded-full border-t-transparent animate-spin drop-shadow-[0_0_15px_rgba(188,237,9,0.5)]"></div>
-                            <div className="absolute w-16 h-16 border-4 border-[#BCED09]/20 rounded-full border-b-transparent animate-[spin_1.5s_linear_infinite_reverse]"></div>
+                            <div className="absolute w-full h-full border-4 border-[#55D6BE]/10 rounded-full"></div>
+                            <div className="absolute w-full h-full border-4 border-[#55D6BE] rounded-full border-t-transparent animate-spin drop-shadow-[0_0_15px_rgba(85,214,190,0.5)]"></div>
+                            <div className="absolute w-16 h-16 border-4 border-[#55D6BE]/20 rounded-full border-b-transparent animate-[spin_1.5s_linear_infinite_reverse]"></div>
                         </div>
-                        <h3 className="text-[#BCED09] font-semibold text-xl tracking-wide animate-pulse mb-2">Creating Offer...</h3>
+                        <h3 className="text-[#55D6BE] font-semibold text-xl tracking-wide animate-pulse mb-2">Creating Offer...</h3>
                         <p className="text-gray-400 text-sm text-center max-w-[280px] px-4 leading-relaxed">
                             Please wait while we process your request and secure your offer details in the blockchain.
                         </p>
@@ -120,7 +120,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                     </button>
                 </div>
 
-                <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #BCED0900, #BCED09, #BCED0900)' }} />
+                <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #55D6BE00, #55D6BE, #55D6BE00)' }} />
 
                 <div className="w-99.75 h-12">
                     <form onSubmit={handleSubmit}>
@@ -130,7 +130,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                 <div
                                     role="tablist"
                                     aria-label="Offer type"
-                                    className="grid grid-cols-2 bg-[#05050980] w-full rounded-lg p-1"
+                                    className="grid grid-cols-2 bg-[#08152180] w-full rounded-lg p-1"
                                 >
                                     {offerTypeTabs.map((t, index) => (
                                         <button
@@ -143,9 +143,9 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                             tabIndex={tab === t ? 0 : -1}
                                             onClick={() => setTab(t)}
                                             onKeyDown={(event) => handleTabKeyDown(event, index)}
-                                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BCED09] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050509]
+                                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#081521]
                                     ${tab === t
-                                                    ? "bg-[#BCED09] text-[#050509]"
+                                                    ? "bg-[#55D6BE] text-[#081521]"
                                                     : "text-[#94A3B8] hover:text-white"
                                                 }`}
                                         >
@@ -162,11 +162,11 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                             className="mt-3"
                         >
                             <p className="text-[#CBD5E1]">Crypto Asset</p>
-                            <div className="flex items-center gap-4 bg-[#0D1117] border border-[#1C2128] rounded-xl px-5 py-4 select-none">
+                            <div className="flex items-center gap-4 bg-[#081521] border border-[#11212E] rounded-xl px-5 py-4 select-none">
                                 <Image src={usdcAsset.icon} width={32} height={32} alt="USDC icon" />
                                 <div className="flex flex-col">
                                     <span className="text-[#F1F5F9] text-[16px] font-bold">{usdcAsset.label} (USDC)</span>
-                                    <span className="text-[#94A3B8] text-xs">Available: <span className="text-[#BCED09] font-bold">{usdcBalance}</span> USDC</span>
+                                    <span className="text-[#94A3B8] text-xs">Available: <span className="text-[#55D6BE] font-bold">{usdcBalance}</span> USDC</span>
                                 </div>
                             </div>
                             <p className="text-[#64748B] text-[11px] mt-2 leading-relaxed">
@@ -185,9 +185,9 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                     min={0}
                                     step="0.0001"
                                     onKeyDown={(e) => ["-", "e", "E"].includes(e.key) && e.preventDefault()}
-                                    className="bg-[#0D1117] w-full border border-[#1C2128] rounded-xl px-5 
+                                    className="bg-[#081521] w-full border border-[#11212E] rounded-xl px-5 
                                         py-4 text-[#F1F5F9] placeholder:text-[#64748B] focus:outline-none 
-                                        focus:ring-2 focus:ring-[#BCED09] [appearance:textfield]
+                                        focus:ring-2 focus:ring-[#55D6BE] [appearance:textfield]
                                         [&::-webkit-outer-spin-button]:appearance-none
                                         [&::-webkit-inner-spin-button]:appearance-none"
                                 />
@@ -210,9 +210,9 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                         placeholder="Min"
                                         min={0}
                                         onKeyDown={(e) => ["-", "e", "E"].includes(e.key) && e.preventDefault()}
-                                        className="bg-[#0D1117] w-full border border-[#1C2128] rounded-xl px-5 
+                                        className="bg-[#081521] w-full border border-[#11212E] rounded-xl px-5 
                                             py-4 text-[#F1F5F9] placeholder:text-[#64748B] focus:outline-none 
-                                            focus:ring-2 focus:ring-[#BCED09] [appearance:textfield]
+                                            focus:ring-2 focus:ring-[#55D6BE] [appearance:textfield]
                                             [&::-webkit-outer-spin-button]:appearance-none
                                             [&::-webkit-inner-spin-button]:appearance-none"
                                     />
@@ -229,9 +229,9 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                         placeholder="Max"
                                         min={0}
                                         onKeyDown={(e) => ["-", "e", "E"].includes(e.key) && e.preventDefault()}
-                                        className="bg-[#0D1117] w-full border border-[#1C2128] rounded-xl px-5 
+                                        className="bg-[#081521] w-full border border-[#11212E] rounded-xl px-5 
                                             py-4 text-[#F1F5F9] placeholder:text-[#64748B] focus:outline-none 
-                                            focus:ring-2 focus:ring-[#BCED09] [appearance:textfield]
+                                            focus:ring-2 focus:ring-[#55D6BE] [appearance:textfield]
                                             [&::-webkit-outer-spin-button]:appearance-none
                                             [&::-webkit-inner-spin-button]:appearance-none"
                                     />
@@ -252,11 +252,11 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                         <div
                                             key={id}
                                             className={`flex w-99.75 h-17.5 border rounded-xl items-center gap-3 cursor-pointer
-                                                    ${checked.includes(id) ? 'border-[#DAFF0066]' : 'border-[#1C2128]'}`}
+                                                    ${checked.includes(id) ? 'border-[#55D6BE66]' : 'border-[#11212E]'}`}
                                             onClick={() => toggle(id as unknown as string)}
                                         >
                                             <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors m-3
-                                                    ${checked.includes(id) ? 'bg-[#DAFF00] border-[#DAFF00]' : 'bg-transparent border-gray-600'}`}
+                                                    ${checked.includes(id) ? 'bg-[#55D6BE] border-[#55D6BE]' : 'bg-transparent border-gray-600'}`}
                                             >
                                                 {checked.includes(id) && (
                                                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="black" strokeWidth={3}>
@@ -285,11 +285,11 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                         <div
                                             key={id}
                                             className={`flex w-99.75 h-17.5 border rounded-xl items-center gap-3 cursor-pointer
-                                                    ${checked.includes(id) ? 'border-[#DAFF0066]' : 'border-[#1C2128]'}`}
+                                                    ${checked.includes(id) ? 'border-[#55D6BE66]' : 'border-[#11212E]'}`}
                                             onClick={() => toggle(id as unknown as string)}
                                         >
                                             <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors m-3
-                                                    ${checked.includes(id) ? 'bg-[#DAFF00] border-[#DAFF00]' : 'bg-transparent border-gray-600'}`}
+                                                    ${checked.includes(id) ? 'bg-[#55D6BE] border-[#55D6BE]' : 'bg-transparent border-gray-600'}`}
                                             >
                                                 {checked.includes(id) && (
                                                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="black" strokeWidth={3}>
@@ -318,8 +318,8 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                 disabled={isSubmitting}
                                 className={`flex-1 font-semibold px-4 py-3 rounded-xl transition-all duration-300
                                     ${isSubmitting 
-                                        ? 'bg-[#bced09]/50 text-black/50 cursor-not-allowed' 
-                                        : 'bg-[#BCED09] text-black hover:bg-[#9ac208] hover:shadow-[0_0_15px_rgba(188,237,9,0.3)]'
+                                        ? 'bg-[#55D6BE]/50 text-black/50 cursor-not-allowed' 
+                                        : 'bg-[#55D6BE] text-black hover:bg-[#38B99F] hover:shadow-[0_0_15px_rgba(85,214,190,0.3)]'
                                     }`}
                             >
                                 {isSubmitting ? 'Processing...' : 'Publish Offer'}

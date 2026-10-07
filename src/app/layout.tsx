@@ -9,12 +9,13 @@ import { QueryProvider } from "./providers/QueryProvider";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700']
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-localsettle',
 });
 
 export const metadata: Metadata = {
-  title: "iKash",
-  description: "We bridge the gap between traditional finance and Stellar’s liquidity to drive sustainable, real-world adoption.",
+  title: "LocalSettle — Local payments, settled on Stellar",
+  description: "Trade stablecoins for local payments, coordinate peer-to-peer orders, and track escrow settlement on Stellar.",
 };
 
 export default function RootLayout({
@@ -24,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={spaceGrotesk.className}
-      >
+      <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className}`}>
         <QueryProvider>
           <NotificationProvider>
             <UserProvider>

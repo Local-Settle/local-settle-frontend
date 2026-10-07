@@ -36,7 +36,7 @@ export function HeaderUser() {
                     {username}
                 </span>
                 {alias && (
-                    <span className="text-[#8F8389] text-xs truncate">
+                    <span className="text-[#9BABB7] text-xs truncate">
                         {alias}
                     </span>
                 )}

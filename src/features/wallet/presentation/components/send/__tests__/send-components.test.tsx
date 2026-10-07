@@ -40,11 +40,11 @@ describe("Send Flow Presentation Components", () => {
     it("identifies valid Stellar public keys", () => {
       expect(isStellarAddress("GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5")).toBe(true);
       expect(isStellarAddress("invalid_address")).toBe(false);
-      expect(isStellarAddress("alex.ikash")).toBe(false);
+      expect(isStellarAddress("alex.localsettle")).toBe(false);
     });
 
     it("identifies potential aliases", () => {
-      expect(isPotentialAlias("alex.ikash")).toBe(true);
+      expect(isPotentialAlias("alex.localsettle")).toBe(true);
       expect(isPotentialAlias("john_doe")).toBe(true);
       expect(isPotentialAlias("GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5")).toBe(false);
       expect(isPotentialAlias("a")).toBe(false);
@@ -84,12 +84,12 @@ describe("Send Flow Presentation Components", () => {
         <SendRecipientInput value="" onChange={onChange} />
       );
 
-      const input = screen.getByPlaceholderText("alex.ikash or GXXXXXX...");
+      const input = screen.getByPlaceholderText("alex.localsettle or GXXXXXX...");
       expect(input).toBeTruthy();
 
       // Type alias
-      rerender(<SendRecipientInput value="alex.ikash" onChange={onChange} />);
-      expect(screen.getByText("iKa$h Alias")).toBeTruthy();
+      rerender(<SendRecipientInput value="alex.localsettle" onChange={onChange} />);
+      expect(screen.getByText("LocalSettle Alias")).toBeTruthy();
 
       // Type Stellar address
       rerender(
@@ -148,7 +148,7 @@ describe("Send Flow Presentation Components", () => {
       const onConfirm = vi.fn();
       const recipient = {
         address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
-        alias: "alex.ikash",
+        alias: "alex.localsettle",
         exists: true,
         hasUsdcTrustline: true,
       };
@@ -164,7 +164,7 @@ describe("Send Flow Presentation Components", () => {
         />
       );
 
-      expect(screen.getByText("alex.ikash")).toBeTruthy();
+      expect(screen.getByText("alex.localsettle")).toBeTruthy();
       expect(screen.getByText(/25\.00.*USDC/)).toBeTruthy();
       expect(screen.getByText(/0\.075.*USDC/)).toBeTruthy();
 
@@ -195,7 +195,7 @@ describe("Send Flow Presentation Components", () => {
       );
 
       expect(screen.getByText(/Recipient account might not have established a USDC trustline/i)).toBeTruthy();
-      expect(screen.getByText(/No iKash profile/i)).toBeTruthy();
+      expect(screen.getByText(/No LocalSettle profile/i)).toBeTruthy();
     });
   });
 
@@ -249,7 +249,7 @@ describe("Send Flow Presentation Components", () => {
           amount="50.00"
           assetName="USDC"
           recipientAddress="GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
-          recipientAlias="alex.ikash"
+          recipientAlias="alex.localsettle"
           txHash="0xabc123456789"
           onReset={onReset}
           onDone={onDone}

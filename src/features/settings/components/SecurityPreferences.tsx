@@ -48,29 +48,29 @@ export function SecurityPreferences() {
     const { preferences, isLoading, error, updatingKeys, updatePreference } = useSecuritySettings();
 
     return (
-        <div className="rounded-xl border border-[#1A1F26] bg-[#0E121B]/60 p-6 backdrop-blur-sm">
-            <div className="flex items-center gap-3 border-b border-[#1A1F26] pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#BCED09]/10 text-[#BCED09]">
+        <div className="rounded-xl border border-[#172B3A] bg-[#0E121B]/60 p-6 backdrop-blur-sm">
+            <div className="flex items-center gap-3 border-b border-[#172B3A] pb-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#55D6BE]/10 text-[#55D6BE]">
                     <Bell className="h-5 w-5" />
                 </div>
                 <div>
                     <h2 className="text-[17px] font-semibold text-white">Notification & Security Preferences</h2>
-                    <p className="text-xs text-[#8F8389]">
+                    <p className="text-xs text-[#9BABB7]">
                         Manage which security alerts and activity notifications you receive
                     </p>
                 </div>
             </div>
 
-            <div className="pt-4 divide-y divide-[#1A1F26]">
+            <div className="pt-4 divide-y divide-[#172B3A]">
                 {isLoading ? (
                     <div className="space-y-4 py-4">
                         {[1, 2, 3, 4, 5].map((i) => (
                             <div key={i} className="flex items-center justify-between py-3 animate-pulse">
                                 <div className="space-y-2">
-                                    <div className="h-4 w-40 bg-[#1A1F26] rounded" />
-                                    <div className="h-3 w-64 bg-[#1A1F26]/60 rounded" />
+                                    <div className="h-4 w-40 bg-[#172B3A] rounded" />
+                                    <div className="h-3 w-64 bg-[#172B3A]/60 rounded" />
                                 </div>
-                                <div className="h-6 w-11 bg-[#1A1F26] rounded-full" />
+                                <div className="h-6 w-11 bg-[#172B3A] rounded-full" />
                             </div>
                         ))}
                     </div>
@@ -85,8 +85,8 @@ export function SecurityPreferences() {
                                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4"
                             >
                                 <div className="flex items-start gap-3.5 max-w-xl">
-                                    <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-md bg-[#161B22] text-[#8F8389] shrink-0">
-                                        <Icon className="h-4 w-4 text-[#BCED09]" />
+                                    <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-md bg-[#161B22] text-[#9BABB7] shrink-0">
+                                        <Icon className="h-4 w-4 text-[#55D6BE]" />
                                     </div>
                                     <div>
                                         <label
@@ -95,7 +95,7 @@ export function SecurityPreferences() {
                                         >
                                             {title}
                                         </label>
-                                        <p className="text-xs text-[#8F8389] mt-0.5 leading-relaxed">
+                                        <p className="text-xs text-[#9BABB7] mt-0.5 leading-relaxed">
                                             {description}
                                         </p>
                                     </div>
@@ -103,7 +103,7 @@ export function SecurityPreferences() {
 
                                 <div className="flex items-center gap-3 self-end sm:self-center shrink-0">
                                     {isUpdating && (
-                                        <Loader2 className="h-4 w-4 animate-spin text-[#BCED09]" />
+                                        <Loader2 className="h-4 w-4 animate-spin text-[#55D6BE]" />
                                     )}
                                     <button
                                         id={`pref-toggle-${key}`}
@@ -114,12 +114,12 @@ export function SecurityPreferences() {
                                         disabled={isUpdating}
                                         onClick={() => void updatePreference(key, !isEnabled)}
                                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer disabled:opacity-50 ${
-                                            isEnabled ? "bg-[#BCED09]" : "bg-[#1F2937]"
+                                            isEnabled ? "bg-[#55D6BE]" : "bg-[#263949]"
                                         }`}
                                     >
                                         <span
                                             className={`inline-block h-4 w-4 transform rounded-full bg-black transition-transform ${
-                                                isEnabled ? "translate-x-6" : "translate-x-1 bg-[#8F8389]"
+                                                isEnabled ? "translate-x-6" : "translate-x-1 bg-[#9BABB7]"
                                             }`}
                                         />
                                     </button>

@@ -27,7 +27,7 @@ export default function Stage2({ onNext }: Stage2Props) {
 
     return (
         <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
-            <div className="bg-[#12141A] rounded-2xl p-6 flex flex-col gap-6 w-150">
+            <div className="bg-[#0D1D2C] rounded-2xl p-6 flex flex-col gap-6 w-150">
                 <div className="flex items-center gap-2">
                     <Image
                         src={preferencesIcon}
@@ -38,7 +38,7 @@ export default function Stage2({ onNext }: Stage2Props) {
                     <p className="text-[#F1F5F9] font-bold text-[20px]">2. Preferences</p>
                 </div>
                 {/*
-                <div className="bg-[#0103084D] border border-[#343434] rounded-xl px-5 py-4 mb-4 flex items-center justify-between">
+                <div className="bg-[#0815214D] border border-[#263949] rounded-xl px-5 py-4 mb-4 flex items-center justify-between">
                     <div>
                         <p className="text-[#F1F5F9] text-[16px] font-semibold">Enable Notifications</p>
                         <p className="text-[#64748B] text-xs mt-0.5">Real-time trade alerts</p>
@@ -46,7 +46,7 @@ export default function Stage2({ onNext }: Stage2Props) {
                     <button
                         type="button"
                         onClick={() => setNotifications(!notifications)}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${notifications ? 'bg-[#BCED09]' : 'bg-gray-600'}`}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 focus:outline-none ${notifications ? 'bg-[#55D6BE]' : 'bg-gray-600'}`}
                     >
                         <span
                             className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-300 ${notifications ? 'translate-x-6' : 'translate-x-1'}`}
@@ -57,7 +57,7 @@ export default function Stage2({ onNext }: Stage2Props) {
                 <div className="relative">
                     <p className="text-[#CBD5E1] text-sm font-semibold mb-2 px-1">Display Currency</p>
                     <div
-                        className="relative bg-[#01030880] border border-[#343434] rounded-xl px-5 py-4 cursor-pointer"
+                        className="relative bg-[#08152180] border border-[#263949] rounded-xl px-5 py-4 cursor-pointer"
                         onClick={() => setOpen(!open)}
                     >
                         <span className="text-[#F1F5F9] text-[16px]">{currency}</span>
@@ -71,7 +71,7 @@ export default function Stage2({ onNext }: Stage2Props) {
                                 <div
                                     key={c}
                                     onClick={() => { setCurrency(c); setOpen(false); }}
-                                    className={`px-5 py-3 text-[16px] cursor-pointer hover:bg-white/10 transition-colors ${currency === c ? 'text-[#BCED09]' : 'text-[#F1F5F9]'}`}
+                                    className={`px-5 py-3 text-[16px] cursor-pointer hover:bg-white/10 transition-colors ${currency === c ? 'text-[#55D6BE]' : 'text-[#F1F5F9]'}`}
                                 >
                                     {c}
                                 </div>

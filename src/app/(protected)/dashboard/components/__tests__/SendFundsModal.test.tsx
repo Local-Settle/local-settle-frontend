@@ -60,7 +60,7 @@ describe("SendFundsModal", () => {
         render(<SendFundsModal onClose={vi.fn()} />);
 
         const dialog = screen.getByRole("dialog");
-        const recipientInput = within(dialog).getByPlaceholderText("alex.ikash or GXXXXXX...");
+        const recipientInput = within(dialog).getByPlaceholderText("alex.localsettle or GXXXXXX...");
         expect(document.activeElement).toBe(recipientInput);
     });
 

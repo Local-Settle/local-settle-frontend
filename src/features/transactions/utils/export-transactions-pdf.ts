@@ -40,15 +40,15 @@ export async function exportTransactionsPdf(
     const printableWidth = pageWidth - (margin * 2); // 210 - 30 = 180mm
 
     // Draw header / brand
-    // Accent color bar: #CEF100
-    doc.setFillColor(206, 241, 0); // iKash primary color
+    // Accent color bar: #55D6BE
+    doc.setFillColor(206, 241, 0); // LocalSettle primary color
     doc.rect(margin, margin, printableWidth, 4, "F");
 
     // Title
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
     doc.setTextColor(17, 24, 39); // Slate-900
-    doc.text("iKash", margin, margin + 14);
+    doc.text("LocalSettle", margin, margin + 14);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
@@ -112,7 +112,7 @@ export async function exportTransactionsPdf(
     ];
 
     const drawTableHeader = (startY: number) => {
-        doc.setFillColor(14, 14, 19); // Dark background #0E0E13
+        doc.setFillColor(14, 14, 19); // Dark background #081521
         doc.rect(margin, startY, printableWidth, headerHeight, "F");
 
         doc.setFont("helvetica", "bold");
@@ -228,7 +228,7 @@ export async function exportTransactionsPdf(
         doc.setTextColor(148, 163, 184); // Slate-400
 
         doc.text(`Page ${j} of ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: "center" });
-        doc.text("iKash P2P Escrow Platform", margin, pageHeight - 10);
+        doc.text("LocalSettle P2P Escrow Platform", margin, pageHeight - 10);
     }
 
     doc.save(filename);

@@ -165,7 +165,7 @@ export function EvidencePreview({
 
     return (
         <>
-        <div className="bg-[#161618] w-full rounded-xl flex flex-col justify-between p-[12px_16px] gap-6 font-space shrink-0 select-none">
+        <div className="bg-[#0D1D2C] w-full rounded-xl flex flex-col justify-between p-[12px_16px] gap-6 font-space shrink-0 select-none">
             
             {/* 1. Estilos Locales de Inyección para Animación Shimmer de lado a lado */}
             <style dangerouslySetInnerHTML={{__html: `
@@ -181,10 +181,10 @@ export function EvidencePreview({
             {/* Minimalist Central Body View Area */}
             <div className="flex-1 flex flex-col justify-center items-center gap-4 shrink-0 min-h-0 w-full h-50">
                 {isUnfunded && (
-                    <div className="w-full flex flex-col items-center justify-center h-full border border-white/[0.02] bg-[#1B1B21]/40 rounded-[12px] p-4 text-center">
+                    <div className="w-full flex flex-col items-center justify-center h-full border border-white/[0.02] bg-[#0D1D2C]/40 rounded-[12px] p-4 text-center">
                         <span className="text-3xl mb-2">🔒</span>
                         <p className="text-[15px] font-bold text-[#C2C7D0]">Escrow Contract Awaiting Funds</p>
-                        <p className="text-[12px] text-[rgba(143,131,137,0.8)] mt-1 max-w-[240px]">
+                        <p className="text-[12px] text-[rgba(155,171,183,0.8)] mt-1 max-w-[240px]">
                             Lock your assets in escrow to establish a secure trading environment.
                         </p>
                     </div>
@@ -195,14 +195,14 @@ export function EvidencePreview({
                         <div className="flex flex-col items-center text-center gap-2 w-full">
                             <span className="text-2xl mb-1 opacity-70">📑</span>
                             <p className="text-[16px] font-bold text-[#FFFFFF] tracking-wide">No Evidence Uploaded</p>
-                            <p className="text-[13px] text-[rgba(143,131,137,0.8)] font-medium max-w-[240px]">
+                            <p className="text-[13px] text-[rgba(155,171,183,0.8)] font-medium max-w-[240px]">
                                 Waiting for the buyer to upload a payment receipt.
                             </p>
                         </div>
                         
                         {/* Indeterminate Moving Loader Line */}
-                        <div className="w-[200px] h-[3px] bg-[#1F1F25] rounded-full overflow-hidden relative mt-6">
-                            <div className="absolute top-0 bottom-0 left-0 bg-[#DAFF00] rounded-full w-1/4 animate-side-to-side" />
+                        <div className="w-[200px] h-[3px] bg-[#11212E] rounded-full overflow-hidden relative mt-6">
+                            <div className="absolute top-0 bottom-0 left-0 bg-[#55D6BE] rounded-full w-1/4 animate-side-to-side" />
                         </div>
                     </div>
                 )}
@@ -249,17 +249,17 @@ export function EvidencePreview({
                                 type="button" 
                                 onClick={() => evidenceUrl && window.open(evidenceUrl, '_blank')}
                                 disabled={!evidenceUrl}
-                                className="bg-[#1F1F25] border border-white/[0.04] w-full h-[48px] text-[#DAFF00] font-bold text-[16px] leading-[24px] rounded-[12px] uppercase flex items-center justify-center gap-2 tracking-[-0.4px] hover:bg-white/[0.04] transition-colors disabled:opacity-50 cursor-pointer"
+                                className="bg-[#11212E] border border-white/[0.04] w-full h-[48px] text-[#55D6BE] font-bold text-[16px] leading-[24px] rounded-[12px] uppercase flex items-center justify-center gap-2 tracking-[-0.4px] hover:bg-white/[0.04] transition-colors disabled:opacity-50 cursor-pointer"
                             >
                                 <Eye className="w-4.5 h-4.5 stroke-[2.5px]" /> VIEW RECEIPT
                             </button>
 
-                            <div className="border border-white/[0.05] bg-[#1B1B21] w-full h-[214.5px] rounded-[12px] flex flex-col items-center justify-between p-6 select-none shadow-[inset_0_0_12px_rgba(218,255,0,0.05)] transition-all duration-300 relative">
+                            <div className="border border-white/[0.05] bg-[#0D1D2C] w-full h-[214.5px] rounded-[12px] flex flex-col items-center justify-between p-6 select-none shadow-[inset_0_0_12px_rgba(218,255,0,0.05)] transition-all duration-300 relative">
                                 <div className="w-full flex items-center justify-between border-b border-[rgba(218,255,0,0.1)] pb-3">
                                     <span className="text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase font-space">
                                         EVIDENCE RECEIVED
                                     </span>
-                                    <span className="text-[9px] text-[#DAFF00] bg-[#DAFF00]/10 border border-[#DAFF00]/20 font-black p-[2px_8px] rounded-full uppercase tracking-wider font-space">
+                                    <span className="text-[9px] text-[#55D6BE] bg-[#55D6BE]/10 border border-[#55D6BE]/20 font-black p-[2px_8px] rounded-full uppercase tracking-wider font-space">
                                         Verified
                                     </span>
                                 </div>
@@ -267,7 +267,7 @@ export function EvidencePreview({
                                 <div className="flex flex-row items-center gap-4 my-auto w-full px-2">
                                     <div 
                                         onClick={() => evidenceUrl && window.open(evidenceUrl, '_blank')}
-                                        className="w-[80px] h-[100px] relative rounded-[8px] bg-[#161618] overflow-hidden border border-white/[0.08] shadow-md flex items-center justify-center group cursor-pointer shrink-0"
+                                        className="w-[80px] h-[100px] relative rounded-[8px] bg-[#0D1D2C] overflow-hidden border border-white/[0.08] shadow-md flex items-center justify-center group cursor-pointer shrink-0"
                                     >
                                         {renderPreviewFile()}
                                         <div className="absolute bottom-1 right-1 bg-black/70 rounded-full p-1 border border-white/20">
@@ -275,10 +275,10 @@ export function EvidencePreview({
                                         </div>
                                     </div>
                                     <div className="flex flex-col gap-1 min-w-0 font-space">
-                                        <p className="text-[14px] font-black text-[#E4E1E9] truncate max-w-[160px]">
+                                        <p className="text-[14px] font-black text-[#D7E0E6] truncate max-w-[160px]">
                                             {getFilenameFromUrl(evidenceUrl)}
                                         </p>
-                                        <p className="text-[10px] text-[#DAFF00] font-bold tracking-wider uppercase">
+                                        <p className="text-[10px] text-[#55D6BE] font-bold tracking-wider uppercase">
                                             SECURED ON-CHAIN
                                         </p>
                                     </div>
@@ -301,19 +301,19 @@ export function EvidencePreview({
                         type="button" 
                         onClick={handleFundAction}
                         disabled={isSubmitting}
-                        className="bg-[#DAFF00] w-full h-[56px] text-[#2B3400] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#dcff15] hover:cursor-pointer uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
+                        className="bg-[#55D6BE] w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#dcff15] hover:cursor-pointer uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
                     >
-                        {isSubmitting ? <Loader2 className="w-5 h-5 text-[#2B3400] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#2B3400] stroke-[3px]" />}
+                        {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
                         {isSubmitting ? "PROCESSING..." : "FUND ESCROW"}
                     </button>
                 ) : isWaitingForBuyer ? (
                     isExpired ? (
-                        <div role="status" className="bg-[#1F1F25] border border-red-500/50 w-full h-[56px] rounded-[12px] flex items-center justify-center">
+                        <div role="status" className="bg-[#11212E] border border-red-500/50 w-full h-[56px] rounded-[12px] flex items-center justify-center">
                             <span className="text-red-500 font-bold text-[16px] leading-[24px] uppercase tracking-[-0.4px]">EXPIRED</span>
                         </div>
                     ) : (
                         <button type="button" disabled className="bg-[#2A292F] w-full h-[56px] text-[#C2C7D0] font-extrabold text-[16px] leading-[24px] rounded-[12px] uppercase cursor-not-allowed tracking-[-0.4px] flex items-center justify-center gap-2">
-                            <span role="status" className="w-2 h-2 rounded-full bg-[#DAFF00] animate-pulse shadow-[0_0_8px_rgba(218,255,0,0.6)]" />
+                            <span role="status" className="w-2 h-2 rounded-full bg-[#55D6BE] animate-pulse shadow-[0_0_8px_rgba(218,255,0,0.6)]" />
                             WAITING FOR PAYMENT ({timeLeft})
                         </button>
                     )
@@ -322,14 +322,14 @@ export function EvidencePreview({
                         type="button" 
                         onClick={handleReleaseAction}
                         disabled={isSubmitting}
-                        className="bg-[#DAFF00] w-full h-[56px] text-[#2B3400] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#c2e500] uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
+                        className="bg-[#55D6BE] w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
                     >
-                        {isSubmitting ? <Loader2 className="w-5 h-5 text-[#2B3400] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#2B3400] stroke-[3px]" />}
+                        {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
                         {isSubmitting ? "PROCESSING..." : "RELEASE CRYPTO"}
                     </button>
                 ) : escrowStatus === "released" ? (
-                    <div role="status" className="bg-[#DAFF00]/10 border border-[#DAFF00]/30 w-full h-[56px] rounded-[12px] flex items-center justify-center">
-                        <span className="text-[#DAFF00] font-bold text-[16px] leading-[24px] uppercase tracking-[-0.4px]">COMPLETED!</span>
+                    <div role="status" className="bg-[#55D6BE]/10 border border-[#55D6BE]/30 w-full h-[56px] rounded-[12px] flex items-center justify-center">
+                        <span className="text-[#55D6BE] font-bold text-[16px] leading-[24px] uppercase tracking-[-0.4px]">COMPLETED!</span>
                     </div>
                 ) : null}
 

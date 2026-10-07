@@ -62,12 +62,12 @@ export function SendAssetSelect({
         type="button"
         disabled={disabled || availableOptions.length <= 1}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full bg-[#0D1117] border border-[#1C2128] hover:border-[#2a3a1a] rounded-xl px-4 py-3.5 flex items-center justify-between text-left transition-colors focus:outline-none focus:ring-2 focus:ring-[#BCED09] disabled:opacity-80 disabled:cursor-default cursor-pointer"
+        className="w-full bg-[#081521] border border-[#11212E] hover:border-[#2a3a1a] rounded-xl px-4 py-3.5 flex items-center justify-between text-left transition-colors focus:outline-none focus:ring-2 focus:ring-[#55D6BE] disabled:opacity-80 disabled:cursor-default cursor-pointer"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 bg-[#1a2a3a] flex items-center justify-center border border-[#2a2a2a]">
+          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 bg-[#1a2a3a] flex items-center justify-center border border-[#172B3A]">
             <AssetIcon name={currentAssetName} size={32} />
           </div>
           <div className="flex flex-col">
@@ -81,7 +81,7 @@ export function SendAssetSelect({
         {availableOptions.length > 1 ? (
           <ChevronDown
             size={18}
-            className={`text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-[#BCED09]" : ""}`}
+            className={`text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-[#55D6BE]" : ""}`}
           />
         ) : (
           <span className="text-[10px] text-[#C2C7D099] uppercase tracking-wide">
@@ -91,8 +91,8 @@ export function SendAssetSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-full bg-[#161618] border border-[#1F2937] rounded-xl shadow-2xl overflow-hidden py-1">
-          <div className="px-3 py-2 text-[10px] font-bold text-[#8F8389] uppercase tracking-wider border-b border-[#1F2937]/50">
+        <div className="absolute z-50 mt-2 w-full bg-[#0D1D2C] border border-[#263949] rounded-xl shadow-2xl overflow-hidden py-1">
+          <div className="px-3 py-2 text-[10px] font-bold text-[#9BABB7] uppercase tracking-wider border-b border-[#263949]/50">
             Select Asset
           </div>
           <div className="max-h-60 overflow-y-auto">
@@ -107,14 +107,14 @@ export function SendAssetSelect({
                     onSelectAsset(opt);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 hover:bg-[#1f2a1a] transition-colors cursor-pointer text-left ${
-                    isSelected ? "bg-[#1f2a1a]/70" : ""
+                  className={`w-full flex items-center justify-between px-4 py-3 hover:bg-[#172B3A] transition-colors cursor-pointer text-left ${
+                    isSelected ? "bg-[#172B3A]/70" : ""
                   }`}
                   role="option"
                   aria-selected={isSelected}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-[#1a2a3a] flex items-center justify-center border border-[#2a2a2a]">
+                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 bg-[#1a2a3a] flex items-center justify-center border border-[#172B3A]">
                       <AssetIcon name={optName} size={28} />
                     </div>
                     <div className="flex flex-col">
@@ -124,7 +124,7 @@ export function SendAssetSelect({
                       </span>
                     </div>
                   </div>
-                  {isSelected && <Check size={16} className="text-[#BCED09]" />}
+                  {isSelected && <Check size={16} className="text-[#55D6BE]" />}
                 </button>
               );
             })}

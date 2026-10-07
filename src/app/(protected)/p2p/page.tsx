@@ -6,7 +6,7 @@ import { OrdersSummaryBox } from "./components/OrdersSummaryBox";
 
 export default function p2pPage() {
     return (
-        <div className="flex min-h-screen w-full bg-[#010308]">
+        <div className="flex min-h-screen w-full bg-[#081521]">
             <Aside />
             <div className="flex flex-col min-w-0 flex-1 pb-20 md:pb-0">
                 <Header description="trading floor" title="p2p marketplace" />
@@ -16,7 +16,7 @@ export default function p2pPage() {
                         <TradeDashboard />
                     </div>
                     
-                    <div className="hidden lg:block w-px bg-[#1F2937]" />
+                    <div className="hidden lg:block w-px bg-[#263949]" />
                     <div className="hidden lg:flex flex-[3] pt-8 px-8 flex-col gap-6 shrink-0">
                         <OrdersSummaryBox />
                     </div>

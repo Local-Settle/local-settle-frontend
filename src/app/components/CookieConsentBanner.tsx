@@ -32,12 +32,12 @@ export function CookieConsentBanner() {
         <div
             role="region"
             aria-label="Cookie consent"
-            className="fixed bottom-0 left-0 right-0 z-[60] border-t border-[#ffffff1a] bg-[#010308]/95 backdrop-blur-md px-4 py-4 md:px-8"
+            className="fixed bottom-0 left-0 right-0 z-[60] border-t border-[#ffffff1a] bg-[#081521]/95 backdrop-blur-md px-4 py-4 md:px-8"
         >
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-6">
                 <p className="text-xs md:text-sm text-gray-400 flex-1 text-center md:text-left">
-                    We use cookies to keep you signed in and to understand how iKash is used. See our{" "}
-                    <Link href="/privacy" className="text-[#BCED09] hover:underline">
+                    We use cookies to keep you signed in and to understand how LocalSettle is used. See our{" "}
+                    <Link href="/privacy" className="text-[#55D6BE] hover:underline">
                         Privacy Policy
                     </Link>{" "}
                     for details.
@@ -51,7 +51,7 @@ export function CookieConsentBanner() {
                     </button>
                     <button
                         onClick={() => handleChoice("accepted")}
-                        className="bg-[#BCED09] hover:bg-[#9bc505] active:scale-95 text-[#010308] text-xs md:text-sm font-bold px-5 py-2 rounded-full transition-all duration-150 cursor-pointer"
+                        className="bg-[#55D6BE] hover:bg-[#38B99F] active:scale-95 text-[#081521] text-xs md:text-sm font-bold px-5 py-2 rounded-full transition-all duration-150 cursor-pointer"
                     >
                         Accept
                     </button>

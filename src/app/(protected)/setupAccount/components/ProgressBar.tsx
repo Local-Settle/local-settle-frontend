@@ -5,7 +5,7 @@ export function ProgressBar({ stage }: { stage: number }) {
                 <div
                     key={step}
                     className={`h-[3px] flex-1 ${
-                        step <= stage ? 'bg-[#BCED09]' : 'bg-[#2A2D35]'
+                        step <= stage ? 'bg-[#55D6BE]' : 'bg-[#2A2D35]'
                     }`}
                 />
             ))}

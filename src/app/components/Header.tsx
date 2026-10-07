@@ -32,9 +32,9 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
     return (
         <>
             {/* Desktop header */}
-            <header className="hidden md:flex items-center justify-between px-12 py-4 border-b border-[#1F2937] w-full">
+            <header className="hidden md:flex items-center justify-between px-12 py-4 border-b border-[#263949] w-full">
                 <div className="uppercase font-bold">
-                    <div className="text-[12px] text-[#8F8389]">
+                    <div className="text-[12px] text-[#9BABB7]">
                         {description !== undefined && <p>{description}</p>}
                     </div>
                     <div className="text-[24px] text-white">
@@ -45,7 +45,7 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
             </header>
 
             {/* Mobile header — sticky, solid background, hamburger + HeaderUser */}
-            <header className="md:hidden sticky top-0 z-50 bg-[#161618] border-b border-[#1F2937] px-5 py-4">
+            <header className="md:hidden sticky top-0 z-50 bg-[#0D1D2C] border-b border-[#263949] px-5 py-4">
                 {!menuOpen ? (
                     <div className="flex items-center gap-4">
                         <button
@@ -59,7 +59,7 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
 
                         <div className="flex flex-col">
                             {mobileLabel !== undefined && (
-                                <p className="text-[10px] text-[#8F8389] uppercase tracking-wide">{mobileLabel}</p>
+                                <p className="text-[10px] text-[#9BABB7] uppercase tracking-wide">{mobileLabel}</p>
                             )}
                             {showUser && (
                                 <div className="mt-1">
@@ -72,7 +72,7 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
                     <nav className="flex flex-col gap-5" aria-label="Mobile Header Navigation">
                         <button
                             onClick={() => setMenuOpen(false)}
-                            className="text-left text-[#BCED09] text-base font-bold tracking-widest uppercase"
+                            className="text-left text-[#55D6BE] text-base font-bold tracking-widest uppercase"
                             aria-label="Close menu"
                             aria-expanded={menuOpen}
                         >
@@ -81,14 +81,14 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
                         <Link
                             href="/settings"
                             onClick={() => setMenuOpen(false)}
-                            className="flex items-center gap-3 text-white text-[17px] hover:text-[#BCED09] transition-colors"
+                            className="flex items-center gap-3 text-white text-[17px] hover:text-[#55D6BE] transition-colors"
                         >
                             <Settings size={24} strokeWidth={2} />
                             Settings
                         </Link>
                         <button
                             onClick={() => { setMenuOpen(false); handleLogout() }}
-                            className="flex items-center gap-3 text-white text-[17px] hover:text-[#BCED09] transition-colors"
+                            className="flex items-center gap-3 text-white text-[17px] hover:text-[#55D6BE] transition-colors"
                         >
                             <Image src='/logout-icon.svg' width={24} height={24} alt='logout' />
                             Logout

@@ -1,71 +1,45 @@
-import { ShieldCheck } from "lucide-react";
+import { KeyRound, Network, ShieldCheck } from "lucide-react";
+
+const notes = [
+  {
+    icon: KeyRound,
+    title: "Wallet authorization",
+    body: "The browser connects to a Stellar wallet for account access and user transaction signatures. LocalSettle stores the public key and application session data; keep your wallet recovery phrase and private keys inside your wallet provider.",
+  },
+  {
+    icon: Network,
+    title: "Platform escrow key",
+    body: "The backend uses a configured operator secret to sign and broadcast escrow deployment transactions. This platform key is a separate trust boundary from a user’s wallet and must be protected by deployment secret management.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Identity and payment data",
+    body: "KYC sessions are created through Didit, and the backend stores the resulting status. Profiles, payment-method details, order chat, and evidence references are handled by the app’s API and storage integrations. Do not include secrets or identity documents in chat or audit metadata.",
+  },
+];
 
 export default function PlatformSecurityPage() {
   return (
-    <div className="space-y-12 animate-[fadeInUp_0.3s_ease-out_forwards]">
-      {/* Title Header */}
-      <div className="flex flex-col gap-4 border-b border-[#ffffff08] pb-8">
-        <div className="flex items-center gap-2 text-[#BCED09]">
-          <ShieldCheck className="w-5 h-5" />
-          <span className="text-xs font-black uppercase tracking-[1.5px]">Platform Docs</span>
-        </div>
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white">
-          Ecosystem Security
-        </h1>
-        <p className="text-gray-400 text-sm font-light leading-relaxed max-w-3xl">
-          An overview of trust boundaries, cryptographic invariants, and the compartmentalization of data risk across the architecture.
-        </p>
+    <div className="space-y-10">
+      <header className="space-y-4 border-b border-white/10 pb-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#55D6BE]">Trust boundaries</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">Security notes</h1>
+        <p className="max-w-3xl text-sm leading-7 text-slate-400">A practical summary of the current implementation. The project is under active development; read the code and deployment configuration before relying on any security property.</p>
+      </header>
+      <div className="space-y-4">
+        {notes.map(({ icon: Icon, title, body }) => (
+          <section key={title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-6 md:p-8">
+            <div className="flex items-start gap-4">
+              <Icon className="mt-1 h-5 w-5 shrink-0 text-[#55D6BE]" />
+              <div>
+                <h2 className="font-semibold text-white">{title}</h2>
+                <p className="mt-3 text-sm leading-7 text-slate-400">{body}</p>
+              </div>
+            </div>
+          </section>
+        ))}
       </div>
-
-      <div className="space-y-10">
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">Private Key Invariants</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              The fundamental security property of the system dictates that user private keys never leave the user&apos;s device. The architecture delegates all signing authority exclusively to the frontend environment, communicating directly with the user&apos;s locally installed wallet extension. 
-            </p>
-            <p>
-              The backend infrastructure is structurally incapable of initiating a transfer or altering an escrow state unilaterally. Its operational scope is strictly confined to fetching on-chain state, generating unsigned transaction envelopes, forwarding them to the client for authorization, and relaying the resulting cryptographic signatures to the network. Consequently, even a total compromise of backend services cannot result in the unauthorized extraction of user funds.
-            </p>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">Decentralized KYC and Data Minimization</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              Identity verification (Know Your Customer) requires the handling of highly sensitive personally identifiable information (PII). Rather than internalizing this risk, the architecture delegates biometric scanning and document verification entirely to Didit, a specialized and compliant decentralized identity provider.
-            </p>
-            <p>
-              During the onboarding process, the backend initializes a secure session and redirects the user to Didit&apos;s hosted infrastructure. Upon completion, Didit transmits a signed webhook containing only the binary resolution of the verification (Approved or Declined). The backend persists only this status flag and an anonymized session identifier. Raw biometric data and passport images are never processed, transmitted, or stored within the internal system boundaries.
-            </p>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">Escrow Dispute Resolution</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              While the smart contracts managing the escrows are self-executing and immune to backend manipulation, the P2P protocol must account for scenarios where fiat settlements are contested. To address this, the Trustless Work integration provisions a designated resolver role within the contract initialization parameters.
-            </p>
-            <p>
-              This role allows a segregated platform support key to intervene exclusively in the event of a dispute. The resolution process relies entirely on the objective evaluation of the unstructured payment evidence uploaded by the buyer to the object storage service. By enforcing resolution through the contract&apos;s defined mechanics rather than an administrative backdoor, the cryptographic guarantee that funds cannot be arbitrarily moved remains intact.
-            </p>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white tracking-tight">Network and API Protections</h2>
-          <div className="space-y-4 text-sm leading-relaxed text-gray-400 font-light">
-            <p>
-              In addition to architectural compartmentalization, the platform employs defense-in-depth strategies at the network layer. Authentication is governed by short-lived JSON Web Tokens (JWT) issued only after a successful cryptographic challenge proving wallet ownership.
-            </p>
-            <p>
-              Furthermore, both frontend and backend services are deployed in isolated Docker containers via Google Cloud Run, separating compute domains. The backend API enforces stringent Cross-Origin Resource Sharing (CORS) policies, supplemented by Google Cloud IAM controls, ensuring that only the official frontend domain possesses the authority to invoke backend operations.
-            </p>
-          </div>
-        </section>
-      </div>
+      <p className="text-xs leading-6 text-slate-500">LocalSettle does not provide a refund operation today. If an order has already been funded, do not assume it can be cancelled through the app. Network activity is public and transactions may be irreversible.</p>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export function WrongNetworkBanner() {
                         <p className="text-xs text-[#FCA5A5] mt-0.5">
                             {currentNetwork === "unknown"
                                 ? "Unable to verify the wallet network. Reconnect your wallet and try again."
-                                : `iKash is currently running on ${expectedCapitalized} (detected: ${currentCapitalized}). Switch your wallet to ${expectedCapitalized} before continuing. Blockchain actions are temporarily disabled.`}
+                                : `LocalSettle is currently running on ${expectedCapitalized} (detected: ${currentCapitalized}). Switch your wallet to ${expectedCapitalized} before continuing. Blockchain actions are temporarily disabled.`}
                         </p>
                     </div>
                 </div>

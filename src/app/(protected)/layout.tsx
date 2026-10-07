@@ -18,8 +18,8 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#010308]">
-        <div className="w-8 h-8 border-4 border-[#BCED09] border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-[#081521]">
+        <div className="w-8 h-8 border-4 border-[#55D6BE] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

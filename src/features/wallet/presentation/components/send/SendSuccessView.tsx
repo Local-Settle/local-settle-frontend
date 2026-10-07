@@ -45,8 +45,8 @@ export function SendSuccessView({
     <div className="flex flex-col items-center justify-center py-6 px-2 gap-6 w-full text-center">
       {/* Checkmark Icon with Glow */}
       <div className="relative flex items-center justify-center">
-        <div className="absolute w-20 h-20 bg-[#BCED09]/20 rounded-full blur-xl animate-pulse" />
-        <div className="w-16 h-16 rounded-full bg-[#BCED09]/10 border-2 border-[#BCED09] flex items-center justify-center text-[#BCED09] relative shadow-lg">
+        <div className="absolute w-20 h-20 bg-[#55D6BE]/20 rounded-full blur-xl animate-pulse" />
+        <div className="w-16 h-16 rounded-full bg-[#55D6BE]/10 border-2 border-[#55D6BE] flex items-center justify-center text-[#55D6BE] relative shadow-lg">
           <Check size={32} strokeWidth={3} />
         </div>
       </div>
@@ -55,9 +55,9 @@ export function SendSuccessView({
         <h3 className="text-white text-2xl font-black uppercase tracking-tight">
           Transfer Complete
         </h3>
-        <p className="text-[#8F8389] text-sm">
+        <p className="text-[#9BABB7] text-sm">
           Successfully sent <span className="text-white font-bold">{amount} {assetName}</span> to{" "}
-          <span className="text-[#BCED09] font-semibold">
+          <span className="text-[#55D6BE] font-semibold">
             {recipientAlias || truncateAddress(recipientAddress)}
           </span>
         </p>
@@ -65,9 +65,9 @@ export function SendSuccessView({
 
       {/* Transaction Details Box */}
       {txHash && (
-        <div className="w-full bg-[#0D1117] border border-[#1C2128] rounded-2xl p-4 flex flex-col gap-3 text-left">
+        <div className="w-full bg-[#081521] border border-[#11212E] rounded-2xl p-4 flex flex-col gap-3 text-left">
           <div className="flex items-center justify-between">
-            <span className="text-[#8F8389] text-[11px] font-bold uppercase tracking-wider">
+            <span className="text-[#9BABB7] text-[11px] font-bold uppercase tracking-wider">
               Transaction Hash
             </span>
             {explorerUrl && (
@@ -75,13 +75,13 @@ export function SendSuccessView({
                 href={explorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-[11px] text-[#BCED09] hover:underline font-semibold"
+                className="flex items-center gap-1 text-[11px] text-[#55D6BE] hover:underline font-semibold"
               >
                 Explorer <ExternalLink size={12} />
               </a>
             )}
           </div>
-          <div className="flex items-center justify-between gap-2 bg-[#161618] border border-[#1F2937] rounded-xl px-3 py-2">
+          <div className="flex items-center justify-between gap-2 bg-[#0D1D2C] border border-[#263949] rounded-xl px-3 py-2">
             <span className="text-xs text-gray-300 font-mono break-all truncate">
               {txHash}
             </span>
@@ -92,7 +92,7 @@ export function SendSuccessView({
               title="Copy Hash"
               aria-label="Copy transaction hash"
             >
-              {copied ? <Check size={14} className="text-[#BCED09]" /> : <Copy size={14} />}
+              {copied ? <Check size={14} className="text-[#55D6BE]" /> : <Copy size={14} />}
             </button>
           </div>
         </div>
@@ -103,7 +103,7 @@ export function SendSuccessView({
         <button
           type="button"
           onClick={onReset}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#1C2128] hover:bg-[#2a2a2a] text-white text-xs font-bold uppercase px-4 py-3.5 rounded-xl transition-all border border-[#2a2a2a] cursor-pointer"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#11212E] hover:bg-[#172B3A] text-white text-xs font-bold uppercase px-4 py-3.5 rounded-xl transition-all border border-[#172B3A] cursor-pointer"
         >
           <RotateCcw size={15} /> Send Another
         </button>
@@ -111,7 +111,7 @@ export function SendSuccessView({
           <button
             type="button"
             onClick={onDone}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#BCED09] hover:bg-[#d4f53a] text-black text-xs font-black uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all cursor-pointer shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all cursor-pointer shadow-lg hover:scale-[1.02] active:scale-[0.98]"
           >
             Dashboard <ArrowRight size={15} />
           </button>

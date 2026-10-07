@@ -1,108 +1,53 @@
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { ArrowLeft, FileText } from "lucide-react";
+
+const terms = [
+  {
+    title: "Development service",
+    body: "LocalSettle is an open-source application in active development. Features, supported assets, networks, payment methods, and availability may change. The current wallet experience is configured for Stellar Testnet by default; test assets have no real-world value.",
+  },
+  {
+    title: "Wallets and transactions",
+    body: "You are responsible for choosing and securing your wallet, reviewing every transaction, and confirming its network, recipient, asset, and amount before signing. Transactions submitted to a public blockchain may be irreversible. LocalSettle cannot recover wallet keys or reverse a confirmed transaction.",
+  },
+  {
+    title: "Peer-to-peer trades",
+    body: "Buyers and sellers agree to local payment terms directly. Fiat payments happen outside Stellar and LocalSettle does not process those payments. Confirm payment details with your counterparty and verify receipt through your own financial provider before taking an on-chain action.",
+  },
+  {
+    title: "Escrow and service limits",
+    body: "The app coordinates Stellar escrow operations through Trustless Work and currently supports USDC for escrow. Contract state, role permissions, and available actions depend on the deployed contract and platform configuration. The application currently has no in-app refund operation. Do not treat interface status or uploaded evidence as a guarantee that a fiat payment has settled.",
+  },
+  {
+    title: "Third-party services and eligibility",
+    body: "Wallet providers, Stellar services, Trustless Work, Didit, and hosting or storage providers are operated by third parties. Their services are subject to their own terms. Some product flows require identity verification through Didit where enabled by the deployment.",
+  },
+];
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-[#010308] text-gray-300 font-sans selection:bg-[#BCED09] selection:text-[#010308]">
-      {/* Top Banner Background Blur */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#BCED09]/5 rounded-full filter blur-[150px] pointer-events-none" />
-
-      {/* Navigation Header */}
-      <header className="w-full bg-[#010308]/80 border-b border-[#ffffff10] backdrop-blur-md sticky top-0 z-50 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-20">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group cursor-pointer font-medium tracking-wide"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </Link>
-          <div className="flex items-center gap-2 text-[#BCED09]">
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-xs font-black uppercase tracking-[1.5px]">Legal</span>
-          </div>
+    <div className="min-h-screen bg-[#081521] text-slate-300">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#081521]/90 px-5 backdrop-blur md:px-8">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white"><ArrowLeft className="h-4 w-4" />Back to LocalSettle</Link>
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#55D6BE]"><FileText className="h-4 w-4" />Terms</span>
         </div>
       </header>
-
-      {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-6 py-20 relative z-10">
-        <div className="space-y-12">
-          <div className="space-y-4 border-b border-[#ffffff10] pb-12">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">
-              Terms of Service
-            </h1>
-            <p className="text-gray-500 text-sm tracking-wider uppercase font-bold">
-              Last Updated: July 2026
-            </p>
-          </div>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">1. Nature of the Platform</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              iKash is a non-custodial peer-to-peer (P2P) crypto-to-fiat orchestration layer built on the Stellar blockchain network. We provide the software interface to connect buyers and sellers, coordinate escrow smart contracts, and facilitate communication. 
-            </p>
-            <p className="text-sm leading-relaxed text-[#BCED09]/90 font-medium bg-[#BCED09]/10 p-4 rounded-xl border border-[#BCED09]/20">
-              iKash is not a bank, broker, custodian, or financial intermediary. We never hold, control, or have access to your funds or private keys at any point during a transaction.
-            </p>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">2. User Responsibilities and Wallet Security</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              Access to iKash requires connecting a compatible self-custodied Stellar wallet. By using the platform, you acknowledge and agree that:
-            </p>
-            <ul className="list-disc pl-5 space-y-3 text-sm text-gray-400 font-light">
-              <li>You maintain exclusive control and responsibility over your wallet and its private keys.</li>
-              <li>iKash cannot recover lost private keys, reverse on-chain transactions, or access your wallet under any circumstances.</li>
-              <li>Loss of access to your wallet constitutes a permanent loss of access to your associated funds and iKash profile.</li>
-              <li>You are solely responsible for ensuring the security of your device and the integrity of the wallet software you choose to install.</li>
-            </ul>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">3. Escrows and Smart Contracts</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              To secure funds in transit, iKash integrates with Trustless Work, an external provider of decentralized, audited smart contracts on the Stellar network. When a trade is initiated, funds are locked within an immutable, self-executing smart contract. iKash backend systems cannot unilaterally release or redirect these funds. The release of funds requires cryptographic signatures generated by the counterparties via their local wallets.
-            </p>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">4. Fiat Settlements and Evidence</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              Fiat transactions (e.g., bank transfers, SINPE mobile) occur entirely off-chain between the buyer and seller. iKash does not process, monitor, or guarantee fiat settlements. 
-            </p>
-            <ul className="list-disc pl-5 space-y-3 text-sm text-gray-400 font-light">
-              <li>Buyers are strictly responsible for transferring the exact agreed-upon fiat amount to the payment details provided by the seller.</li>
-              <li>Sellers are responsible for verifying the receipt of funds in their bank accounts before cryptographically releasing the escrowed assets.</li>
-              <li>Users must upload clear and accurate evidence (e.g., transfer receipts) to the platform to confirm off-chain settlements. Falsifying evidence is a violation of these terms and will result in a permanent ban.</li>
-            </ul>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">5. Dispute Resolution</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              In the event of a disagreement regarding a fiat settlement, either party may initiate a dispute. During a dispute, a designated iKash platform support key may act as a decentralized resolver within the Trustless Work smart contract. 
-            </p>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              iKash will review the chat logs and uploaded payment evidence to determine the rightful owner of the escrowed assets. You agree that iKash&apos;s decision in resolving disputes is final and binding. iKash assumes no liability for losses incurred due to fraudulent off-chain transfers if sufficient evidence is not provided.
-            </p>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">6. KYC Verification and Compliance</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              To maintain the integrity of the P2P network, iKash requires all users to undergo identity verification (KYC) processed by our third-party provider, Didit. You agree to provide accurate and truthful information during this process. iKash reserves the right to suspend, restrict, or terminate access to the platform for any user who fails KYC verification, is flagged for suspicious activity, or violates these Terms of Service.
-            </p>
-          </section>
-
+      <main className="mx-auto max-w-3xl px-5 py-16 md:px-8 md:py-24">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#55D6BE]">Terms of use</p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-5xl">Using LocalSettle</h1>
+        <p className="mt-5 text-sm leading-7 text-slate-400">Last updated: October 2026. By using a LocalSettle deployment, you agree to use it lawfully and to review these terms and the deployment’s configuration.</p>
+        <div className="mt-12 space-y-9">
+          {terms.map((term, index) => (
+            <section key={term.title} className="border-t border-white/10 pt-7">
+              <h2 className="text-lg font-semibold text-white">{index + 1}. {term.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-400">{term.body}</p>
+            </section>
+          ))}
         </div>
+        <p className="mt-12 rounded-2xl border border-amber-300/20 bg-amber-300/5 p-5 text-xs leading-6 text-slate-400">This page is a project-level usage notice. Hosted deployments should publish terms that identify their operator and applicable jurisdiction.</p>
       </main>
-
-      <footer className="w-full border-t border-[#ffffff05] py-12 text-center mt-20">
-        <p className="text-xs text-gray-600 font-bold tracking-widest">
-          © 2026 IKASH FINANCIAL. ALL RIGHTS RESERVED.
-        </p>
-      </footer>
+      <footer className="border-t border-white/10 px-5 py-8 text-center text-xs text-slate-500">© 2026 LocalSettle</footer>
     </div>
   );
 }

@@ -9,4 +9,4 @@ export interface CreateOrder {
     buyerAddress: string;
     assetCode: string;
     title?: string;
-}
+}

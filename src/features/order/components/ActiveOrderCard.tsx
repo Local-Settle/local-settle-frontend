@@ -23,15 +23,15 @@ interface ActiveOrderCardProps {
 
 // Status pill: border colored, text white (per reviewer feedback)
 const STATUS_BORDER: Record<string, string> = {
-    FUNDING: "border-[#BCED09]",
+    FUNDING: "border-[#55D6BE]",
     PENDING: "border-yellow-400",
     INITIALIZED: "border-blue-400",
     FUNDED: "border-blue-400",
     "IN PROGRESS": "border-blue-400",
-    "FIAT SENT": "border-[#BCED09]",
+    "FIAT SENT": "border-[#55D6BE]",
     DISPUTED: "border-red-400",
-    RELEASED: "border-[#BCED09]",
-    RESOLVED: "border-[#BCED09]",
+    RELEASED: "border-[#55D6BE]",
+    RESOLVED: "border-[#55D6BE]",
     // COMPLETED intentionally omitted — completed orders do not appear in the active section
 };
 
@@ -53,7 +53,7 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
     const counterparty = isBuying ? order.seller : order.buyer;
 
     const displayStatus = statusLabel(order);
-    const statusBorder = STATUS_BORDER[displayStatus] ?? "border-[#8F8389]";
+    const statusBorder = STATUS_BORDER[displayStatus] ?? "border-[#9BABB7]";
     const assetCode = order.offer?.assetCode || order.assetCode || "USDC";
     const paymentMethod =
         order.offer?.payment_methods?.[0]?.bankName ||
@@ -69,14 +69,14 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
     return (
         <div
             className="flex flex-col rounded-2xl bg-[#121214] border border-[#1f1f1f] overflow-hidden
-                       min-w-[260px] w-full transition-all duration-200 hover:border-[#2a2a2a] hover:bg-[#151517]"
+                       min-w-[260px] w-full transition-all duration-200 hover:border-[#172B3A] hover:bg-[#151517]"
             data-testid="active-order-card"
         >
             {/* Top section — 24px gap and padding per Figma */}
             <div className="flex flex-col gap-6 p-6">
                 {/* Role + Status row */}
                 <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold tracking-[0.15em] text-[#8F8389] uppercase">
+                    <span className="text-[11px] font-semibold tracking-[0.15em] text-[#9BABB7] uppercase">
                         {role}
                     </span>
                     {/* Border colored, text white */}
@@ -112,8 +112,8 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
 
                 {/* Payment method — Landmark icon from lucide-react */}
                 <div className="flex items-center gap-2">
-                    <Landmark size={16} className="text-[#8F8389] shrink-0" />
-                    <span className="text-[13px] text-[#8F8389]">{paymentMethod}</span>
+                    <Landmark size={16} className="text-[#9BABB7] shrink-0" />
+                    <span className="text-[13px] text-[#9BABB7]">{paymentMethod}</span>
                 </div>
             </div>
 
@@ -124,7 +124,7 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
             <div className="flex flex-col gap-6 p-6">
                 {/* Counterparty — profile image pattern from P2P panel */}
                 <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#2a2a2a] border border-[#3a3a3a] shrink-0 overflow-hidden">
+                    <div className="w-9 h-9 rounded-full bg-[#172B3A] border border-[#3a3a3a] shrink-0 overflow-hidden">
                         {counterparty?.profileImageUrl ? (
                             <Image
                                 src={counterparty.profileImageUrl}
@@ -139,7 +139,7 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
                         <p className="text-[13px] font-semibold text-white leading-tight">
                             {counterparty?.alias || (isBuying ? "Seller" : "Buyer")}
                         </p>
-                        <p className="text-[11px] text-[#8F8389] leading-tight">
+                        <p className="text-[11px] text-[#9BABB7] leading-tight">
                             Unit price&nbsp;
                             <span className="font-bold text-[#c0c0c0]">
                                 {unitPrice ?? "—"} {fiatCurrency}
@@ -150,10 +150,10 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
 
                 {/* Time + Open button — items aligned at bottom */}
                 <div className="flex items-end justify-between">
-                    <span className="text-[12px] text-[#8F8389]">{displayTime}</span>
+                    <span className="text-[12px] text-[#9BABB7]">{displayTime}</span>
                     <button
                         onClick={openOrder}
-                        className="px-5 py-2 rounded-full bg-[#BCED09] text-black text-[13px] font-bold
+                        className="px-5 py-2 rounded-full bg-[#55D6BE] text-black text-[13px] font-bold
                                    tracking-wide cursor-pointer transition-all duration-150
                                    hover:opacity-90"
                     >

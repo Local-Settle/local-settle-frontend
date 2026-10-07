@@ -57,7 +57,7 @@ describe("WrongNetworkBanner", () => {
         expect(screen.getByRole("alert")).toBeTruthy();
         expect(screen.getByText("Wrong Stellar network detected")).toBeTruthy();
         expect(
-            screen.getByText(/iKash is currently running on Testnet \(detected: Mainnet\)/)
+            screen.getByText(/LocalSettle is currently running on Testnet \(detected: Mainnet\)/)
         ).toBeTruthy();
     });
 

@@ -29,7 +29,7 @@ export function WalletAssetList({
                 <button
                         type="button"
                         onClick={onViewAll}
-                        className="text-[#BCED09] text-xs font-semibold hover:underline"
+                        className="text-[#55D6BE] text-xs font-semibold hover:underline"
                     >
                         View all
                     </button>
@@ -58,14 +58,14 @@ export function WalletAssetList({
                         <button
                             type="button"
                             onClick={onRetry}
-                            className="text-black bg-[#BCED09] hover:bg-[#d4f53a] text-xs font-bold px-4 py-2 rounded-lg tracking-wide transition-colors"
+                            className="text-black bg-[#55D6BE] hover:bg-[#55D6BE] text-xs font-bold px-4 py-2 rounded-lg tracking-wide transition-colors"
                         >
                             Retry
                         </button>
                     )}
                 </div>
             ) : assets.length === 0 ? (
-                <p className="text-[#8F8389] text-sm p-4 rounded-2xl bg-[#141416] border border-[#1F1F22]">
+                <p className="text-[#9BABB7] text-sm p-4 rounded-2xl bg-[#141416] border border-[#1F1F22]">
                     No assets are currently available.
                 </p>
             ) : (

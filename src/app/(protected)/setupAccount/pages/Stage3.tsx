@@ -147,10 +147,10 @@ export default function Stage3({ onFinish, isSubmitting = false, submitError = n
 
     return (
         <form onSubmit={handleSubmit} className='flex flex-col gap-8' noValidate>
-            <div className="bg-[#12141A] rounded-2xl p-6 flex flex-col gap-6 w-full max-w-150">
+            <div className="bg-[#0D1D2C] rounded-2xl p-6 flex flex-col gap-6 w-full max-w-150">
                 <div className='flex flex-col items-end p-0 -m-3'>
-                    <section className='flex w-[134.5px] items-center justify-center h-5.5 rounded-full bg-[#BCED091A] border border-[#BCED0933]'>
-                        <p className='font-bold text-[#BCED09] uppercase text-[10px]'>Recommended for P2P</p>
+                    <section className='flex w-[134.5px] items-center justify-center h-5.5 rounded-full bg-[#55D6BE1A] border border-[#55D6BE33]'>
+                        <p className='font-bold text-[#55D6BE] uppercase text-[10px]'>Recommended for P2P</p>
                     </section>
                 </div>
 
@@ -164,7 +164,7 @@ export default function Stage3({ onFinish, isSubmitting = false, submitError = n
 
                 <div className="flex flex-col gap-2">
                     <p className="text-[#CBD5E1] text-sm font-semibold px-1">Method Classification</p>
-                    <div className="flex bg-[#01030880] p-1 rounded-xl border border-[#343434]" role="group" aria-label="Payment method category">
+                    <div className="flex bg-[#08152180] p-1 rounded-xl border border-[#263949]" role="group" aria-label="Payment method category">
                         {(['BANK', 'PLATFORM', 'MOBILE'] as ProviderType[]).map((type) => (
                             <button
                                 key={type}
@@ -173,7 +173,7 @@ export default function Stage3({ onFinish, isSubmitting = false, submitError = n
                                 onClick={() => handleTypeChange(type)}
                                 className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
                                     selectedType === type
-                                    ? 'bg-[#BCED09] text-[#12141A]'
+                                    ? 'bg-[#55D6BE] text-[#0D1D2C]'
                                     : 'text-[#94A3B8] hover:text-white'
                                 }`}
                             >
@@ -195,7 +195,7 @@ export default function Stage3({ onFinish, isSubmitting = false, submitError = n
                         aria-labelledby={`${listboxId}-label`}
                         onClick={() => setIsProviderListOpen(!isProviderListOpen)}
                         onKeyDown={handleTriggerKeyDown}
-                        className="relative w-full text-left bg-[#01030880] border border-[#343434] rounded-xl px-5 py-4 cursor-pointer"
+                        className="relative w-full text-left bg-[#08152180] border border-[#263949] rounded-xl px-5 py-4 cursor-pointer"
                     >
                         <span className="text-[#F1F5F9] text-[16px]">
                             {selectedProvider ? selectedProvider.name : `Select a ${selectedType.toLowerCase()} provider...`}
@@ -221,7 +221,7 @@ export default function Stage3({ onFinish, isSubmitting = false, submitError = n
                                         tabIndex={0}
                                         onClick={() => handleProviderSelect(p)}
                                         onKeyDown={(e) => handleOptionKeyDown(e, p, index)}
-                                        className={`px-5 py-3 text-[16px] cursor-pointer hover:bg-white/10 focus:bg-white/10 outline-none transition-colors ${selectedProvider?.provider_id === p.provider_id ? 'text-[#BCED09]' : 'text-[#F1F5F9]'}`}
+                                        className={`px-5 py-3 text-[16px] cursor-pointer hover:bg-white/10 focus:bg-white/10 outline-none transition-colors ${selectedProvider?.provider_id === p.provider_id ? 'text-[#55D6BE]' : 'text-[#F1F5F9]'}`}
                                     >
                                         {p.name}
                                     </li>
@@ -257,8 +257,8 @@ export default function Stage3({ onFinish, isSubmitting = false, submitError = n
                                         aria-required={req.required}
                                         aria-invalid={Boolean(fieldError)}
                                         aria-describedby={fieldError ? errorId : undefined}
-                                        className={`bg-[#01030880] text-[#F1F5F9] text-[16px] rounded-xl px-4 py-3 outline-none border transition-all ${
-                                            fieldError ? 'border-red-500' : 'border-[#343434] focus:border-[#BCED09]'
+                                        className={`bg-[#08152180] text-[#F1F5F9] text-[16px] rounded-xl px-4 py-3 outline-none border transition-all ${
+                                            fieldError ? 'border-red-500' : 'border-[#263949] focus:border-[#55D6BE]'
                                         }`}
                                     />
                                     {fieldError && (

@@ -60,7 +60,7 @@ export function MobileBottomNav({ links }: { links: NavLink[] }) {
                                 {isActive ? (
                                     <div className="flex flex-col items-center" style={{ transform: 'translateY(-14px)' }}>
                                         <div
-                                            className="flex items-center justify-center rounded-full bg-[#BCED09]"
+                                            className="flex items-center justify-center rounded-full bg-[#55D6BE]"
                                             style={{ width: '52px', height: '52px' }}
                                         >
                                             <IconComponent size={24} strokeWidth={2.5} color="#000000" />
@@ -70,7 +70,7 @@ export function MobileBottomNav({ links }: { links: NavLink[] }) {
                                         </span>
                                     </div>
                                 ) : (
-                                    <IconComponent size={22} strokeWidth={2} color="#8F8389" />
+                                    <IconComponent size={22} strokeWidth={2} color="#9BABB7" />
                                 )}
                             </Link>
                         )

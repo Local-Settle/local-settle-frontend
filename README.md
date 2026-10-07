@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LocalSettle Web App
 
-## Getting Started
+LocalSettle is an open-source Stellar wallet app for peer-to-peer stablecoin trades against local payment methods. Users can browse offers, coordinate orders and payment evidence, track escrow status, send USDC to a wallet or alias, and review transactions.
 
-First, run the development server:
+This repository contains the Next.js frontend. The NestJS API and integration services live in the companion [`iKash-backend` repository](https://github.com/iKa-h/iKash-backend).
+
+## Product flows
+
+- Connect a supported Stellar wallet and authenticate by signing a short-lived challenge.
+- Browse or publish buy and sell offers, create orders, and coordinate with the counterparty through order chat.
+- Prepare and sign Stellar transactions in the connected wallet; direct USDC sends support wallet addresses and LocalSettle aliases.
+- View account balances, transaction history, settings, profile and KYC status.
+
+The app currently defaults to Stellar Testnet. P2P escrow supports USDC and uses Trustless Work through the backend. Fiat payments occur between users off-chain. See the public pages at `/info`, `/info/features`, and `/info/security` for a summary of the current implementation.
+
+## Development
+
+Requirements: Node.js 20+ and pnpm (the repository includes `pnpm-lock.yaml`). Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_API_URL` to the local backend URL.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The development server runs at [http://localhost:3000](http://localhost:3000). Commands:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm build       # Create a production build
+pnpm lint        # Run ESLint
+pnpm test        # Run Vitest once
+pnpm analyze     # Build with bundle analysis enabled
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Structure
 
-## Learn More
+- `src/app/` contains App Router routes, public pages, protected product pages, and shared layout components.
+- `src/features/` contains wallet, user, offer, order, escrow, chat, settings, and transaction logic.
+- `src/lib/` contains API client helpers; `public/` contains static images and LocalSettle brand assets.
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Place feature-specific UI and state close to the owning feature. Add regression coverage for changed behavior, follow nearby TypeScript conventions, and document any required environment changes. Keep wallet signing inside the wallet integration and never ask users to share private keys or recovery phrases.

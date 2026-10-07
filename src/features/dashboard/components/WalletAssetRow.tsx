@@ -32,7 +32,7 @@ export function WalletAssetRow({ asset }: WalletAssetRowProps) {
                     <p className="text-white font-bold text-sm tracking-wide truncate">
                         {asset.code}
                     </p>
-                    <p className="text-[#8F8389] text-[12px] tracking-[0.15em] uppercase truncate">
+                    <p className="text-[#9BABB7] text-[12px] tracking-[0.15em] uppercase truncate">
                         {asset.name}
                     </p>
                 </div>

@@ -10,7 +10,7 @@ import { useOfferCounts } from "@/features/offer/hooks/useOfferCounts";
 function Skeleton({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-block rounded bg-[#2a2a2a] animate-pulse ${className}`}
+      className={`inline-block rounded bg-[#172B3A] animate-pulse ${className}`}
       aria-hidden="true"
     />
   );
@@ -21,7 +21,7 @@ function Skeleton({ className = "" }: { className?: string }) {
 /**
  * MarketSnapshot
  *
- * Displays a live summary of the iKash P2P market:
+ * Displays a live summary of the LocalSettle P2P market:
  *  - Number of active buy offers
  *  - Number of active sell offers
  *  - Current USDC/USD price (refreshed every 60 s)
@@ -42,7 +42,7 @@ export function MarketSnapshot() {
     }
     if (priceStatus === "error") {
       return (
-        <span className="text-[#8F8389] text-sm font-medium">
+        <span className="text-[#9BABB7] text-sm font-medium">
           Price unavailable
         </span>
       );
@@ -53,7 +53,7 @@ export function MarketSnapshot() {
         <span className="text-white font-bold text-lg tabular-nums">
           {price !== null ? formatUsdcPrice(price) : "—"}
         </span>
-        <span className="text-[#8F8389] text-sm font-semibold">USD</span>
+        <span className="text-[#9BABB7] text-sm font-semibold">USD</span>
         {priceStatus === "stale" && (
           <span
             title="Price may be outdated"
@@ -69,15 +69,15 @@ export function MarketSnapshot() {
   // ── Offer count display ────────────────────────────────────────────────────
   const renderCount = (count: number | null) => {
     if (countsLoading) return <Skeleton className="h-5 w-7 inline-block" />;
-    if (count === null) return <span className="text-[#8F8389]">—</span>;
+    if (count === null) return <span className="text-[#9BABB7]">—</span>;
     return (
-      <span className="text-[#BCED09] font-bold tabular-nums">{count}</span>
+      <span className="text-[#55D6BE] font-bold tabular-nums">{count}</span>
     );
   };
 
   return (
     <div
-      className="w-full rounded-2xl bg-[#161618] border border-[#1F2937] px-5 py-4 md:px-6 md:py-5"
+      className="w-full rounded-2xl bg-[#0D1D2C] border border-[#263949] px-5 py-4 md:px-6 md:py-5"
       role="region"
       aria-label="Market Snapshot"
     >
@@ -96,12 +96,12 @@ export function MarketSnapshot() {
             cx="9"
             cy="9"
             r="8"
-            stroke="#BCED09"
+            stroke="#55D6BE"
             strokeWidth="1.5"
           />
           <path
             d="M9 8v5M9 6.5v.5"
-            stroke="#BCED09"
+            stroke="#55D6BE"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -132,7 +132,7 @@ export function MarketSnapshot() {
         </div>
 
         {/* Vertical divider */}
-        <div className="w-px bg-[#2D2D2D] self-stretch mx-2 md:mx-4 shrink-0" />
+        <div className="w-px bg-[#263949] self-stretch mx-2 md:mx-4 shrink-0" />
 
         {/* Right column — USDC Price ──────────────────────────────────────── */}
         <div className="flex flex-col gap-2 flex-1 pl-4 md:pl-6">

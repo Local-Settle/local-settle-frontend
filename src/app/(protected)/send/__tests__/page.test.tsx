@@ -122,7 +122,7 @@ describe("SendPage standalone route", () => {
 
     render(<SendPage />);
 
-    const recipientInput = screen.getByPlaceholderText("alex.ikash or GXXXXXX...");
+    const recipientInput = screen.getByPlaceholderText("alex.localsettle or GXXXXXX...");
     const amountInput = screen.getByPlaceholderText("0.00");
 
     expect((recipientInput as HTMLInputElement).value).toBe(
@@ -134,7 +134,7 @@ describe("SendPage standalone route", () => {
   it("validates empty or invalid recipient format", () => {
     render(<SendPage />);
 
-    const recipientInput = screen.getByPlaceholderText("alex.ikash or GXXXXXX...");
+    const recipientInput = screen.getByPlaceholderText("alex.localsettle or GXXXXXX...");
     const amountInput = screen.getByPlaceholderText("0.00");
     const reviewBtn = screen.getByRole("button", { name: /Review & Send/i });
 
@@ -151,11 +151,11 @@ describe("SendPage standalone route", () => {
   it("validates amount exceeding available balance", () => {
     render(<SendPage />);
 
-    const recipientInput = screen.getByPlaceholderText("alex.ikash or GXXXXXX...");
+    const recipientInput = screen.getByPlaceholderText("alex.localsettle or GXXXXXX...");
     const amountInput = screen.getByPlaceholderText("0.00");
     const reviewBtn = screen.getByRole("button", { name: /Review & Send/i });
 
-    fireEvent.change(recipientInput, { target: { value: "alex.ikash" } });
+    fireEvent.change(recipientInput, { target: { value: "alex.localsettle" } });
     fireEvent.change(amountInput, { target: { value: "9999" } });
 
     fireEvent.click(reviewBtn);
@@ -167,7 +167,7 @@ describe("SendPage standalone route", () => {
   it("calls resolveAndPrepare when inputs are valid", () => {
     render(<SendPage />);
 
-    const recipientInput = screen.getByPlaceholderText("alex.ikash or GXXXXXX...");
+    const recipientInput = screen.getByPlaceholderText("alex.localsettle or GXXXXXX...");
     const amountInput = screen.getByPlaceholderText("0.00");
     const reviewBtn = screen.getByRole("button", { name: /Review & Send/i });
 
@@ -190,7 +190,7 @@ describe("SendPage standalone route", () => {
       step: "confirm",
       recipient: {
         address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
-        alias: "alex.ikash",
+        alias: "alex.localsettle",
         exists: true,
         hasUsdcTrustline: true,
       },
@@ -202,7 +202,7 @@ describe("SendPage standalone route", () => {
     render(<SendPage />);
 
     expect(screen.getByText("Review Transaction")).toBeTruthy();
-    expect(screen.getByText("alex.ikash")).toBeTruthy();
+    expect(screen.getByText("alex.localsettle")).toBeTruthy();
     expect(screen.getByRole("button", { name: /Sign & Send/i })).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: /Sign & Send/i }));
@@ -214,7 +214,7 @@ describe("SendPage standalone route", () => {
       step: "success",
       recipient: {
         address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
-        alias: "alex.ikash",
+        alias: "alex.localsettle",
         exists: true,
         hasUsdcTrustline: true,
       },

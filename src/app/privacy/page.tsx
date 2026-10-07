@@ -1,107 +1,53 @@
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
 
+const sections = [
+  {
+    title: "Information used by the service",
+    body: "LocalSettle stores the Stellar public key associated with an account, optional profile details, aliases, KYC status, saved payment methods, offers, orders, escrow references, and order chat. Security audit records may include request IP address, user agent, action, and selected event metadata. Payment evidence is stored through the configured file-storage provider.",
+  },
+  {
+    title: "Wallets and public networks",
+    body: "Wallet providers handle your private keys and sign transactions requested by the app. Public keys and transactions submitted to Stellar are visible on the network. LocalSettle cannot remove public blockchain records.",
+  },
+  {
+    title: "Service providers",
+    body: "The application integrates with Stellar network services, Trustless Work for escrow operations, Didit for identity-verification sessions, PostgreSQL for application data, and Google Cloud Storage when configured for file storage. Those providers process data needed to deliver their part of the service under their own terms.",
+  },
+  {
+    title: "Sharing during a trade",
+    body: "Payment-method details and trade messages may be visible to the other participant in an order because they are needed to complete the off-chain payment. Do not send passwords, wallet recovery phrases, private keys, or unrelated identity documents through chat.",
+  },
+  {
+    title: "Retention and requests",
+    body: "Application records are retained as needed to operate the service, support account and trade flows, and meet security or legal obligations. Retention periods and request handling depend on the deployment and applicable requirements. Contact the project maintainers through the repository for privacy questions or data requests.",
+  },
+];
+
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#010308] text-gray-300 font-sans selection:bg-[#BCED09] selection:text-[#010308]">
-      {/* Top Banner Background Blur */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#BCED09]/5 rounded-full filter blur-[150px] pointer-events-none" />
-
-      {/* Navigation Header */}
-      <header className="w-full bg-[#010308]/80 border-b border-[#ffffff10] backdrop-blur-md sticky top-0 z-50 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-20">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors group cursor-pointer font-medium tracking-wide"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </Link>
-          <div className="flex items-center gap-2 text-[#BCED09]">
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-xs font-black uppercase tracking-[1.5px]">Legal</span>
-          </div>
+    <div className="min-h-screen bg-[#081521] text-slate-300">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#081521]/90 px-5 backdrop-blur md:px-8">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white"><ArrowLeft className="h-4 w-4" />Back to LocalSettle</Link>
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#55D6BE]"><ShieldCheck className="h-4 w-4" />Privacy</span>
         </div>
       </header>
-
-      {/* Main Content */}
-      <main className="max-w-3xl mx-auto px-6 py-20 relative z-10">
-        <div className="space-y-12">
-          <div className="space-y-4 border-b border-[#ffffff10] pb-12">
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">
-              Privacy Policy
-            </h1>
-            <p className="text-gray-500 text-sm tracking-wider uppercase font-bold">
-              Last Updated: July 2026
-            </p>
-          </div>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">1. Introduction</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              At iKash, privacy and security are foundational to our architecture. This Privacy Policy details the strict data minimization practices we employ to protect your information. As a non-custodial peer-to-peer (P2P) platform operating on the Stellar network, our system is designed to facilitate trustless transactions without requiring us to hold unnecessary sensitive personal data.
-            </p>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">2. Information We Explicitly Do Not Collect</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              Due to our zero-trust and decentralized architecture, there are critical pieces of information we categorically refuse to process or store:
-            </p>
-            <ul className="list-disc pl-5 space-y-3 text-sm text-gray-400 font-light">
-              <li><strong className="text-gray-300">Private Keys:</strong> We never request, generate, receive, or store your blockchain private keys. All cryptographic signing occurs locally on your device.</li>
-              <li><strong className="text-gray-300">Raw Biometric Data:</strong> We do not store biometric scans, facial recognition data, or raw passport/ID document images. Identity verification is entirely delegated to our specialized partner, Didit.</li>
-            </ul>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">3. Information We Collect and Store</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              To operate the P2P marketplace and ensure a secure trading environment, our backend relational database (PostgreSQL) collects and stores the following strictly necessary data:
-            </p>
-            <ul className="list-disc pl-5 space-y-3 text-sm text-gray-400 font-light">
-              <li><strong className="text-gray-300">Blockchain Identifiers:</strong> Your Stellar public key (wallet address), which acts as your primary identifier.</li>
-              <li><strong className="text-gray-300">KYC Status:</strong> An anonymized Didit session identifier and your binary verification status (e.g., &quot;Approved&quot; or &quot;Declined&quot;).</li>
-              <li><strong className="text-gray-300">Payment Methods:</strong> Fiat payment details you register (e.g., bank account numbers, beneficiary names, national ID numbers) required for counterparties to send you funds.</li>
-              <li><strong className="text-gray-300">Transactional Data:</strong> Offers created, order matching history, and escrow state metadata (e.g., contract IDs, transaction hashes).</li>
-              <li><strong className="text-gray-300">Communication & Evidence:</strong> Encrypted chat message logs tied to active orders, and URLs linking to payment evidence (receipts/screenshots) securely stored in Google Cloud Storage.</li>
-            </ul>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">4. How We Share Your Information</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              We do not sell or indiscriminately share your data. Sharing is strictly limited to the functional requirements of the P2P protocol:
-            </p>
-            <ul className="list-disc pl-5 space-y-3 text-sm text-gray-400 font-light">
-              <li><strong className="text-gray-300">Counterparty Exposure:</strong> When you enter into an active order, your registered fiat payment method details are exclusively revealed to your specific counterparty. This is unavoidable and necessary for the fiat settlement phase to occur. This data is not public or accessible outside the context of an active trade.</li>
-              <li><strong className="text-gray-300">Infrastructure Providers:</strong> We utilize Google Cloud Platform (Cloud Run, Cloud Storage) and Supabase (managed PostgreSQL) to host our infrastructure securely.</li>
-              <li><strong className="text-gray-300">Escrow Providers:</strong> We share necessary order parameters with Trustless Work to deploy smart contracts on the Stellar network.</li>
-            </ul>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">5. Data Retention Policy</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              To prevent the accumulation of historical transactional data, iKash enforces a strict two-year retention window for audit and transactional records. After this period, active relational data and associated evidence files are removed from our active databases and moved to a frozen, inaccessible archive, except where prolonged retention is required by applicable laws. Note that on-chain transactions submitted to the Stellar network are public, immutable, and beyond our control to modify or delete.
-            </p>
-          </section>
-
-          <section className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">6. Your Rights and Consents</h2>
-            <p className="text-sm leading-relaxed text-gray-400 font-light">
-              By connecting your wallet and interacting with the iKash platform, you explicitly consent to the localized sharing of your payment method details with your trading counterparties. Because your account is bound to your self-custodied wallet, you retain sovereign control over your blockchain identity.
-            </p>
-          </section>
-
+      <main className="mx-auto max-w-3xl px-5 py-16 md:px-8 md:py-24">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#55D6BE]">Privacy notice</p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-5xl">Your data in LocalSettle</h1>
+        <p className="mt-5 text-sm leading-7 text-slate-400">Last updated: October 2026. This notice describes the information the current LocalSettle application handles and why it is needed.</p>
+        <div className="mt-12 space-y-9">
+          {sections.map((section, index) => (
+            <section key={section.title} className="border-t border-white/10 pt-7">
+              <h2 className="text-lg font-semibold text-white">{index + 1}. {section.title}</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-400">{section.body}</p>
+            </section>
+          ))}
         </div>
+        <p className="mt-12 rounded-2xl border border-[#55D6BE]/20 bg-[#55D6BE]/5 p-5 text-xs leading-6 text-slate-400">LocalSettle is open-source software in active development. The data practices of a hosted deployment may depend on its operators and configuration.</p>
       </main>
-
-      <footer className="w-full border-t border-[#ffffff05] py-12 text-center mt-20">
-        <p className="text-xs text-gray-600 font-bold tracking-widest">
-          © 2026 IKASH FINANCIAL. ALL RIGHTS RESERVED.
-        </p>
-      </footer>
+      <footer className="border-t border-white/10 px-5 py-8 text-center text-xs text-slate-500">© 2026 LocalSettle</footer>
     </div>
   );
 }

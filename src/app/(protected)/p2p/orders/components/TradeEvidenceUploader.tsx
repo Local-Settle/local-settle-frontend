@@ -263,11 +263,11 @@ export function TradeEvidenceUploader({
 
     return (
         <>
-        <div className="bg-[#161618] w-[402.8px] h-[571.5px] rounded-[16px] flex flex-col justify-between p-[12px_16px] gap-6 font-space shrink-0 select-none">
+        <div className="bg-[#0D1D2C] w-[402.8px] h-[571.5px] rounded-[16px] flex flex-col justify-between p-[12px_16px] gap-6 font-space shrink-0 select-none">
             
             {/* Header Info Banner */}
-            <div className="bg-[#1B1B21] border-l border-[rgba(69,73,50,0.3)] rounded-[8px] p-[20px_12px] h-[99px] flex gap-3 shrink-0">
-                <span className="w-[11.67px] h-[11.67px] bg-[#DAFF00] rounded-full flex items-center justify-center shrink-0 mt-1 shadow-[0_0_8px_rgba(218,255,0,0.5)]">
+            <div className="bg-[#0D1D2C] border-l border-[rgba(69,73,50,0.3)] rounded-[8px] p-[20px_12px] h-[99px] flex gap-3 shrink-0">
+                <span className="w-[11.67px] h-[11.67px] bg-[#55D6BE] rounded-full flex items-center justify-center shrink-0 mt-1 shadow-[0_0_8px_rgba(218,255,0,0.5)]">
                     <Info className="w-[8px] h-[8px] text-black stroke-[3.5px]" />
                 </span>
                 <p className="text-[#C2C7D0] text-[12px] leading-[20px] font-manrope font-normal">
@@ -290,15 +290,15 @@ export function TradeEvidenceUploader({
                         type="button" 
                         onClick={uploadState === 'idle' ? triggerUpload : handleUploadToServer}
                         disabled={escrowStatus !== "funded" || uploadState === 'uploading' || uploadState === 'uploaded'}
-                        className="bg-[#DAFF00] disabled:bg-[#1F1F25] disabled:text-[rgba(143,131,137,0.5)] w-full h-[48px] text-[#2B3400] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#c2e500] uppercase transition-all duration-200 flex items-center justify-center gap-2 select-none tracking-[-0.4px] disabled:cursor-not-allowed shrink-0 cursor-pointer"
+                        className="bg-[#55D6BE] disabled:bg-[#11212E] disabled:text-[rgba(155,171,183,0.5)] w-full h-[48px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 flex items-center justify-center gap-2 select-none tracking-[-0.4px] disabled:cursor-not-allowed shrink-0 cursor-pointer"
                     >
                         {uploadState === 'uploading' ? (
                             <>
-                                <Loader2 className="w-5 h-5 text-[#2B3400] animate-spin" /> UPLOADING...
+                                <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> UPLOADING...
                             </>
                         ) : uploadState === 'uploaded' ? (
                             <span role="status">
-                                <CircleCheck className="w-5 h-5 text-[#2B3400] stroke-[3px]" /> EVIDENCE UPLOADED
+                                <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" /> EVIDENCE UPLOADED
                             </span>
                         ) : (
                             <>
@@ -310,12 +310,12 @@ export function TradeEvidenceUploader({
 
                 {isEvidenceSubmitted ? (
                     /* Display Submitted Evidence Preview when Completed or Fiat Sent */
-                    <div className="border border-[#DAFF00]/30 bg-[#1B1B21] w-full h-[276.5px] rounded-[12px] flex flex-col items-center justify-between p-6 select-none shadow-[inset_0_0_12px_rgba(218,255,0,0.05)] transition-all duration-300">
+                    <div className="border border-[#55D6BE]/30 bg-[#0D1D2C] w-full h-[276.5px] rounded-[12px] flex flex-col items-center justify-between p-6 select-none shadow-[inset_0_0_12px_rgba(218,255,0,0.05)] transition-all duration-300">
                         <div className="w-full flex items-center justify-between border-b border-[rgba(218,255,0,0.1)] pb-3">
                             <span className="text-[10px] text-[#64748B] font-bold tracking-[1px] uppercase">
                                 EVIDENCE SUBMITTED
                             </span>
-                            <span className="text-[9px] text-[#DAFF00] bg-[#DAFF00]/10 border border-[#DAFF00]/20 font-black p-[2px_8px] rounded-full uppercase tracking-wider">
+                            <span className="text-[9px] text-[#55D6BE] bg-[#55D6BE]/10 border border-[#55D6BE]/20 font-black p-[2px_8px] rounded-full uppercase tracking-wider">
                                 Verified
                             </span>
                         </div>
@@ -323,7 +323,7 @@ export function TradeEvidenceUploader({
                         <div className="flex flex-row items-center gap-4 my-auto w-full px-2">
                             <div 
                                 onClick={handlePreviewClick}
-                                className="w-[80px] h-[100px] relative rounded-[8px] bg-[#161618] overflow-hidden border border-white/[0.08] shadow-md flex items-center justify-center group cursor-pointer shrink-0"
+                                className="w-[80px] h-[100px] relative rounded-[8px] bg-[#0D1D2C] overflow-hidden border border-white/[0.08] shadow-md flex items-center justify-center group cursor-pointer shrink-0"
                             >
                                 {renderPreviewFile()}
                                 <div className="absolute bottom-1 right-1 bg-black/70 rounded-full p-1 border border-white/20">
@@ -331,10 +331,10 @@ export function TradeEvidenceUploader({
                                 </div>
                             </div>
                             <div className="flex flex-col gap-1 min-w-0">
-                                <p className="text-[14px] font-black text-[#E4E1E9] truncate max-w-[160px]">
+                                <p className="text-[14px] font-black text-[#D7E0E6] truncate max-w-[160px]">
                                     {getFilenameFromUrl(evidenceUrlState)}
                                 </p>
-                                <p className="text-[10px] text-[#DAFF00] font-bold tracking-wider uppercase">
+                                <p className="text-[10px] text-[#55D6BE] font-bold tracking-wider uppercase">
                                     SECURED ON-CHAIN
                                 </p>
                             </div>
@@ -354,26 +354,26 @@ export function TradeEvidenceUploader({
                         onClick={escrowStatus === "funded" ? triggerUpload : undefined}
                         className={`border-2 border-dashed w-full h-[214.5px] rounded-[12px] flex flex-col items-center justify-center transition-all duration-200 select-none ${
                             escrowStatus !== "funded"
-                                ? "border-[rgba(143,131,137,0.2)] bg-[#1B1B21]/10 cursor-not-allowed"
+                                ? "border-[rgba(155,171,183,0.2)] bg-[#0D1D2C]/10 cursor-not-allowed"
                                 : isDragging 
-                                    ? "border-[#DAFF00] bg-[#DAFF00]/5 cursor-pointer" 
-                                    : "border-[rgba(143,131,137,0.8)] hover:border-[#DAFF00]/40 bg-[#161618] cursor-pointer"
+                                    ? "border-[#55D6BE] bg-[#55D6BE]/5 cursor-pointer" 
+                                    : "border-[rgba(155,171,183,0.8)] hover:border-[#55D6BE]/40 bg-[#0D1D2C] cursor-pointer"
                         }`}
                     >
                         <div className="flex flex-col items-center gap-2">
-                            <FileUp className="w-8 h-8 text-[rgba(143,131,137,0.8)]" />
-                            <p className="text-[16px] font-medium leading-[24px] text-[rgba(143,131,137,0.8)] text-center tracking-normal font-space max-w-[200px]">
+                            <FileUp className="w-8 h-8 text-[rgba(155,171,183,0.8)]" />
+                            <p className="text-[16px] font-medium leading-[24px] text-[rgba(155,171,183,0.8)] text-center tracking-normal font-space max-w-[200px]">
                                 Drop your evidence file here
                             </p>
                         </div>
                     </div>
                 ) : (
                     /* Dashed border preview box for Selected / Uploading / Uploaded states */
-                    <div className="border-2 border-dashed border-[rgba(143,131,137,0.4)] w-full h-[214.5px] rounded-[12px] flex flex-row items-center p-4 gap-4 bg-[#1B1B21]/30 select-none relative">
+                    <div className="border-2 border-dashed border-[rgba(155,171,183,0.4)] w-full h-[214.5px] rounded-[12px] flex flex-row items-center p-4 gap-4 bg-[#0D1D2C]/30 select-none relative">
                         {/* Preview thumbnail box (left) */}
                         <div 
                             onClick={handlePreviewClick}
-                            className="w-[110px] h-[140px] relative rounded-[8px] bg-[#161618] overflow-hidden border border-white/[0.08] shadow-md flex items-center justify-center group cursor-pointer shrink-0"
+                            className="w-[110px] h-[140px] relative rounded-[8px] bg-[#0D1D2C] overflow-hidden border border-white/[0.08] shadow-md flex items-center justify-center group cursor-pointer shrink-0"
                         >
                             {renderPreviewFile()}
                             {/* Magnifier Glass overlay */}
@@ -395,13 +395,13 @@ export function TradeEvidenceUploader({
                             )}
                             
                             {uploadState === 'uploading' && (
-                                <p className="text-[12px] text-[#DAFF00] font-semibold animate-pulse">
+                                <p className="text-[12px] text-[#55D6BE] font-semibold animate-pulse">
                                     Uploading...
                                 </p>
                             )}
 
                             {uploadState === 'uploaded' && (
-                                <p className="text-[12px] text-[rgba(143,131,137,0.8)] font-semibold">
+                                <p className="text-[12px] text-[rgba(155,171,183,0.8)] font-semibold">
                                     Uploaded at {uploadedTime || "14:25"}
                                 </p>
                             )}
@@ -432,9 +432,9 @@ export function TradeEvidenceUploader({
                         type="button" 
                         onClick={handleAction}
                         disabled={isSubmitting || uploadState !== 'uploaded'}
-                        className="bg-[#DAFF00] disabled:bg-[#1F1F25] disabled:text-[rgba(143,131,137,0.5)] disabled:cursor-not-allowed w-full h-[56px] text-[#2B3400] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#c2e500] uppercase transition-all duration-200 flex items-center justify-center gap-2 tracking-[-0.4px] cursor-pointer"
+                        className="bg-[#55D6BE] disabled:bg-[#11212E] disabled:text-[rgba(155,171,183,0.5)] disabled:cursor-not-allowed w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 flex items-center justify-center gap-2 tracking-[-0.4px] cursor-pointer"
                     >
-                        {isSubmitting ? <Loader2 className="w-5 h-5 text-[#2B3400] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#2B3400] stroke-[3px]" />}
+                        {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
                         {isSubmitting ? "PROCESSING..." : "MARK AS PAID"}
                     </button>
                 ) : escrowStatus === "fiat_sent" ? (
@@ -442,7 +442,7 @@ export function TradeEvidenceUploader({
                         WAITING FOR RELEASE
                     </button>
                 ) : escrowStatus === "released" ? (
-                    <div className="bg-[#DAFF00]/10 border border-[#DAFF00]/30 w-full h-[56px] rounded-[12px] flex items-center justify-center">                            <span role="status" className="text-[#DAFF00] font-bold text-[16px] leading-[24px] uppercase tracking-[-0.4px]">COMPLETED!</span>
+                    <div className="bg-[#55D6BE]/10 border border-[#55D6BE]/30 w-full h-[56px] rounded-[12px] flex items-center justify-center">                            <span role="status" className="text-[#55D6BE] font-bold text-[16px] leading-[24px] uppercase tracking-[-0.4px]">COMPLETED!</span>
                     </div>
                 ) : null}
 

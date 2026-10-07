@@ -48,7 +48,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                     aria-modal="true"
                     aria-labelledby="receive-funds-title"
                     tabIndex={-1}
-                    className="bg-[#0D1117F2] h-full w-md p-8 border-r border-white/10 flex flex-col justify-between"
+                    className="bg-[#081521F2] h-full w-md p-8 border-r border-white/10 flex flex-col justify-between"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div>
@@ -67,7 +67,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                             </button>
                         </div>
 
-                        <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #BCED0900, #BCED09, #BCED0900)' }} />
+                        <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #55D6BE00, #55D6BE, #55D6BE00)' }} />
 
                         <div className="flex flex-col items-center justify-center p-8 border border-white/10 rounded-xl bg-white/5 text-center mt-10">
                             <p className="text-yellow-400 text-sm font-semibold mb-4">No wallet connected.</p>
@@ -77,7 +77,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
 
                     <button
                         onClick={() => onClose()}
-                        className="w-full bg-[#BCED09] uppercase text-black font-semibold px-4 py-3 rounded-xl hover:bg-[#9ac208] transition-colors mt-auto"
+                        className="w-full bg-[#55D6BE] uppercase text-black font-semibold px-4 py-3 rounded-xl hover:bg-[#38B99F] transition-colors mt-auto"
                     >
                         Close
                     </button>
@@ -97,7 +97,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                 aria-modal="true"
                 aria-labelledby="receive-funds-title"
                 tabIndex={-1}
-                className="bg-[#0D1117F2] h-full w-md p-8 border-r border-white/10 flex flex-col justify-between"
+                className="bg-[#081521F2] h-full w-md p-8 border-r border-white/10 flex flex-col justify-between"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div>
@@ -116,7 +116,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                         </button>
                     </div>
 
-                    <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #BCED0900, #BCED09, #BCED0900)' }} />
+                    <div className="w-full h-px mb-6" style={{ background: 'linear-gradient(to right, #55D6BE00, #55D6BE, #55D6BE00)' }} />
 
                     {/* QR Code Container */}
                     <div className="flex items-center justify-center bg-white w-full max-w-[220px] aspect-square rounded-2xl p-4 mx-auto mb-6 border border-white/10 shadow-lg">
@@ -125,7 +125,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                                 value={qrUrl}
                                 size={188}
                                 level="M"
-                                fgColor="#0D1117"
+                                fgColor="#081521"
                                 bgColor="#FFFFFF"
                             />
                         ) : (
@@ -135,18 +135,18 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
 
                     {/* Alias Field */}
                     <div className="flex flex-col mt-4">
-                        <p className="text-[#C2C7D0] text-[12px] mb-2 uppercase">ikash alias</p>
+                        <p className="text-[#C2C7D0] text-[12px] mb-2 uppercase">LocalSettle alias</p>
                         <div className="relative">
                             <input
                                 type="text"
                                 value={currentUser?.alias || "No alias set"}
                                 readOnly
-                                className="w-full h-13 rounded-xl border border-[#45493233] bg-[#1B1B21] pl-4 pr-20 text-white text-sm"
+                                className="w-full h-13 rounded-xl border border-[#26394933] bg-[#0D1D2C] pl-4 pr-20 text-white text-sm"
                             />
                             {currentUser?.alias && (
                                 <button
                                     onClick={() => handleCopy(currentUser.alias || "", "Alias")}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#BCED09] hover:text-white text-xs font-semibold py-1.5 px-3 rounded-lg hover:bg-white/5 transition-all"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#55D6BE] hover:text-white text-xs font-semibold py-1.5 px-3 rounded-lg hover:bg-white/5 transition-all"
                                 >
                                     {copiedType === "Alias" ? "Copied!" : "Copy"}
                                 </button>
@@ -162,11 +162,11 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                                 type="text"
                                 value={publicKey}
                                 readOnly
-                                className="w-full h-13 rounded-xl border border-[#45493233] bg-[#1B1B21] pl-4 pr-20 text-white text-sm font-mono truncate"
+                                className="w-full h-13 rounded-xl border border-[#26394933] bg-[#0D1D2C] pl-4 pr-20 text-white text-sm font-mono truncate"
                             />
                             <button
                                 onClick={() => handleCopy(publicKey, "Wallet ID")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#BCED09] hover:text-white text-xs font-semibold py-1.5 px-3 rounded-lg hover:bg-white/5 transition-all"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#55D6BE] hover:text-white text-xs font-semibold py-1.5 px-3 rounded-lg hover:bg-white/5 transition-all"
                             >
                                 {copiedType === "Wallet ID" ? "Copied!" : "Copy"}
                             </button>
@@ -177,7 +177,7 @@ export function ReceiveFundsModal({ onClose }: CloseModalProps) {
                 <div className="flex w-full items-center justify-center gap-3 mt-10">
                     <button
                         onClick={handleShareDetails}
-                        className="flex-1 bg-[#BCED09] uppercase text-black font-semibold px-4 py-3 rounded-xl hover:bg-[#9ac208] transition-colors"
+                        className="flex-1 bg-[#55D6BE] uppercase text-black font-semibold px-4 py-3 rounded-xl hover:bg-[#38B99F] transition-colors"
                     >
                         {copiedType === "Share Link" ? "COPIED SEND LINK!" : "share details"}
                     </button>

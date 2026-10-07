@@ -13,7 +13,7 @@ export default function DashboardPage() {
     const displayName = currentUser?.alias || (currentUser?.publicKey ? `${currentUser.publicKey.slice(0, 6)}...` : "");
 
     return (
-        <div className="flex min-h-screen w-full bg-[#010308]">
+        <div className="flex min-h-screen w-full bg-[#081521]">
             <Aside />
             <div className="flex flex-col flex-1 min-w-0">
                 <Header
@@ -25,7 +25,7 @@ export default function DashboardPage() {
                 <main className="flex flex-col w-full min-w-0">
                     <Suspense fallback={
                         <div className="w-full flex items-center justify-center p-8">
-                            <div className="w-8 h-8 border-4 border-[#BCED09] border-t-transparent rounded-full animate-spin" />
+                            <div className="w-8 h-8 border-4 border-[#55D6BE] border-t-transparent rounded-full animate-spin" />
                         </div>
                     }>
                         <WalletDashboard />

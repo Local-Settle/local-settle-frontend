@@ -24,13 +24,13 @@ export const SendRecipientInput = forwardRef<HTMLInputElement, SendRecipientInpu
             Recipient Address or Alias
           </label>
           {isGAddress && (
-            <span className="flex items-center gap-1 text-[10px] text-[#BCED09] font-medium uppercase tracking-wider bg-[#BCED09]/10 px-2 py-0.5 rounded-full border border-[#BCED09]/20">
+            <span className="flex items-center gap-1 text-[10px] text-[#55D6BE] font-medium uppercase tracking-wider bg-[#55D6BE]/10 px-2 py-0.5 rounded-full border border-[#55D6BE]/20">
               <KeyRound size={11} /> Stellar Address
             </span>
           )}
           {isAlias && (
             <span className="flex items-center gap-1 text-[10px] text-[#38bdf8] font-medium uppercase tracking-wider bg-[#38bdf8]/10 px-2 py-0.5 rounded-full border border-[#38bdf8]/20">
-              <UserCheck size={11} /> iKa$h Alias
+              <UserCheck size={11} /> LocalSettle Alias
             </span>
           )}
         </div>
@@ -39,11 +39,11 @@ export const SendRecipientInput = forwardRef<HTMLInputElement, SendRecipientInpu
           <input
             ref={ref}
             type="text"
-            placeholder="alex.ikash or GXXXXXX..."
+            placeholder="alex.localsettle or GXXXXXX..."
             value={value}
             disabled={disabled}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full rounded-xl border border-[#45493233] bg-[#1B1B21] px-4 py-3.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#BCED09] disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-mono md:font-sans"
+            className="w-full rounded-xl border border-[#26394933] bg-[#0D1D2C] px-4 py-3.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#55D6BE] disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-mono md:font-sans"
             autoComplete="off"
             autoCorrect="off"
             spellCheck="false"
@@ -54,7 +54,7 @@ export const SendRecipientInput = forwardRef<HTMLInputElement, SendRecipientInpu
           <span className="text-red-400 text-[11px] mt-1.5 font-medium">{error}</span>
         ) : (
           <span className="text-[#C2C7D099] text-[10px] mt-1.5">
-            Enter a Stellar public key (starting with G) or a registered iKa$h alias.
+            Enter a Stellar public key (starting with G) or a registered LocalSettle alias.
           </span>
         )}
       </div>
