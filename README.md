@@ -108,3 +108,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Keep fron
 ## Security and trust
 
 Never request or commit a wallet secret, recovery phrase, token, or real user payment data. User transaction signing is requested from the connected wallet. Escrow deployment also depends on a separately configured platform operator key in the backend, so deployments must secure and restrict that key. See the [backend architecture notes](https://github.com/Local-Settle/local-settle-backend/blob/main/docs/architecture.md) for the complete trust boundary.
+
+## License
+
+LocalSettle is licensed under the MIT License. See [LICENSE](LICENSE).
