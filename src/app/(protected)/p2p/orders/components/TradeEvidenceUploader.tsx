@@ -19,6 +19,7 @@ export interface TradeEvidenceUploaderProps {
     canCancel: boolean;
     isCancelling: boolean;
     onCancelOrder: () => void;
+    paymentInstructionsAvailable?: boolean;
 }
 
 export function TradeEvidenceUploader({
@@ -29,7 +30,8 @@ export function TradeEvidenceUploader({
     onStatusChange,
     canCancel,
     isCancelling,
-    onCancelOrder
+    onCancelOrder,
+    paymentInstructionsAvailable = true,
 }: TradeEvidenceUploaderProps) {
     const { markFiatSent, syncEscrow, uploadEvidence } = useEscrows();
 
@@ -167,7 +169,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleAction = async () => {
-        if (isSubmitting || !buyerAddress || !escrowId || !evidenceUrlState) return;
+        if (isSubmitting || !paymentInstructionsAvailable || !buyerAddress || !escrowId || !evidenceUrlState) return;
         setIsSubmitting(true);
         try {
             if (escrowStatus === "funded") {
@@ -198,7 +200,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleSignatureRetry = async () => {
-        if (!escrowId) return;
+        if (!paymentInstructionsAvailable || !escrowId) return;
         setIsSubmitting(true);
         try {
             const signedXdr = await sig.retry();
@@ -423,6 +425,11 @@ export function TradeEvidenceUploader({
 
             {/* Action Footer */}
             <div className="flex flex-col gap-3 shrink-0">
+                {escrowStatus === "funded" && !paymentInstructionsAvailable && (
+                    <p role="alert" className="rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-100">
+                        Payment instructions are unavailable. Contact support before sending funds.
+                    </p>
+                )}
                 {escrowStatus === "pending" || escrowStatus === "initialized" ? (
                     <button type="button" disabled className="bg-[#2A292F] w-full h-[56px] text-[#C2C7D0] font-extrabold text-[16px] leading-[24px] rounded-[12px] uppercase cursor-not-allowed tracking-[-0.4px]">
                         WAITING FOR FUNDING
@@ -431,11 +438,11 @@ export function TradeEvidenceUploader({
                     <button 
                         type="button" 
                         onClick={handleAction}
-                        disabled={isSubmitting || uploadState !== 'uploaded'}
+                        disabled={isSubmitting || uploadState !== 'uploaded' || !paymentInstructionsAvailable}
                         className="bg-[#55D6BE] disabled:bg-[#11212E] disabled:text-[rgba(155,171,183,0.5)] disabled:cursor-not-allowed w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 flex items-center justify-center gap-2 tracking-[-0.4px] cursor-pointer"
                     >
                         {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
-                        {isSubmitting ? "PROCESSING..." : "MARK AS PAID"}
+                        {isSubmitting ? "PROCESSING..." : paymentInstructionsAvailable ? "MARK AS PAID" : "PAYMENT DETAILS UNAVAILABLE"}
                     </button>
                 ) : escrowStatus === "fiat_sent" ? (
                     <button type="button" disabled className="bg-[#2A292F] w-full h-[56px] text-[#C2C7D0] font-extrabold text-[16px] leading-[24px] rounded-[12px] uppercase cursor-not-allowed tracking-[-0.4px]">

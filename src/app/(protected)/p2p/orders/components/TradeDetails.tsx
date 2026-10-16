@@ -11,7 +11,7 @@ export interface TradeDetailsProps {
     total: number;
     fiatCurrency?: string;
     escrowDuration?: string;
-    paymentMethod: string;
+    paymentMethod?: string;
     paymentType?: "platform" | "web" | "bank";
     accountIdentifier?: string;
     accountOwner?: string;
@@ -31,9 +31,9 @@ export function TradeDetails({
     escrowDuration = "15 Minutes",
     paymentMethod,
     paymentType = "bank",
-    accountIdentifier = "N/A",
-    accountOwner = "QuantVortex_LP",
-    counterpartyName = "QuantVortex_LP",
+    accountIdentifier = "",
+    accountOwner = "",
+    counterpartyName = "Counterparty unavailable",
     counterpartyRate = "99.8%",
     counterpartyKyc = true,
     counterpartyProfileImageUrl
@@ -134,7 +134,7 @@ export function TradeDetails({
                                 Payment Method
                             </span>
                             <span className="text-white font-medium text-[16px] font-space">
-                                {paymentMethod}
+                                {paymentMethod || "Payment method unavailable"}
                             </span>
                         </div>
 
@@ -257,13 +257,13 @@ export function TradeDetails({
                             <div className="flex items-center gap-3">
                                 {renderPaymentIcon()}
                                 <span className="text-[14px] leading-5 text-[#D7E0E6] font-medium font-manrope">
-                                    {paymentMethod}
+                                    {paymentMethod || "Payment method unavailable"}
                                 </span>
                             </div>
                             
                             {/* Copy button & Toggle Arrow */}
                             <div className="flex items-center gap-3">
-                                <button 
+                                {accountIdentifier && <button
                                     type="button" 
                                     onClick={handleCopy}
                                     className="p-1 rounded hover:bg-white/[0.04] active:scale-95 transition-all flex items-center gap-1.5"
@@ -276,7 +276,7 @@ export function TradeDetails({
                                     ) : (
                                         <Copy className="w-4 h-4 text-[#C2C7D0] hover:text-white transition-colors" />
                                     )}
-                                </button>
+                                </button>}
                                 {isAccordionOpen ? (
                                     <ChevronUp className="w-4 h-4 text-[#C2C7D0]" />
                                 ) : (
@@ -294,7 +294,7 @@ export function TradeDetails({
                                         ACCOUNT IDENTIFIER
                                     </p>
                                     <span className="text-white text-[12px] font-mono select-all bg-[#081521] px-3 py-2 border border-white/[0.03] rounded">
-                                        {accountIdentifier}
+                                        {accountIdentifier || "Payment account details were not provided."}
                                     </span>
                                 </div>
                                 {/* Account Owner */}
@@ -303,7 +303,7 @@ export function TradeDetails({
                                         ACCOUNT OWNER
                                     </p>
                                     <span className="text-white text-[12px] font-semibold pl-1">
-                                        {accountOwner}
+                                        {accountOwner || "Beneficiary name was not provided."}
                                     </span>
                                 </div>
                             </div>

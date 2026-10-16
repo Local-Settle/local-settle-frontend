@@ -197,19 +197,21 @@ export default function TradePage({ params }: PageProps) {
         paymentType = "bank";
     }
 
-    const paymentMethodLabel = paymentMethodObj?.payment_provider?.name || paymentMethodObj?.bankName || "Bank Transfer SEPA";
+    const paymentMethodLabel = paymentMethodObj?.payment_provider?.name || paymentMethodObj?.bankName || "";
     
     const accountIdentifier = 
         paymentMethodObj?.accountIdentifier || 
         paymentMethodObj?.account_identifier || 
         paymentMethodObj?.accountDetails || 
-        "No details provided";
+        "";
         
     const accountOwner = 
         paymentMethodObj?.beneficiaryName || 
         paymentMethodObj?.beneficiary_name || 
-        order.seller?.alias || 
-        "QuantVortex_LP";
+        "";
+    const paymentInstructionsAvailable = Boolean(
+        paymentMethodLabel && (paymentType !== "bank" || (accountIdentifier && accountOwner))
+    );
 
     const escrowId = order.escrow?.escrowId;
     const escrowStatus = order.escrow?.escrowStatus || "pending";
@@ -283,6 +285,7 @@ export default function TradePage({ params }: PageProps) {
                                                 paymentType={paymentType}
                                                 accountIdentifier={accountIdentifier}
                                                 accountOwner={accountOwner}
+                                                paymentInstructionsAvailable={paymentInstructionsAvailable}
                                                 counterpartyName={counterpartyUser?.alias || "Seller"}
                                                 counterpartyRate="99.8%"
                                                 counterpartyKyc={counterpartyUser?.kycStatus === "approved"}
@@ -296,6 +299,7 @@ export default function TradePage({ params }: PageProps) {
                                                 escrowStatus={escrowStatus}
                                                 buyerAddress={buyerAddress}
                                                 amount={amountVal}
+                                                paymentInstructionsAvailable={paymentInstructionsAvailable}
                                                 evidenceUrl={order.escrow?.evidenceUrl}
                                                 onStatusChange={fetchOrder}
                                                 canCancel={canCancel}
