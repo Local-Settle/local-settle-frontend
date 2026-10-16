@@ -3,7 +3,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useOrders } from "@/features/order/hooks/useOrders";
-import { useRouter } from "next/navigation";
 import { Aside } from "@/app/components/Aside";
 import { Header } from "@/app/components/Header";
 import { TransactionExportMenu } from "@/features/transactions/components/TransactionExportMenu";
@@ -14,7 +13,8 @@ export default function TransactionsPage() {
     const { currentUser } = useUser();
     const { orders, fetchUserOrders } = useOrders();
     const [loading, setLoading] = useState(true);
-    const router = useRouter();
+    const [selectedTransaction, setSelectedTransaction] = useState<(typeof orders)[number] | null>(null);
+    const [copiedHash, setCopiedHash] = useState(false);
 
     // Filters states
     // Default to completed transactions
@@ -276,7 +276,16 @@ export default function TransactionsPage() {
                                         return (
                                             <div
                                                 key={o.orderId}
-                                                onClick={() => router.push("/p2p/orders/" + o.orderId)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onClick={() => { setSelectedTransaction(o); setCopiedHash(false); }}
+                                                onKeyDown={(event) => {
+                                                    if (event.key === "Enter" || event.key === " ") {
+                                                        event.preventDefault();
+                                                        setSelectedTransaction(o);
+                                                        setCopiedHash(false);
+                                                    }
+                                                }}
                                                 className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1.2fr_1fr_1.2fr_40px] gap-4 p-6 border-b border-[rgba(22,22,24,0.05)] items-center hover:bg-[#1C1C1F] transition-colors cursor-pointer select-none"
                                             >
                                                 {/* Asset & Type */}
@@ -346,6 +355,37 @@ export default function TransactionsPage() {
                         </div>
                     </div>
                 </main>
+            {selectedTransaction && (() => {
+                const txHash = selectedTransaction.escrow?.txHashRelease || selectedTransaction.escrow?.txHashLock;
+                const operation = selectedTransaction.escrow?.txHashRelease
+                    ? "Escrow release"
+                    : selectedTransaction.escrow?.txHashLock ? "Escrow lock" : "Order transaction";
+                return (
+                    <div className="fixed inset-0 z-50 flex justify-end bg-black/60" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedTransaction(null); }}>
+                        <section role="dialog" aria-modal="true" aria-labelledby="transaction-detail-title" className="h-full w-full max-w-lg overflow-y-auto border-l border-[#263949] bg-[#0D1D2C] p-6 text-white shadow-2xl">
+                            <div className="mb-6 flex items-center justify-between">
+                                <h2 id="transaction-detail-title" className="text-lg font-bold">Transaction details</h2>
+                                <button type="button" onClick={() => setSelectedTransaction(null)} aria-label="Close transaction details" className="rounded px-3 py-2 text-sm hover:bg-white/10">Close</button>
+                            </div>
+                            <dl className="space-y-4 text-sm">
+                                <div><dt className="text-[#9BABB7]">Order</dt><dd className="break-all">{selectedTransaction.orderId}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Operation</dt><dd>{operation}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Asset</dt><dd>{selectedTransaction.offer?.assetCode || selectedTransaction.assetCode || "Not provided"}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Amount</dt><dd>{selectedTransaction.assetAmount || "Not provided"}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Date</dt><dd>{selectedTransaction.createdAt ? new Date(selectedTransaction.createdAt).toLocaleString() : "Not provided"}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Buyer address</dt><dd className="break-all">{selectedTransaction.escrow?.buyerAddress || "Not provided"}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Seller address</dt><dd className="break-all">{selectedTransaction.escrow?.sellerAddress || "Not provided"}</dd></div>
+                                <div><dt className="text-[#9BABB7]">Asset issuer and memo</dt><dd>Not provided by the transaction record</dd></div>
+                                <div><dt className="text-[#9BABB7]">Transaction hash</dt><dd className="break-all">{txHash || "Not provided"}</dd></div>
+                            </dl>
+                            {txHash && <div className="mt-6 flex gap-3">
+                                <button type="button" onClick={() => void navigator.clipboard.writeText(txHash).then(() => setCopiedHash(true))} className="rounded-lg bg-[#172B3A] px-4 py-2 text-sm">{copiedHash ? "Copied" : "Copy hash"}</button>
+                                <a href={`https://stellar.expert/explorer/testnet/tx/${encodeURIComponent(txHash)}`} target="_blank" rel="noreferrer" className="rounded-lg bg-[#55D6BE] px-4 py-2 text-sm font-semibold text-black">Open explorer</a>
+                            </div>}
+                        </section>
+                    </div>
+                );
+            })()}
             </div>
         </div>
     );
