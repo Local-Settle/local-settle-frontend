@@ -37,6 +37,38 @@ jobs:
 
       - run: pnpm run test
 
+  performance-budget:
+    name: Check protected route bundle budgets
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_API_URL: https://api.example.invalid
+      NEXT_PUBLIC_STELLAR_NETWORK: TESTNET
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run check:route-budgets
+      - run: pnpm run analyze:bundle
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: protected-route-bundle-analysis
+          path: .next/diagnostics/analyze/
+          if-no-files-found: error
+          retention-days: 14
+
   build:
     name: Build Docker image
     needs: test
