@@ -204,7 +204,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
     );
 
     return (
-        <div className="w-full h-full bg-[#0D1D2C] flex flex-col overflow-hidden shrink-0 font-space select-none">
+        <div className="w-full flex-1 min-h-0 bg-[#0D1D2C] flex flex-col overflow-hidden shrink-0 font-space select-none">
             {/* Header */}
             <header className="h-[64px] border-b border-[rgba(69,73,50,0.1)] px-[24px] flex items-center justify-between shrink-0 bg-[#0D1D2C]">
                 <div className="flex items-center gap-3">
