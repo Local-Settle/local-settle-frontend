@@ -157,7 +157,7 @@ export function TradeDetails({
     // VISTA DE COMPRADOR (image_9a25b1.png)
     // ==========================================
     return (
-        <div className="bg-[#0D1D2C] w-[616.2px] h-[571.5px] border-l-4 border-[#55D6BE] rounded-r-[12px] flex flex-col justify-between p-8 font-space shrink-0 select-none">
+        <div className="bg-[#0D1D2C] w-full min-h-[520px] md:w-[616.2px] md:h-[571.5px] border-l-4 border-[#55D6BE] rounded-r-[12px] flex flex-col justify-between p-5 md:p-8 font-space md:shrink-0 select-none">
             {/* Top row */}
             <div className="flex flex-row justify-between items-start w-full h-[60px] shrink-0">
                 <div className="flex flex-col gap-1">

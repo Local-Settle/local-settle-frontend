@@ -263,7 +263,7 @@ export function TradeEvidenceUploader({
 
     return (
         <>
-        <div className="bg-[#0D1D2C] w-[402.8px] h-[571.5px] rounded-[16px] flex flex-col justify-between p-[12px_16px] gap-6 font-space shrink-0 select-none">
+        <div className="bg-[#0D1D2C] w-full min-h-[571.5px] md:w-[402.8px] md:h-[571.5px] rounded-[16px] flex flex-col justify-between p-[12px_16px] gap-6 font-space md:shrink-0 select-none">
             
             {/* Header Info Banner */}
             <div className="bg-[#0D1D2C] border-l border-[rgba(69,73,50,0.3)] rounded-[8px] p-[20px_12px] h-[99px] flex gap-3 shrink-0">

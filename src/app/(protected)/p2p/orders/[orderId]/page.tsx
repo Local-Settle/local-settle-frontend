@@ -225,10 +225,10 @@ export default function TradePage({ params }: PageProps) {
             <Aside />
             <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                 <Header description="trading floor" title="p2p marketplace" />
-                <main className="flex flex-col md:flex-row items-start w-full h-[calc(100vh-96px)] overflow-hidden bg-[#081521] min-h-0 select-none">
+                <main className="flex flex-col md:flex-row items-start w-full h-auto min-h-[calc(100vh-96px)] md:h-[calc(100vh-96px)] overflow-y-auto md:overflow-hidden bg-[#081521] min-h-0 select-none">
                     
                     {/* COLUMNA IZQUIERDA: Panel de Transacción */}
-                    <div className="w-full md:w-[1172px] h-full flex flex-col border-r border-[rgba(69,73,50,0.1)] bg-[#081521] shrink-0 min-h-0">
+                    <div className="w-full md:w-[1172px] h-auto md:h-full flex flex-col border-r border-[rgba(69,73,50,0.1)] bg-[#081521] md:shrink-0 min-h-0">
                         
                         {/* Subheader superior de navegación */}
                         <div className="h-[64px] border-b border-[rgba(69,73,50,0.1)] bg-[rgba(19,19,24,0.6)] backdrop-blur-md px-4 md:px-[60px] flex items-center justify-between shrink-0">
@@ -267,10 +267,10 @@ export default function TradePage({ params }: PageProps) {
                         </div>
 
                         {/* Contenedor Principal Escalado por Rol */}
-                        <div className="grow flex flex-col p-4 md:p-[32px_64px_40px_64px] overflow-auto justify-between items-center min-h-0 w-full">
+                        <div className="flex-1 flex flex-col p-4 md:p-[32px_64px_40px_64px] overflow-visible md:overflow-auto justify-between items-center min-h-0 w-full">
                             
                             {isBuyer ? (
-                                <div className="flex flex-col items-center justify-center h-full w-full">
+                                <div className="flex flex-col items-center justify-center md:h-full w-full">
                                     <div className="flex flex-col md:flex-row items-start gap-4 shrink-0 min-h-0 w-full">
                                         <div className="w-full md:w-[616.2px] h-full shrink-0">
                                             <TradeDetails 
@@ -388,7 +388,7 @@ export default function TradePage({ params }: PageProps) {
                     </div>
 
                     {/* COLUMNA DERECHA: Componente de Chat global */}
-                    <div className="w-full md:w-[460px] h-full bg-[#0D1D2C] flex flex-col shrink-0 min-h-0">
+                    <div className="w-full md:w-[460px] h-[min(65vh,560px)] min-h-[400px] md:h-full bg-[#0D1D2C] flex flex-col md:shrink-0 min-h-0">
                         <Chat 
                             orderId={order.orderId} 
                             chatName={counterpartyUser?.alias || (isBuyer ? "Seller" : "Buyer")} 
