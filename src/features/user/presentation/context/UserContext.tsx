@@ -1,9 +1,10 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback, useRef } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Users } from '../../models/users';
 import { walletService } from '../../../wallet/application/wallet.service';
-import { setTokenProvider, setUnauthorizedHandler } from '@/lib/api';
+import { resetCsrfToken, setTokenProvider, setUnauthorizedHandler } from '@/lib/api';
 
 function isTokenExpired(token: string | null) {
     if (!token) return true;
@@ -28,6 +29,7 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+    const queryClient = useQueryClient();
     const [currentUser, setCurrentUser] = useState<Users | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +44,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }, [accessToken]);
 
     const logout = useCallback(() => {
+        queryClient.clear();
+        resetCsrfToken();
         setCurrentUser(null);
         setAccessToken(null);
         localStorage.removeItem('ikash_user');
@@ -49,7 +53,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('ikash_wallet_session');
         walletService.clearSession();
         window.location.href = "/";
-    }, []);
+    }, [queryClient]);
 
     // Keep the api client's token provider in sync with context state without
     // a static import (avoids a circular dependency).
