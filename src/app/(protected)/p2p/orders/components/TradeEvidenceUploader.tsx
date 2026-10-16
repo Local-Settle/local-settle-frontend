@@ -7,6 +7,7 @@ import { useSignatureCancellation } from "@/features/wallet/hooks/useSignatureCa
 import { Info, Upload, FileUp, CircleCheck, Loader2, Search, Trash2 } from "lucide-react";
 import { SignatureCancelledModal } from "../../components/SignatureCancelledModal";
 import { useNotifications } from "@/features/notifications";
+import { validateEvidenceFile } from "@/features/escrow/utils/evidence-file";
 
 export interface TradeEvidenceUploaderProps {
     orderId: string;
@@ -40,6 +41,7 @@ export function TradeEvidenceUploader({
         evidenceUrl ? 'uploaded' : 'idle'
     );
     const [uploadedTime, setUploadedTime] = useState<string | null>(null);
+    const [fileError, setFileError] = useState<string | null>(null);
 
     const [isDragging, setIsDragging] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,18 +71,24 @@ export function TradeEvidenceUploader({
         }
     }, [evidenceUrl, escrowStatus, uploadedTime]);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0];
-            setUploadedFile(file);
-            setUploadState('selected');
-            
-            if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
-            }
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
+    const selectEvidenceFile = (file: File) => {
+        const validationError = validateEvidenceFile(file);
+        if (validationError) {
+            setFileError(validationError);
+            notify("error", validationError);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+            return;
         }
+        setFileError(null);
+        setUploadedFile(file);
+        setUploadState('selected');
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(URL.createObjectURL(file));
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) selectEvidenceFile(file);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -96,15 +104,7 @@ export function TradeEvidenceUploader({
         e.preventDefault();
         setIsDragging(false);
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            const file = e.dataTransfer.files[0];
-            setUploadedFile(file);
-            setUploadState('selected');
-            
-            if (previewUrl) {
-                URL.revokeObjectURL(previewUrl);
-            }
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
+            selectEvidenceFile(e.dataTransfer.files[0]);
         }
     };
 
@@ -282,8 +282,9 @@ export function TradeEvidenceUploader({
                     ref={fileInputRef} 
                     onChange={handleFileChange} 
                     className="hidden" 
-                    accept="image/*,application/pdf"
+                    accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
                 />
+                {fileError && <p role="alert" className="text-red-300 text-xs">{fileError}</p>}
                 
                 {!isEvidenceSubmitted && (
                     <button 
