@@ -7,4 +7,5 @@ export interface Message {
     senderAlias?: string;
     clientMessageId?: string;
     deliveryStatus?: "sending" | "delivered" | "failed";
+    readAt?: string | null;
 }

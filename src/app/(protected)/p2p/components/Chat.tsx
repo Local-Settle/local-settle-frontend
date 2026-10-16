@@ -30,6 +30,9 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
     const [historyLoaded, setHistoryLoaded] = useState(false);
     const [isCounterpartyTyping, setIsCounterpartyTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const nearBottomRef = useRef(true);
+    const markedReadRef = useRef(new Set<string>());
+    const [readReceiptsEnabled, setReadReceiptsEnabled] = useState(false);
 
     // Demo chat is only reachable when the demo flag is on; otherwise mock ids
     // fall through to the real chat flow (which loads from the backend).
@@ -80,13 +83,43 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
         [currentUser, mergeMessages, notify],
     );
 
-    const { status: connectionStatus, sendMessage } = useChatSocket({
+    const handleMessageRead = useCallback((event: { orderId: string; messageId: string; readerId: string; readAt: string }) => {
+        if (!currentUser || event.readerId === currentUser.userId) return;
+        setMessages((previous) => previous.map((message) =>
+            message.messageId === event.messageId && message.orderId === event.orderId && message.senderId === currentUser.userId
+                ? { ...message, readAt: event.readAt }
+                : message,
+        ));
+    }, [currentUser]);
+
+    const { status: connectionStatus, sendMessage, markMessageRead } = useChatSocket({
         orderId,
         accessToken,
         enabled: Boolean(currentUser && accessToken && historyLoaded && !isDemo),
         onMessage: handleIncomingMessage,
+        onMessageRead: handleMessageRead,
         onError: handleSocketError,
     });
+
+    useEffect(() => {
+        if (!currentUser) return;
+        const key = `localsettle:chat:read-receipts:${currentUser.userId}`;
+        setReadReceiptsEnabled(window.localStorage.getItem(key) === "true");
+    }, [currentUser?.userId]);
+
+    useEffect(() => {
+        markedReadRef.current.clear();
+        nearBottomRef.current = true;
+    }, [orderId]);
+
+    useEffect(() => {
+        if (!readReceiptsEnabled || !currentUser || isDemo || document.visibilityState !== "visible" || !nearBottomRef.current) return;
+        const unread = messages.filter((message) => message.senderId !== currentUser.userId && !markedReadRef.current.has(message.messageId));
+        for (const message of unread) {
+            markedReadRef.current.add(message.messageId);
+            void markMessageRead(message.messageId).catch(() => markedReadRef.current.delete(message.messageId));
+        }
+    }, [currentUser, isDemo, markMessageRead, messages, readReceiptsEnabled]);
 
     // Load initial messages
     useEffect(() => {
@@ -227,13 +260,29 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                         </p>
                     </div>
                 </div>
-                <button className="text-[#9BABB7] hover:text-white cursor-pointer px-1">
-                    <MoreVertical className="w-5 h-5 text-[#9BABB7]" />
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        type="button"
+                        aria-pressed={readReceiptsEnabled}
+                        onClick={() => {
+                            const enabled = !readReceiptsEnabled;
+                            setReadReceiptsEnabled(enabled);
+                            if (currentUser) window.localStorage.setItem(`localsettle:chat:read-receipts:${currentUser.userId}`, String(enabled));
+                        }}
+                        className="text-[10px] text-[#9BABB7] hover:text-white"
+                        title="Read receipts are off by default and saved on this device"
+                    >
+                        Read receipts {readReceiptsEnabled ? "On" : "Off"}
+                    </button>
+                    <MoreVertical className="w-5 h-5 text-[#9BABB7]" aria-hidden="true" />
+                </div>
             </header>
             
             {/* Chat Messages Body */}
-            <main role="log" aria-live="polite" aria-label="Chat messages" className="flex-grow overflow-y-auto p-6 space-y-5 bg-[#0D1D2C]/10 scrollbar-thin flex flex-col">
+            <main onScroll={(event) => {
+                const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+                nearBottomRef.current = scrollHeight - scrollTop - clientHeight < 80;
+            }} role="log" aria-live="polite" aria-label="Chat messages" className="flex-grow overflow-y-auto p-6 space-y-5 bg-[#0D1D2C]/10 scrollbar-thin flex flex-col">
                 {/* Order Created status banner */}
                 <section className="flex items-center justify-center my-2 shrink-0">
                     <div className="bg-[#11212E] px-4 py-1.5 flex items-center justify-center rounded-full border border-[rgba(69,73,50,0.2)]">
@@ -271,7 +320,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                                             ? "• Sending…"
                                             : msg.deliveryStatus === "failed"
                                                 ? "• Failed"
-                                                : "• Delivered"
+                                                : msg.readAt ? "• Read" : "• Sent"
                                     )}
                                 </span>
                             </div>

@@ -22,6 +22,7 @@ export interface ChatAck<T = undefined> {
 
 export interface ServerToClientEvents {
     'message-created': (message: Message) => void;
+    'message-read': (event: { orderId: string; messageId: string; readerId: string; readAt: string }) => void;
     'chat-error': (error: ChatError) => void;
     'user-joined': (event: { orderId: string; userId: string }) => void;
     'user-left': (event: { orderId: string; userId: string }) => void;
@@ -39,5 +40,9 @@ export interface ClientToServerEvents {
     'send-message': (
         payload: { orderId: string; content: string; clientMessageId: string },
         acknowledgement: (response: ChatAck<Message>) => void,
+    ) => void;
+    'mark-read': (
+        payload: { orderId: string; messageId: string },
+        acknowledgement: (response: ChatAck) => void,
     ) => void;
 }
