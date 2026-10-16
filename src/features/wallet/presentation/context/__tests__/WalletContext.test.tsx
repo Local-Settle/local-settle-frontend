@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WalletProvider, useWalletContext } from "../WalletContext";
 import * as walletServiceModule from "../../../application/wallet.service";
 
@@ -46,7 +47,13 @@ vi.mock("next/navigation", () => ({
 const mockedWalletService = vi.mocked(walletServiceModule.walletService);
 
 function renderWalletContext() {
-    return renderHook(() => useWalletContext(), { wrapper: WalletProvider });
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <QueryClientProvider client={queryClient}>
+            <WalletProvider>{children}</WalletProvider>
+        </QueryClientProvider>
+    );
+    return { ...renderHook(() => useWalletContext(), { wrapper }), queryClient };
 }
 
 describe("WalletContext", () => {
@@ -124,13 +131,14 @@ describe("WalletContext", () => {
             .mockResolvedValueOnce("GABC_FREIGHTER")
             .mockResolvedValueOnce("GXYZ_LOBSTR");
 
-        const { result } = renderWalletContext();
+        const { result, queryClient } = renderWalletContext();
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         await act(async () => {
             await result.current.connect("freighter-id");
         });
         expect(result.current.publicKey).toBe("GABC_FREIGHTER");
+        queryClient.setQueryData(["private", "wallet"], { balance: "cached" });
 
         await act(async () => {
             await result.current.connect("lobstr-id");
@@ -138,6 +146,7 @@ describe("WalletContext", () => {
 
         expect(result.current.publicKey).toBe("GXYZ_LOBSTR");
         expect(result.current.walletId).toBe("lobstr-id");
+        expect(queryClient.getQueryData(["private", "wallet"])).toBeUndefined();
     });
 
     it("surfaces a rejected connection as an error and notifies the user", async () => {
