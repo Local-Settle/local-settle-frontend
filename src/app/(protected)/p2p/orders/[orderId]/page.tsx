@@ -21,6 +21,62 @@ import { useEscrowStatusSync } from "@/features/escrow/hooks/useEscrowStatusSync
 import { ArrowLeft, AlertTriangle, Ban, Loader2, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
+interface OnChainSnapshot {
+    onChainBalance?: unknown;
+    onChainData?: unknown;
+}
+
+function OnChainEscrowDetails({ escrowId, expectedAmount, assetCode }: { escrowId?: string; expectedAmount?: string; assetCode: string }) {
+    const { accessToken } = useUser();
+    const [snapshot, setSnapshot] = useState<OnChainSnapshot | null>(null);
+    const [failed, setFailed] = useState(false);
+
+    useEffect(() => {
+        if (!escrowId) return;
+        const controller = new AbortController();
+        const headers: Record<string, string> = {};
+        if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/escrows/${escrowId}/status`, { headers, signal: controller.signal })
+            .then(async response => {
+                if (!response.ok) throw new Error("On-chain state unavailable");
+                return response.json() as Promise<OnChainSnapshot>;
+            })
+            .then(setSnapshot)
+            .catch(error => {
+                if (error instanceof DOMException && error.name === "AbortError") return;
+                setFailed(true);
+            });
+        return () => controller.abort();
+    }, [escrowId, accessToken]);
+
+    if (!escrowId) return null;
+    const balances = Array.isArray(snapshot?.onChainBalance) ? snapshot.onChainBalance as Record<string, unknown>[] : [];
+    const actualBalance = balances.find(item => item.balance !== null && item.balance !== undefined)?.balance
+        ?? (typeof snapshot?.onChainBalance === "number" || typeof snapshot?.onChainBalance === "string" ? snapshot.onChainBalance : null);
+    const chainEntries = Array.isArray(snapshot?.onChainData) ? snapshot.onChainData as Record<string, unknown>[] : [];
+    const milestones = Array.isArray(chainEntries[0]?.milestones) ? chainEntries[0].milestones as Record<string, unknown>[] : [];
+
+    return (
+        <section aria-label="On-chain escrow details" className="w-full rounded-xl border border-[#263949] bg-[#0D1D2C] p-4 text-sm">
+            <h3 className="mb-3 font-bold text-white">On-chain escrow details</h3>
+            {failed ? <p className="text-amber-300">Current chain data could not be loaded.</p> : (
+                <div className="space-y-2 text-[#C2C7D0]">
+                    <p>Expected amount: <strong className="text-white">{expectedAmount || "Unavailable"} {assetCode}</strong></p>
+                    <p>On-chain balance: <strong className="text-white">{actualBalance === null ? "Unavailable" : `${actualBalance} ${assetCode}`}</strong></p>
+                    <div>
+                        <span>Milestones: </span>
+                        {milestones.length ? milestones.map((milestone, index) => (
+                            <span key={index} className="mr-2 text-white">
+                                {String(milestone.title ?? milestone.name ?? `Milestone ${index + 1}`)} — {String(milestone.status ?? "status unavailable")}
+                            </span>
+                        )) : <span>Unavailable</span>}
+                    </div>
+                </div>
+            )}
+        </section>
+    );
+}
+
 interface PageProps {
     params: Promise<{ orderId: string }>;
 }
@@ -384,6 +440,11 @@ export default function TradePage({ params }: PageProps) {
                                     
                                 </div>
                             )}
+                            <OnChainEscrowDetails
+                                escrowId={escrowId}
+                                expectedAmount={order.assetAmount}
+                                assetCode={order.offer?.assetCode || "USDC"}
+                            />
                         </div>
                     </div>
 
