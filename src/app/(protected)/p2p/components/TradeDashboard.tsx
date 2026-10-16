@@ -348,9 +348,11 @@ function TradeDashboardInner() {
                             ];
 
                             return (
-                                <div
+                                <article
                                     key={offer.offerId}
-                                    className="flex flex-col xl:flex-row bg-[#0D1D2C] border border-[#263949] rounded-2xl p-6 hover:border-[#55D6BE] hover:bg-[#1A1A1C] transition-all duration-300 group gap-6 xl:gap-0"
+                                    aria-labelledby={`offer-title-${offer.offerId}`}
+                                    tabIndex={0}
+                                    className="flex flex-col xl:flex-row bg-[#0D1D2C] border border-[#263949] rounded-2xl p-6 hover:border-[#55D6BE] hover:bg-[#1A1A1C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] transition-all duration-300 group gap-6 xl:gap-0"
                                 >
                                     {/* Left: Identity and Capacity */}
                                     <div className="flex flex-col gap-6 xl:w-[40%]">
@@ -367,7 +369,7 @@ function TradeDashboardInner() {
                                                 <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#55D6BE] border-2 border-[#0D1D2C] rounded-full"></div>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-white font-bold text-base">{userFound[offer.creatorId]?.alias || "Unknown"}</span>
+                                                <h3 id={`offer-title-${offer.offerId}`} className="text-white font-bold text-base">Offer from {userFound[offer.creatorId]?.alias || "Unknown"}</h3>
                                                 <span className="text-[#55D6BE] text-xs font-semibold mt-0.5 tracking-wide">1,420 ORDERS • 98.5%</span>
                                             </div>
                                         </div>
@@ -424,7 +426,8 @@ function TradeDashboardInner() {
                                                 }
                                                 setSelectedOffer(offer);
                                             }}
-                                            className={`w-full max-w-[220px] py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${isVerified
+                                            aria-label={`${tab === "Buy" ? "Buy from" : "Sell to"} ${userFound[offer.creatorId]?.alias || "this trader"}`}
+                                            className={`w-full max-w-[220px] py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1D2C] ${isVerified
                                                 ? "bg-[#55D6BE] text-black hover:shadow-[0_0_20px_rgba(85,214,190,0.25)] hover:scale-[1.02] active:scale-[0.98]"
                                                 : "bg-gray-700 text-gray-400 cursor-not-allowed"
                                                 }`}
@@ -432,7 +435,7 @@ function TradeDashboardInner() {
                                             {tab === "Buy" ? "BUY" : "SELL"}
                                         </button>
                                     </div>
-                                </div>
+                                </article>
                             );
                         })}
                     </div>
