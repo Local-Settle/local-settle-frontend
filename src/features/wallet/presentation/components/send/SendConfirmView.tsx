@@ -52,15 +52,15 @@ export function SendConfirmView({
               {truncateAddress(recipient.address)}
             </span>
             {!recipient.exists && (
-              <span className="text-amber-400 text-[10px] mt-1 font-medium">
-                No LocalSettle profile — sending directly to Stellar address
+              <span className="text-amber-300 text-xs mt-2 font-medium">
+                This Stellar account is not funded or active yet. It must be activated before you can send.
               </span>
             )}
           </div>
         </div>
 
         {/* Warning if USDC and no trustline */}
-        {assetName === "USDC" && !recipient.hasUsdcTrustline && (
+        {recipient.exists && assetName === "USDC" && !recipient.hasUsdcTrustline && (
           <div className="mt-4 p-3 bg-amber-950/30 border border-amber-500/40 rounded-xl flex items-start gap-2.5">
             <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <p className="text-amber-300 text-xs leading-relaxed">
@@ -111,12 +111,14 @@ export function SendConfirmView({
         <button
           type="button"
           onClick={onConfirm}
-          disabled={isLoading}
-          className="flex-1 flex items-center justify-center gap-2 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+          disabled={isLoading || !recipient.exists}
+          aria-describedby={!recipient.exists ? "inactive-recipient-help" : undefined}
+          className="flex-1 flex items-center justify-center gap-2 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Send size={15} className="stroke-[2.5]" /> Sign & Send
         </button>
       </div>
+      {!recipient.exists && <p id="inactive-recipient-help" className="text-amber-300 text-xs">Activate the recipient account on Stellar before sending.</p>}
     </div>
   );
 }

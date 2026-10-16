@@ -179,7 +179,7 @@ describe("Send Flow Presentation Components", () => {
       const recipient = {
         address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
         alias: null,
-        exists: false,
+        exists: true,
         hasUsdcTrustline: false,
       };
 
@@ -195,7 +195,29 @@ describe("Send Flow Presentation Components", () => {
       );
 
       expect(screen.getByText(/Recipient account might not have established a USDC trustline/i)).toBeTruthy();
-      expect(screen.getByText(/No LocalSettle profile/i)).toBeTruthy();
+      expect(screen.queryByText(/not funded or active yet/i)).toBeNull();
+    });
+
+    it("blocks signing until an unfunded Stellar recipient is activated", () => {
+      render(
+        <SendConfirmView
+          recipient={{
+            address: "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+            alias: null,
+            exists: false,
+            hasUsdcTrustline: false,
+          }}
+          amount="10.00"
+          assetName="USDC"
+          fee="0.03"
+          onBack={vi.fn()}
+          onConfirm={vi.fn()}
+        />,
+      );
+
+      expect(screen.getByText(/not funded or active yet/i)).toBeTruthy();
+      const sendButton = screen.getByRole("button", { name: /Sign & Send/i }) as HTMLButtonElement;
+      expect(sendButton.disabled).toBe(true);
     });
   });
 
