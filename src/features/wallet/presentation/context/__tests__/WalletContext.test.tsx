@@ -213,6 +213,24 @@ describe("WalletContext", () => {
         expect(result.current.publicKey).toBeNull();
     });
 
+    it("clears the authenticated account when the provider changes accounts in the background", async () => {
+        mockedWalletService.connect.mockResolvedValueOnce("GABC_OLD_ACCOUNT");
+        const { result, queryClient } = renderWalletContext();
+        await waitFor(() => expect(result.current.isLoading).toBe(false));
+        await act(async () => result.current.connect("freighter-id"));
+        queryClient.setQueryData(["private", "wallet"], { balance: "old-account" });
+        mockedWalletService.restoreSession.mockResolvedValueOnce(null);
+
+        await act(async () => {
+            window.dispatchEvent(new Event("focus"));
+        });
+
+        await waitFor(() => expect(result.current.isConnected).toBe(false));
+        expect(result.current.publicKey).toBeNull();
+        expect(queryClient.getQueryData(["private", "wallet"])).toBeUndefined();
+        expect(mockSetAccessToken).toHaveBeenLastCalledWith(null);
+    });
+
     describe("network detection & guard", () => {
         it("identifies correct network when detected matches expected", async () => {
             mockedWalletService.connect.mockResolvedValueOnce("GABCPUBLICKEY");
