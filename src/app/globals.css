@@ -8,6 +8,7 @@
   --accent: #55d6be;
   --accent-strong: #38b99f;
   --muted: #9babb7;
+  --disabled-foreground: #b8c5ce;
 }
 
 @theme inline {
@@ -21,6 +22,12 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-localsettle), Arial, Helvetica, sans-serif;
+}
+
+button:disabled,
+button:disabled * {
+  color: var(--disabled-foreground) !important;
+  opacity: 1 !important;
 }
 
 @keyframes toast-enter {
