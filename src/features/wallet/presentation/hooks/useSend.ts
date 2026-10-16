@@ -24,6 +24,7 @@ export interface RecipientInfo {
 export interface SendState {
   step: SendStep;
   recipient: RecipientInfo | null;
+  memo: string | null;
   fee: string | null;
   txHash: string | null;
   errorMessage: string | null;
@@ -39,13 +40,19 @@ export function useSend() {
   const [state, setState] = useState<SendState>({
     step: "form",
     recipient: null,
+    memo: null,
     fee: null,
     txHash: null,
     errorMessage: null,
   });
 
   const resolveAndPrepare = useCallback(
-    async (query: string, amount: string, assetCode?: string) => {
+    async (query: string, amount: string, assetCode?: string, memo?: string) => {
+      const trimmedMemo = memo?.trim() ?? "";
+      if (new TextEncoder().encode(trimmedMemo).length > 28) {
+        setState(s => ({ ...s, step: "error", errorMessage: "Stellar text memos must be 28 UTF-8 bytes or fewer." }));
+        return;
+      }
       setState(s => ({ ...s, step: "loading", errorMessage: null }));
       preparedXdrRef.current = null;
 
@@ -63,10 +70,11 @@ export function useSend() {
         }
         const recipient: RecipientInfo = await resolveRes.json();
 
-        const prepareBody: { recipient: string; amount: string; asset?: string } = {
+        const prepareBody: { recipient: string; amount: string; asset?: string; memo?: string } = {
           recipient: recipient.address,
           amount,
         };
+        if (trimmedMemo) prepareBody.memo = trimmedMemo;
         if (assetCode && assetCode !== "native") {
           prepareBody.asset = assetCode;
         }
@@ -82,6 +90,10 @@ export function useSend() {
         }
         const prepared = await prepareRes.json() as Record<string, string>;
 
+        if (trimmedMemo && prepared.memo !== trimmedMemo) {
+          throw new Error("The server did not confirm this memo in the prepared transaction. Memo transfers need backend support; signing was not started.");
+        }
+
         const xdr = prepared.xdr ?? prepared.unsignedXdr ?? prepared.txXdr ?? prepared.transaction ?? prepared.envelope ?? null;
         if (!xdr) {
           console.error("[useSend] prepare response missing XDR field:", prepared);
@@ -89,7 +101,7 @@ export function useSend() {
         }
 
         preparedXdrRef.current = xdr;
-        setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null }));
+        setState(s => ({ ...s, step: "confirm", recipient, memo: trimmedMemo || null, fee: prepared.fee ?? null }));
       } catch (err) {
         setState(s => ({
           ...s,
@@ -153,7 +165,7 @@ export function useSend() {
 
   const reset = useCallback(() => {
     preparedXdrRef.current = null;
-    setState({ step: "form", recipient: null, fee: null, txHash: null, errorMessage: null });
+    setState({ step: "form", recipient: null, memo: null, fee: null, txHash: null, errorMessage: null });
   }, []);
 
   const backToConfirm = useCallback(() => {

@@ -56,6 +56,8 @@ function SendContent() {
   );
   const [recipientInput, setRecipientInput] = useState(initialRecipient);
   const [amount, setAmount] = useState(initialAmount);
+  const [memo, setMemo] = useState("");
+  const [memoError, setMemoError] = useState<string | null>(null);
   const [inputError, setInputError] = useState<string | null>(null);
   const [amountError, setAmountError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
@@ -129,15 +131,23 @@ function SendContent() {
       return;
     }
 
+    if (new TextEncoder().encode(memo.trim()).length > 28) {
+      setMemoError("Stellar text memos must be 28 UTF-8 bytes or fewer");
+      return;
+    }
+
     setInputError(null);
     setAmountError(null);
-    resolveAndPrepare(trimmed, amount, assetName);
+    setMemoError(null);
+    resolveAndPrepare(trimmed, amount, assetName, memo.trim());
   };
 
   const handleResetForm = () => {
     reset();
     setAmount("");
     setRecipientInput("");
+    setMemo("");
+    setMemoError(null);
     setInputError(null);
     setAmountError(null);
   };
@@ -287,6 +297,22 @@ function SendContent() {
                         disabled={isTransacting}
                       />
 
+                      <label className="flex flex-col gap-2 text-sm text-[#C2C7D0]">
+                        Stellar text memo <span className="text-xs text-[#9BABB7]">Optional · up to 28 UTF-8 bytes</span>
+                        <input
+                          value={memo}
+                          onChange={(event) => {
+                            setMemo(event.target.value);
+                            setMemoError(null);
+                          }}
+                          disabled={isTransacting}
+                          aria-invalid={Boolean(memoError)}
+                          className="w-full rounded-xl border border-[#263949] bg-[#081521] px-4 py-3 text-white outline-none focus:border-[#55D6BE]"
+                          placeholder="Add a memo"
+                        />
+                        {memoError && <span className="text-xs text-red-400">{memoError}</span>}
+                      </label>
+
                       <div className="pt-4">
                         <button
                           type="button"
@@ -327,6 +353,7 @@ function SendContent() {
                       amount={amount}
                       assetName={assetName}
                       fee={state.fee}
+                      memo={state.memo}
                       onBack={reset}
                       onConfirm={confirmSend}
                       isLoading={isTransacting}
