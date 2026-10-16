@@ -189,6 +189,26 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
         }
     };
 
+
+    const retryFailedMessage = async (failedMessage: Message) => {
+        if (connectionStatus !== "connected" || !failedMessage.clientMessageId) return;
+        setMessages((previous) => previous.map((message) =>
+            message.messageId === failedMessage.messageId
+                ? { ...message, deliveryStatus: "sending" }
+                : message,
+        ));
+        try {
+            const delivered = await sendMessage(failedMessage.content, failedMessage.clientMessageId);
+            mergeMessages(delivered);
+        } catch {
+            setMessages((previous) => previous.map((message) =>
+                message.messageId === failedMessage.messageId
+                    ? { ...message, deliveryStatus: "failed" }
+                    : message,
+            ));
+        }
+    };
+
     const connectionLabel = isDemo
         ? "Demo chat"
         : ({
@@ -232,6 +252,11 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                 </button>
             </header>
             
+            {!isDemo && connectionStatus !== "connected" && (
+                <p role="status" aria-live="polite" className="px-6 py-2 text-xs text-amber-300 bg-amber-950/30">
+                    {connectionLabel}. Messages are not queued while offline; retry any failed message after reconnecting.
+                </p>
+            )}
             {/* Chat Messages Body */}
             <main role="log" aria-live="polite" aria-label="Chat messages" className="flex-grow overflow-y-auto p-6 space-y-5 bg-[#0D1D2C]/10 scrollbar-thin flex flex-col">
                 {/* Order Created status banner */}
@@ -270,7 +295,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                                         msg.deliveryStatus === "sending"
                                             ? "• Sending…"
                                             : msg.deliveryStatus === "failed"
-                                                ? "• Failed"
+                                                ? <>• Failed <button type="button" onClick={() => void retryFailedMessage(msg)} disabled={connectionStatus !== "connected"} className="ml-2 underline disabled:opacity-50">Retry</button></>
                                                 : "• Delivered"
                                     )}
                                 </span>
