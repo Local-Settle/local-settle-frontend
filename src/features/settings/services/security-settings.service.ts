@@ -100,4 +100,23 @@ export const securitySettingsService = {
         }
         return data as UserSession[];
     },
+
+    async revokeRecentSession(sessionId: string, accessToken?: string | null): Promise<void> {
+        if (!sessionId.trim()) {
+            throw new Error("A session ID is required.");
+        }
+
+        const headers: Record<string, string> = {};
+        if (accessToken) {
+            headers["Authorization"] = `Bearer ${accessToken}`;
+        }
+
+        const res = await fetch(
+            `${getApiBaseUrl()}/users/me/sessions/${encodeURIComponent(sessionId)}`,
+            { method: "DELETE", headers },
+        );
+        if (!res.ok) {
+            throw new Error(`Unable to revoke this session (${res.status}).`);
+        }
+    },
 };

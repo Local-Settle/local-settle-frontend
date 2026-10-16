@@ -4,7 +4,7 @@ import { Laptop, Smartphone, Globe, Clock, ShieldCheck, RefreshCw } from "lucide
 import { useRecentSessions } from "../hooks/useRecentSessions";
 
 export function RecentSessionsList() {
-    const { sessions, isLoading, error, reload } = useRecentSessions();
+    const { sessions, isLoading, error, reload, revokingSessionId, revokeError, revokeSession } = useRecentSessions();
     const isStale = Boolean(error && sessions.length > 0);
 
     const formatDate = (dateStr: string) => {
@@ -134,7 +134,7 @@ export function RecentSessionsList() {
                                     </div>
 
                                     {!session.isCurrent && (
-                                        <div className="self-end sm:self-center">
+                                        <div className="flex items-center gap-3 self-end sm:self-center">
                                             <span
                                                 className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
                                                     session.status === "active"
@@ -146,6 +146,17 @@ export function RecentSessionsList() {
                                             >
                                                 {session.status}
                                             </span>
+                                            {session.status === "active" && revokeSession && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => void revokeSession(session.id)}
+                                                    disabled={Boolean(revokingSessionId)}
+                                                    aria-label={`Revoke session on ${session.device}`}
+                                                    className="rounded-md border border-red-400/30 px-2.5 py-1 text-xs font-semibold text-red-300 hover:bg-red-400/10 disabled:cursor-wait disabled:opacity-60"
+                                                >
+                                                    {revokingSessionId === session.id ? "Revoking…" : "Revoke"}
+                                                </button>
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -154,6 +165,12 @@ export function RecentSessionsList() {
                     </div>
                 )}
             </div>
+
+            {revokeError && (
+                <p role="alert" className="mt-4 rounded-lg border border-red-400/20 bg-red-400/10 p-3 text-xs text-red-200">
+                    {revokeError} The session is still listed; retry when the service is available.
+                </p>
+            )}
 
         </div>
     );
