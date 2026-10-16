@@ -14,6 +14,7 @@ interface UseChatSocketOptions {
     accessToken: string | null;
     enabled: boolean;
     onMessage: (message: Message) => void;
+    onMessageRead?: (event: { orderId: string; messageId: string; readerId: string; readAt: string }) => void;
     onError: (error: ChatError) => void;
 }
 
@@ -28,11 +29,13 @@ export function useChatSocket({
     accessToken,
     enabled,
     onMessage,
+    onMessageRead = () => {},
     onError,
 }: UseChatSocketOptions) {
     const socketRef = useRef<ChatSocket | null>(null);
     const messageHandlerRef = useRef(onMessage);
     const errorHandlerRef = useRef(onError);
+    const readHandlerRef = useRef(onMessageRead);
     const [status, setStatus] = useState<ChatConnectionStatus>('disconnected');
 
     useEffect(() => {
@@ -42,6 +45,10 @@ export function useChatSocket({
     useEffect(() => {
         errorHandlerRef.current = onError;
     }, [onError]);
+
+    useEffect(() => {
+        readHandlerRef.current = onMessageRead;
+    }, [onMessageRead]);
 
     useEffect(() => {
         if (!enabled || !accessToken) {
@@ -80,6 +87,9 @@ export function useChatSocket({
             joinOrder();
         });
         socket.on('message-created', (message) => messageHandlerRef.current(message));
+        socket.on('message-read', (event) => {
+            if (event.orderId === orderId) readHandlerRef.current(event);
+        });
         socket.on('chat-error', handleChatError);
         socket.on('disconnect', (reason) => {
             if (reason !== 'io client disconnect') setStatus('disconnected');
@@ -136,8 +146,20 @@ export function useChatSocket({
         [orderId],
     );
 
+    const markMessageRead = useCallback((messageId: string): Promise<void> => {
+        const socket = socketRef.current;
+        if (!socket?.connected) return Promise.reject(new Error('Chat is currently disconnected.'));
+        return new Promise((resolve, reject) => {
+            socket.emit('mark-read', { orderId, messageId }, (response) => {
+                if (response.ok) resolve();
+                else reject(new Error(response.error?.message ?? 'Read receipt could not be recorded.'));
+            });
+        });
+    }, [orderId]);
+
     return {
         status: enabled && accessToken ? status : 'disconnected',
         sendMessage,
+        markMessageRead,
     };
 }
