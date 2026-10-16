@@ -43,6 +43,7 @@ export function EvidencePreview({
     const [timeLeft, setTimeLeft] = useState<string>("00:00");
     const [isExpired, setIsExpired] = useState(false);
     const [pendingAction, setPendingAction] = useState<"fund" | "release" | null>(null);
+    const [previewUnavailable, setPreviewUnavailable] = useState(false);
     const { notify } = useNotifications();
     const sig = useSignatureCancellation();
 
@@ -223,11 +224,16 @@ export function EvidencePreview({
 
                     const renderPreviewFile = () => {
                         if (!evidenceUrl) return <div className="text-white font-mono text-xs">NO FILE</div>;
-                        const isPdfFile = evidenceUrl.toLowerCase().endsWith(".pdf");
+                        const extension = (() => { try { return new URL(evidenceUrl).pathname.split(".").pop()?.toLowerCase() ?? ""; } catch { return ""; } })();
+                        const isPdfFile = extension === "pdf";
+                        if (!isPdfFile && !["png", "jpg", "jpeg", "webp"].includes(extension)) {
+                            return <div className="p-2 text-center text-xs text-[#C2C7D0]">Preview unavailable for this file type. Use Open receipt to download it.</div>;
+                        }
+                        if (previewUnavailable) return <div role="status" className="p-2 text-center text-xs text-amber-300">Evidence link expired or unavailable. Refresh access to try again.</div>;
 
                         if (isPdfFile) {
                             return (
-                                <iframe 
+                                <iframe title="Payment evidence PDF preview"
                                     src={`${evidenceUrl}#toolbar=0&navpanes=0&scrollbar=0`} 
                                     className="w-full h-full border-0 pointer-events-none rounded-[8px]" 
                                 />
@@ -238,6 +244,7 @@ export function EvidencePreview({
                             <img 
                                 src={evidenceUrl} 
                                 alt="Uploaded receipt preview" 
+                                onError={() => setPreviewUnavailable(true)}
                                 className="w-full h-full object-cover rounded-[8px]" 
                             />
                         );
@@ -247,7 +254,7 @@ export function EvidencePreview({
                         <div className="w-full h-full flex flex-col gap-4">
                             <button 
                                 type="button" 
-                                onClick={() => evidenceUrl && window.open(evidenceUrl, '_blank')}
+                                onClick={() => evidenceUrl && window.open(evidenceUrl, '_blank', 'noopener,noreferrer')}
                                 disabled={!evidenceUrl}
                                 className="bg-[#11212E] border border-white/[0.04] w-full h-[48px] text-[#55D6BE] font-bold text-[16px] leading-[24px] rounded-[12px] uppercase flex items-center justify-center gap-2 tracking-[-0.4px] hover:bg-white/[0.04] transition-colors disabled:opacity-50 cursor-pointer"
                             >
@@ -260,7 +267,7 @@ export function EvidencePreview({
                                         EVIDENCE RECEIVED
                                     </span>
                                     <span className="text-[9px] text-[#55D6BE] bg-[#55D6BE]/10 border border-[#55D6BE]/20 font-black p-[2px_8px] rounded-full uppercase tracking-wider font-space">
-                                        Verified
+                                        {evidenceUrl?.split("?")[0].split(".").pop()?.toUpperCase() || "FILE"}
                                     </span>
                                 </div>
                                 
@@ -278,6 +285,7 @@ export function EvidencePreview({
                                         <p className="text-[14px] font-black text-[#D7E0E6] truncate max-w-[160px]">
                                             {getFilenameFromUrl(evidenceUrl)}
                                         </p>
+                                        {evidenceUrl && <button type="button" onClick={() => { setPreviewUnavailable(false); onStatusChange(); }} className="w-fit text-left text-[10px] text-[#55D6BE] underline">Refresh evidence access</button>}
                                         <p className="text-[10px] text-[#55D6BE] font-bold tracking-wider uppercase">
                                             SECURED ON-CHAIN
                                         </p>

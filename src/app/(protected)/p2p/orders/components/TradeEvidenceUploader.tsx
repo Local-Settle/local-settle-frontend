@@ -40,6 +40,7 @@ export function TradeEvidenceUploader({
         evidenceUrl ? 'uploaded' : 'idle'
     );
     const [uploadedTime, setUploadedTime] = useState<string | null>(null);
+    const [evidenceUnavailable, setEvidenceUnavailable] = useState(false);
 
     const [isDragging, setIsDragging] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,6 +51,7 @@ export function TradeEvidenceUploader({
     // Sync with incoming evidenceUrl prop (e.g. on page refresh or peer update)
     useEffect(() => {
         if (evidenceUrl) {
+            setEvidenceUnavailable(false);
             setEvidenceUrlState(evidenceUrl);
             setUploadState('uploaded');
             if (!uploadedTime) {
@@ -243,17 +245,23 @@ export function TradeEvidenceUploader({
 
         if (isPdfFile) {
             return (
-                <iframe 
+                <iframe title="Payment evidence PDF preview"
                     src={`${url}#toolbar=0&navpanes=0&scrollbar=0`} 
                     className="w-full h-full border-0 pointer-events-none rounded-[8px]" 
                 />
             );
         }
 
+        const extension = uploadedFile?.name.split(".").pop()?.toLowerCase() ?? evidenceUrlState?.split("?")[0].split(".").pop()?.toLowerCase();
+        if (!uploadedFile && !["png", "jpg", "jpeg", "webp"].includes(extension ?? "")) {
+            return <div className="p-2 text-center text-xs text-[#C2C7D0]">Preview unavailable for this file type.</div>;
+        }
+        if (evidenceUnavailable) return <div role="status" className="p-2 text-center text-xs text-amber-300">Evidence link expired or unavailable. Refresh access to try again.</div>;
         return (
             <img 
                 src={url} 
                 alt="Uploaded receipt preview" 
+                onError={() => setEvidenceUnavailable(true)}
                 className="w-full h-full object-cover rounded-[8px]" 
             />
         );
@@ -387,6 +395,9 @@ export function TradeEvidenceUploader({
                             <p className="text-[14px] font-bold text-white truncate w-full">
                                 {uploadedFile ? uploadedFile.name : getFilenameFromUrl(evidenceUrlState)}
                             </p>
+                            {(uploadedFile || evidenceUrlState) && <p className="text-[10px] text-[#9BABB7]">File type: {(uploadedFile?.name.split(".").pop() || evidenceUrlState?.split("?")[0].split(".").pop() || "unknown").toUpperCase()}</p>}
+                            {evidenceUnavailable && <p role="status" className="text-[11px] text-amber-300">Link expired or unavailable.</p>}
+                            {evidenceUrlState && uploadState === "uploaded" && <button type="button" onClick={() => { setEvidenceUnavailable(false); onStatusChange(); }} className="w-fit text-left text-[10px] text-[#55D6BE] underline">Refresh evidence access</button>}
                             
                             {uploadState === 'selected' && (
                                 <p className="text-[12px] text-[#C2C7D0] font-semibold">
