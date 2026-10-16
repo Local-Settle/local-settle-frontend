@@ -268,13 +268,33 @@ describe("CSV Export Utility", () => {
         expect(contentStr.startsWith("\uFEFF")).toBe(true);
         
         // Header verification
-        expect(contentStr).toContain("Order ID,Date,Role,Asset Code,Asset Amount,Fiat Currency,Fiat Amount,Exchange Rate,Payment Method,Status,Transaction Hash,Counterparty Alias");
+        expect(contentStr).toContain('"Order ID","Date","Role","Asset Code","Asset Amount","Fiat Currency","Fiat Amount","Exchange Rate","Payment Method","Status","Transaction Hash","Counterparty Alias"');
         
         // Escaped comma verification (Charlie, comma user -> "Charlie, comma user")
         expect(contentStr).toContain('"Charlie, comma user"');
         
         // Escaped quotes verification (SINPE Movil "Fast" -> "SINPE Movil ""Fast""")
         expect(contentStr).toContain('"SINPE Movil ""Fast"""');
+    });
+
+    it("neutralizes formula-like text and preserves Unicode characters", () => {
+        const records = transactionExportService.mapOrdersToExportRecords(MOCK_ORDERS, MOCK_CURRENT_USER_ID);
+        records[0].counterpartyAlias = '=HYPERLINK("https://example.test")';
+        records[1].counterpartyAlias = "José 🧑🏽‍💻, 東京";
+
+        const createElementSpy = vi.spyOn(document, "createElement").mockReturnValue({
+            setAttribute: vi.fn(), style: { visibility: "" }, click: vi.fn(),
+        } as unknown as HTMLAnchorElement);
+        vi.spyOn(document.body, "appendChild").mockImplementation((el) => el);
+        vi.spyOn(document.body, "removeChild").mockImplementation((el) => el);
+        const blobConstructorSpy = vi.spyOn(globalThis, "Blob");
+
+        exportTransactionsCsv(records, "test-filename.csv");
+
+        const contentStr = blobConstructorSpy.mock.calls.at(-1)?.[0][0] as string;
+        expect(contentStr).toContain("'=HYPERLINK(\"\"https://example.test\"\")");
+        expect(contentStr).toContain('"José 🧑🏽‍💻, 東京"');
+        createElementSpy.mockRestore();
     });
 });
 

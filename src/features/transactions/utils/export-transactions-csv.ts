@@ -22,12 +22,15 @@ export function exportTransactionsCsv(records: ExportTransactionRecord[], filena
 
     const escapeCsvValue = (val: string | number | undefined | null): string => {
         if (val === null || val === undefined) return "";
-        const str = String(val);
-        // Escape quotes, commas, and newlines
-        if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
-            return `"${str.replace(/"/g, '""')}"`;
+        let str = String(val);
+        // Prevent spreadsheet formula execution for untrusted text while leaving
+        // ordinary negative numeric values intact.
+        if (/^[\t\r ]*[=+@]/.test(str) || /^[\t\r ]*-(?=\D)/.test(str)) {
+            str = `'${str}`;
         }
-        return str;
+        // Quote every cell (RFC 4180) so commas, quotes, CR/LF, and Unicode
+        // remain unambiguous when rows are parsed by spreadsheet software.
+        return `"${str.replace(/"/g, '""')}"`;
     };
 
     const csvRows = [headers.map(escapeCsvValue).join(",")];
