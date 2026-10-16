@@ -11,7 +11,8 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     if (!isLoading && !canAccess) {
-      router.replace("/welcome");
+      const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      router.replace(`/welcome?returnTo=${encodeURIComponent(returnTo)}`);
       return;
     }
   }, [canAccess, isLoading, router]);
