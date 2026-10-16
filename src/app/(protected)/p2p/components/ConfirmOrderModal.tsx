@@ -63,6 +63,8 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
     }, []);
 
     const isBuyOperation = offer.type === "sell"; // Merchant is selling, User is BUYING crypto
+    const assetCode = offer.assetCode || "XLM";
+    const stellarNetwork = (process.env.NEXT_PUBLIC_STELLAR_NETWORK || "testnet").toLowerCase() === "mainnet" ? "Mainnet" : "Testnet";
     const priceNum = parseFloat(offer.price) || 0;
     const minLimit = parseFloat(offer.minAmount) || 0;
     const maxLimit = parseFloat(offer.maxAmount) || 0;
@@ -605,6 +607,20 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                         </div>
                     </div>
 
+                    <section aria-label="Trade review terms" className="rounded-lg border border-[#263949] bg-[#0D1D2C] p-5 text-sm">
+                        <h3 className="mb-3 font-bold text-white">Review trade terms</h3>
+                        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-[#9BABB7]">
+                            <dt>Counterparty</dt><dd className="text-right text-white">{creator?.alias || "Merchant"}</dd>
+                            <dt>Price</dt><dd className="text-right text-white">1 {assetCode} = {priceNum.toLocaleString()} USD</dd>
+                            <dt>Order limits</dt><dd className="text-right text-white">{minLimit.toLocaleString()}–{maxLimit.toLocaleString()} USD</dd>
+                            <dt>Payment method</dt><dd className="text-right text-white">{selectedMethodObj?.label || "Select a payment method"}</dd>
+                            <dt>Network and asset</dt><dd className="text-right text-white">Stellar {stellarNetwork} · {assetCode}</dd>
+                        </dl>
+                        <p className="mt-4 border-t border-[#263949] pt-3 text-xs leading-relaxed text-[#C2C7D0]">
+                            Fiat payment takes place between the buyer and seller. The crypto is held in Stellar escrow until the trade’s required settlement steps are completed.
+                        </p>
+                    </section>
+
                     {/* 4. Action Buttons */}
                     <div className="flex flex-col gap-3 pt-2">
                         <button
@@ -624,7 +640,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                             disabled={isSubmitting}
                             className="w-full bg-[#2A292F] hover:bg-[#35343b] text-[#D7E0E6] font-bold text-base py-3.5 rounded-lg transition-colors cursor-pointer font-space"
                         >
-                            Cancel
+                            Back to offers
                         </button>
                     </div>
 
