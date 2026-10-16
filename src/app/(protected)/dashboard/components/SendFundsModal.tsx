@@ -22,7 +22,7 @@ import {
 export function SendFundsModal({ onClose }: CloseModalProps) {
   const { publicKey } = useWallet();
   const { balances } = useWalletBalance(publicKey);
-  const { state, resolveAndPrepare, confirmSend, reset, backToConfirm } = useSend();
+  const { state, resolveAndPrepare, confirmSend, refreshPrepared, reset, backToConfirm } = useSend();
   const { notify } = useNotifications();
   const searchParams = useSearchParams();
   const walletQuery = searchParams.get('wallet') || searchParams.get('recipient') || "";
@@ -32,6 +32,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
   const [amount, setAmount] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [amountError, setAmountError] = useState<string | null>(null);
+  const [now, setNow] = useState(() => Date.now());
   const recipientInputRef = useRef<HTMLInputElement>(null);
 
   // Derive selected asset from balances and selection
@@ -41,6 +42,13 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
 
   const assetName = getAssetName(selectedAsset);
   const isTransacting = state.step === "loading" || state.step === "signing" || state.step === "submitting";
+  const isPreparedStale = state.needsRefresh || !state.preparedAt || now - state.preparedAt >= 4 * 60 * 1000;
+
+  useEffect(() => {
+    if (state.step !== "confirm") return;
+    const interval = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(interval);
+  }, [state.step]);
 
   // Notify on success or error transitions
   useEffect(() => {
@@ -211,9 +219,13 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
           <div className="flex-1 flex flex-col justify-between">
             <SendConfirmView
               recipient={state.recipient}
-              amount={amount}
+              amount={state.preparedAmount ?? amount}
               assetName={assetName}
               fee={state.fee}
+              networkFee={state.networkFee}
+              total={state.total}
+              isStale={isPreparedStale}
+              onRefresh={refreshPrepared}
               onBack={reset}
               onConfirm={confirmSend}
             />

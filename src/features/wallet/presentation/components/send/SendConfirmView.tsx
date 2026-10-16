@@ -10,6 +10,10 @@ interface SendConfirmViewProps {
   amount: string;
   assetName: string;
   fee: string | null;
+  networkFee?: string | null;
+  total?: string | null;
+  isStale?: boolean;
+  onRefresh?: () => void;
   onBack: () => void;
   onConfirm: () => void;
   isLoading?: boolean;
@@ -20,13 +24,17 @@ export function SendConfirmView({
   amount,
   assetName,
   fee,
+  networkFee,
+  total,
+  isStale = false,
+  onRefresh,
   onBack,
   onConfirm,
   isLoading = false,
 }: SendConfirmViewProps) {
   const feeNum = fee ? parseFloat(fee) : (parseFloat(amount || "0") * 0.003);
   const amountNum = parseFloat(amount || "0");
-  const totalNum = amountNum + feeNum;
+  const totalNum = total ? parseFloat(total) : amountNum + feeNum;
 
   const feeDisplay = feeNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
   const totalDisplay = totalNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
@@ -83,20 +91,27 @@ export function SendConfirmView({
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-[#9BABB7]">Network / Protocol Fee (0.3%)</span>
+            <span className="text-[#9BABB7]">Platform Fee</span>
             <span className="text-white font-bold tabular-nums">
               {feeDisplay} {assetName}
             </span>
           </div>
+          {networkFee && <div className="flex justify-between items-center text-sm"><span className="text-[#9BABB7]">Stellar Network Fee</span><span className="text-white font-bold tabular-nums">{networkFee} XLM</span></div>}
           <div className="w-full h-px bg-[#11212E] my-2" />
           <div className="flex justify-between items-center text-base">
-            <span className="text-[#C2C7D0] font-semibold">Total Deducted</span>
+            <span className="text-[#C2C7D0] font-semibold">Total Debit</span>
             <span className="text-[#55D6BE] font-black tabular-nums text-lg">
               {totalDisplay} {assetName}
             </span>
           </div>
         </div>
       </div>
+
+      {isStale && (
+        <div role="alert" className="rounded-xl border border-amber-500/40 bg-amber-950/30 p-3 text-sm text-amber-200">
+          This prepared transaction is near expiry. Refresh and review the updated fees before signing.
+        </div>
+      )}
 
       {/* Action buttons */}
       <div className="flex gap-3 pt-2">
@@ -110,11 +125,11 @@ export function SendConfirmView({
         </button>
         <button
           type="button"
-          onClick={onConfirm}
+          onClick={isStale ? onRefresh : onConfirm}
           disabled={isLoading}
           className="flex-1 flex items-center justify-center gap-2 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
         >
-          <Send size={15} className="stroke-[2.5]" /> Sign & Send
+          {isStale ? "Refresh transaction" : <><Send size={15} className="stroke-[2.5]" /> Sign & Send</>}
         </button>
       </div>
     </div>
