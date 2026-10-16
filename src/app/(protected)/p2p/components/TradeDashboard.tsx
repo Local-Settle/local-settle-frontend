@@ -73,6 +73,19 @@ function sortOffers(offers: Offer[], sort: string): Offer[] {
     }
 }
 
+function inactiveOfferReason(offer: Offer): string | null {
+    if (offer.executed) return "This offer has already been completed.";
+    switch (offer.status.toLowerCase()) {
+        case "active": return null;
+        case "paused": return "The owner has paused this offer.";
+        case "closed": return "The owner has closed this offer.";
+        case "expired": return "This offer has expired.";
+        case "unavailable":
+        case "inactive": return "This offer is currently unavailable.";
+        default: return "This offer is not available for new trades.";
+    }
+}
+
 // ----------------------------------------------------------
 // Empty state component
 // ----------------------------------------------------------
@@ -184,7 +197,7 @@ function TradeDashboardInner() {
     // paymentMethod, minAmount, maxAmount, and sort are applied here client-side
     // because the backend does not yet support those query params.
     const visibleOffers = useMemo(() => {
-        let result = offers.filter(o => !o.executed);
+        let result = offers;
 
         // --- paymentMethod filter ---
         if (filters.paymentMethod) {
@@ -415,7 +428,11 @@ function TradeDashboardInner() {
                                                 <span className="text-[#9BABB7] font-bold text-sm">USD</span>
                                             </div>
                                         </div>
-                                        <button
+                                        {inactiveOfferReason(offer) ? (
+                                            <p role="status" className="w-full max-w-[220px] rounded-lg border border-amber-500/30 bg-amber-950/20 p-3 text-xs text-amber-200">
+                                                {inactiveOfferReason(offer)}
+                                            </p>
+                                        ) : <button
                                             disabled={!isVerified}
                                             onClick={() => {
                                                 if (!isVerified) {
@@ -430,7 +447,7 @@ function TradeDashboardInner() {
                                                 }`}
                                         >
                                             {tab === "Buy" ? "BUY" : "SELL"}
-                                        </button>
+                                        </button>}
                                     </div>
                                 </div>
                             );
