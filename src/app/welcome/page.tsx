@@ -27,7 +27,7 @@ export function ConnectWalletModal({
   onClose: () => void;
 }) {
   const { connect, disconnect, isConnected, walletId } = useWalletContext();
-  const { availability } = useWalletAvailability();
+  const { availability, isLoading: isCheckingWallets, error: walletAvailabilityError } = useWalletAvailability();
   const router = useRouter();
   const [modalState, setModalState] = useState<
     "select" | "connecting" | "failed"
@@ -202,6 +202,16 @@ export function ConnectWalletModal({
                   <span className="bg-[#0C1B27] px-2 text-gray-500 uppercase tracking-wider">Or connect to Testnet</span>
                 </div>
               </div>
+
+              {walletAvailabilityError ? (
+                <p role="status" className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+                  {walletAvailabilityError}
+                </p>
+              ) : !isCheckingWallets && !Object.values(availability).some(Boolean) ? (
+                <p role="status" className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-gray-300">
+                  No supported wallet was detected. Install one of the listed wallets to connect; you can still browse the app without connecting.
+                </p>
+              ) : null}
 
               {/* Wallet Options — driven by the shared Stellar Wallets Kit config,
                   so adding a wallet only means editing config/wallet-options.ts.
