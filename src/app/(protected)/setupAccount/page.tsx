@@ -11,6 +11,7 @@ import Stage3 from './pages/Stage3'
 import { useUsers } from '../../../features/user/hooks/useUsers'
 import { useUser } from '../../../features/user/presentation/context/UserContext'
 import { SetupAccountPayload } from '../../../features/user/models/setupAccount'
+import { getSafeReturnPath } from '@/features/wallet/utils/safeReturnPath'
 
 export default function SetupAccount() {
     const [stage, setStage] = useState<1 | 2 | 3>(1);
@@ -35,7 +36,9 @@ export default function SetupAccount() {
             const updated = await setupAccount(currentUser.userId, finalData);
             if (updated) {
                 setCurrentUser(updated);
-                router.push('/dashboard');
+                const returnTo = getSafeReturnPath(sessionStorage.getItem('post-login-return'));
+                sessionStorage.removeItem('post-login-return');
+                router.push(returnTo ?? '/dashboard');
             }
             // On failure, `setupError` is now populated by useUsers and Stage3
             // keeps the entered values so the user can retry without re-typing.
@@ -49,7 +52,9 @@ export default function SetupAccount() {
             const updated = await setupAccount(currentUser.userId, { ...({ pendingAccountInfo: false } as Record<string, unknown>) });
             if (updated) {
                 setCurrentUser(updated);
-                router.push('/dashboard');
+                const returnTo = getSafeReturnPath(sessionStorage.getItem('post-login-return'));
+                sessionStorage.removeItem('post-login-return');
+                router.push(returnTo ?? '/dashboard');
             }
         }
     };
