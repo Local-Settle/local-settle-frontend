@@ -327,6 +327,7 @@ function SendContent() {
                       amount={amount}
                       assetName={assetName}
                       fee={state.fee}
+                      total={state.total}
                       onBack={reset}
                       onConfirm={confirmSend}
                       isLoading={isTransacting}
