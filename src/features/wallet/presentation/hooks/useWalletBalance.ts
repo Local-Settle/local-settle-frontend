@@ -16,14 +16,16 @@ export interface BalanceState {
   balance: string | null; // Native XLM balance
   balances: AssetBalance[]; // All balances
   isLoading: boolean;
+  isFetching: boolean;
+  lastUpdatedAt: number | null;
   error: string | null;
-  refetch: () => void;
+  refetch: () => Promise<void>;
 }
 
 export function useWalletBalance(publicKey: string | null): BalanceState {
   const { apiFetch } = useApi();
 
-  const { data, isLoading, error, refetch } = useQuery<AssetBalance[], Error>({
+  const { data, isLoading, isFetching, dataUpdatedAt, error, refetch: queryRefetch } = useQuery<AssetBalance[], Error>({
     queryKey: queryKeys.wallet.balance(publicKey),
     queryFn: () => apiFetch(`/stellar/balances/${publicKey}`),
     enabled: !!publicKey,
@@ -36,7 +38,9 @@ export function useWalletBalance(publicKey: string | null): BalanceState {
     balance: data ? balance : null,
     balances: data || [],
     isLoading,
+    isFetching,
+    lastUpdatedAt: dataUpdatedAt || null,
     error: error?.message || null,
-    refetch,
+    refetch: async () => { await queryRefetch(); },
   };
 }
