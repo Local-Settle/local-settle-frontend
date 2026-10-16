@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Loader2, ShieldCheck, Mail, AlertTriangle, ArrowRightLeft, Lock } from "lucide-react";
+import { Bell, Loader2, ShieldCheck, Mail } from "lucide-react";
 import { useSecuritySettings } from "../hooks/useSecuritySettings";
 import type { SecurityPreferences as PreferencesType } from "../types/security-settings.types";
 
@@ -15,31 +15,13 @@ const PREFERENCE_ITEMS: PreferenceItem[] = [
     {
         key: "securityUpdates",
         title: "Security Updates",
-        description: "Receive critical security patches, account safety notices, and protocol changes.",
+        description: "Receive critical account safety notices and security changes.",
         icon: ShieldCheck,
     },
     {
-        key: "loginAlerts",
-        title: "Login Alerts",
-        description: "Get notified when a new wallet session or signature challenge is completed.",
-        icon: Lock,
-    },
-    {
-        key: "transactionNotifications",
-        title: "Transaction Notifications",
-        description: "Real-time alerts when Stellar transactions or deposits are confirmed on-chain.",
-        icon: ArrowRightLeft,
-    },
-    {
-        key: "escrowStatusUpdates",
-        title: "Escrow Status Updates",
-        description: "Notifications when escrow funds are deposited, locked, released, or refunded.",
-        icon: AlertTriangle,
-    },
-    {
         key: "emailNotifications",
-        title: "Email Notifications",
-        description: "Receive security alerts and transaction receipts via your verified email address.",
+        title: "Account Notifications",
+        description: "Enable account and activity notifications.",
         icon: Mail,
     },
 ];
