@@ -24,7 +24,10 @@ export interface RecipientInfo {
 export interface SendState {
   step: SendStep;
   recipient: RecipientInfo | null;
+  preparedAmount: string | null;
   fee: string | null;
+  networkFee: string | null;
+  total: string | null;
   txHash: string | null;
   errorMessage: string | null;
 }
@@ -39,7 +42,10 @@ export function useSend() {
   const [state, setState] = useState<SendState>({
     step: "form",
     recipient: null,
+    preparedAmount: null,
     fee: null,
+    networkFee: null,
+    total: null,
     txHash: null,
     errorMessage: null,
   });
@@ -89,7 +95,15 @@ export function useSend() {
         }
 
         preparedXdrRef.current = xdr;
-        setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null }));
+        setState(s => ({
+          ...s,
+          step: "confirm",
+          recipient,
+          preparedAmount: prepared.amount ?? null,
+          fee: prepared.platformFee ?? prepared.fee ?? null,
+          networkFee: prepared.networkFee ?? prepared.baseFee ?? null,
+          total: prepared.total ?? prepared.totalDebit ?? null,
+        }));
       } catch (err) {
         setState(s => ({
           ...s,
@@ -153,7 +167,7 @@ export function useSend() {
 
   const reset = useCallback(() => {
     preparedXdrRef.current = null;
-    setState({ step: "form", recipient: null, fee: null, txHash: null, errorMessage: null });
+    setState({ step: "form", recipient: null, preparedAmount: null, fee: null, networkFee: null, total: null, txHash: null, errorMessage: null });
   }, []);
 
   const backToConfirm = useCallback(() => {

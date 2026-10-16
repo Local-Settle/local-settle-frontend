@@ -211,9 +211,11 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
           <div className="flex-1 flex flex-col justify-between">
             <SendConfirmView
               recipient={state.recipient}
-              amount={amount}
+              amount={state.preparedAmount ?? amount}
               assetName={assetName}
               fee={state.fee}
+              networkFee={state.networkFee}
+              total={state.total}
               onBack={reset}
               onConfirm={confirmSend}
             />

@@ -159,6 +159,8 @@ describe("Send Flow Presentation Components", () => {
           amount="25.00"
           assetName="USDC"
           fee="0.075"
+          networkFee="0.00001"
+          total="25.07501"
           onBack={onBack}
           onConfirm={onConfirm}
         />
@@ -166,7 +168,11 @@ describe("Send Flow Presentation Components", () => {
 
       expect(screen.getByText("alex.localsettle")).toBeTruthy();
       expect(screen.getByText(/25\.00.*USDC/)).toBeTruthy();
-      expect(screen.getByText(/0\.075.*USDC/)).toBeTruthy();
+      expect(screen.getByText("Platform Fee")).toBeTruthy();
+      expect(screen.getByText("0.075 USDC")).toBeTruthy();
+      expect(screen.getByText("Stellar Network Fee")).toBeTruthy();
+      expect(screen.getByText("0.00001 XLM")).toBeTruthy();
+      expect(screen.getByText("25.07501 USDC")).toBeTruthy();
 
       fireEvent.click(screen.getByRole("button", { name: /Back/i }));
       expect(onBack).toHaveBeenCalledTimes(1);
