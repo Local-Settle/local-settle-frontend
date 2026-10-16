@@ -52,7 +52,7 @@ function OrdersSkeleton() {
       {[0, 1, 2, 3].map((row) => (
         <div
           key={row}
-          className="grid grid-cols-1 md:grid-cols-[1.5fr_1.2fr_1fr_1.2fr_1fr_40px] gap-4 p-6 border-b border-[rgba(22,22,24,0.05)] items-center animate-pulse"
+          className="grid grid-cols-1 md:grid-cols-[1.5fr_1.2fr_1fr_1.2fr_1fr_40px] gap-4 p-6 border-b border-[rgba(22,22,24,0.05)] items-center animate-pulse motion-reduce:animate-none"
         >
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-[#172B3A]" />

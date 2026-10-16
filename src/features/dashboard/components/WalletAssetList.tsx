@@ -45,7 +45,7 @@ export function WalletAssetList({
                         <li
                             key={index}
                             data-testid="asset-skeleton"
-                            className="flex-1 min-h-16 rounded-2xl bg-[#141416] border border-[#1F1F22] animate-pulse"
+                            className="flex-1 min-h-16 rounded-2xl bg-[#141416] border border-[#1F1F22] animate-pulse motion-reduce:animate-none"
                         />
                     ))}
                 </ul>
