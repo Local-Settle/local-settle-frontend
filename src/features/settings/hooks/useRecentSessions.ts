@@ -6,6 +6,16 @@ import { useWalletContext } from "@/features/wallet/presentation/context/WalletC
 import { securitySettingsService } from "../services/security-settings.service";
 import type { UserSession } from "../types/security-settings.types";
 
+export interface RecentSessionsState {
+    sessions: UserSession[];
+    isLoading: boolean;
+    error: string | null;
+    reload: () => Promise<void>;
+    revokingSessionId?: string | null;
+    revokeError?: string | null;
+    revokeSession?: (sessionId: string) => Promise<void>;
+}
+
 function getBrowserAndDevice(): { device: string; browser: string } {
     if (typeof window === "undefined") {
         return { device: "Desktop", browser: "Web Browser" };
@@ -28,13 +38,15 @@ function getBrowserAndDevice(): { device: string; browser: string } {
     return { device, browser };
 }
 
-export function useRecentSessions() {
+export function useRecentSessions(): RecentSessionsState {
     const { accessToken, currentUser } = useUser();
     const { isConnected } = useWalletContext();
 
     const [sessions, setSessions] = useState<UserSession[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [revokingSessionId, setRevokingSessionId] = useState<string | null>(null);
+    const [revokeError, setRevokeError] = useState<string | null>(null);
 
     const loadSessions = useCallback(async () => {
         setIsLoading(true);
@@ -67,6 +79,21 @@ export function useRecentSessions() {
         }
     }, [accessToken, currentUser, isConnected]);
 
+    const revokeSession = useCallback(async (sessionId: string) => {
+        setRevokingSessionId(sessionId);
+        setRevokeError(null);
+        try {
+            await securitySettingsService.revokeRecentSession(sessionId, accessToken);
+            // Never mark a session revoked optimistically; the list reflects the
+            // server's response after a successful revocation.
+            await loadSessions();
+        } catch (err) {
+            setRevokeError(err instanceof Error ? err.message : "Failed to revoke this session.");
+        } finally {
+            setRevokingSessionId(null);
+        }
+    }, [accessToken, loadSessions]);
+
     useEffect(() => {
         void loadSessions();
     }, [loadSessions]);
@@ -76,5 +103,8 @@ export function useRecentSessions() {
         isLoading,
         error,
         reload: loadSessions,
+        revokingSessionId,
+        revokeError,
+        revokeSession,
     };
 }

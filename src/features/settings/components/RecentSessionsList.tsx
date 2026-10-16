@@ -4,7 +4,8 @@ import { Laptop, Smartphone, Globe, Clock, ShieldCheck, RefreshCw } from "lucide
 import { useRecentSessions } from "../hooks/useRecentSessions";
 
 export function RecentSessionsList() {
-    const { sessions, isLoading, error, reload } = useRecentSessions();
+    const { sessions, isLoading, error, reload, revokingSessionId, revokeError, revokeSession } = useRecentSessions();
+    const isStale = Boolean(error && sessions.length > 0);
 
     const formatDate = (dateStr: string) => {
         try {
@@ -65,12 +66,21 @@ export function RecentSessionsList() {
                             </div>
                         ))}
                     </div>
+                ) : error && sessions.length === 0 ? (
+                    <div role="alert" className="py-8 text-center text-sm text-[#F87171]">
+                        Could not load recent sessions. Use Refresh to try again.
+                    </div>
                 ) : sessions.length === 0 ? (
                     <div className="py-8 text-center text-sm text-[#9BABB7]">
                         No recent session activity is available.
                     </div>
                 ) : (
                     <div className="space-y-3">
+                        {isStale && (
+                            <p role="status" className="text-xs text-amber-200">
+                                Showing the last loaded session list. Refresh failed; retry to get current data.
+                            </p>
+                        )}
                         {sessions.map((session) => {
                             const isMobile =
                                 /mobile|android|iphone|ipad/i.test(session.device) ||
@@ -124,7 +134,7 @@ export function RecentSessionsList() {
                                     </div>
 
                                     {!session.isCurrent && (
-                                        <div className="self-end sm:self-center">
+                                        <div className="flex items-center gap-3 self-end sm:self-center">
                                             <span
                                                 className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
                                                     session.status === "active"
@@ -136,6 +146,17 @@ export function RecentSessionsList() {
                                             >
                                                 {session.status}
                                             </span>
+                                            {session.status === "active" && revokeSession && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => void revokeSession(session.id)}
+                                                    disabled={Boolean(revokingSessionId)}
+                                                    aria-label={`Revoke session on ${session.device}`}
+                                                    className="rounded-md border border-red-400/30 px-2.5 py-1 text-xs font-semibold text-red-300 hover:bg-red-400/10 disabled:cursor-wait disabled:opacity-60"
+                                                >
+                                                    {revokingSessionId === session.id ? "Revoking…" : "Revoke"}
+                                                </button>
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -145,11 +166,12 @@ export function RecentSessionsList() {
                 )}
             </div>
 
-            {error && (
-                <div className="mt-4 rounded-lg bg-[#EF4444]/10 border border-[#EF4444]/20 p-3 text-xs text-[#F87171]">
-                    {error}
-                </div>
+            {revokeError && (
+                <p role="alert" className="mt-4 rounded-lg border border-red-400/20 bg-red-400/10 p-3 text-xs text-red-200">
+                    {revokeError} The session is still listed; retry when the service is available.
+                </p>
             )}
+
         </div>
     );
 }

@@ -80,24 +80,43 @@ export const securitySettingsService = {
     },
 
     async getRecentSessions(accessToken?: string | null): Promise<UserSession[]> {
-        try {
-            const headers: Record<string, string> = {};
-            if (accessToken) {
-                headers["Authorization"] = `Bearer ${accessToken}`;
-            }
+        const headers: Record<string, string> = {};
+        if (accessToken) {
+            headers["Authorization"] = `Bearer ${accessToken}`;
+        }
 
-            const res = await fetch(`${getApiBaseUrl()}/users/me/sessions`, {
-                method: "GET",
-                headers,
-            });
+        const res = await fetch(`${getApiBaseUrl()}/users/me/sessions`, {
+            method: "GET",
+            headers,
+        });
 
-            if (!res.ok) {
-                return [];
-            }
+        if (!res.ok) {
+            throw new Error(`Unable to load recent sessions (${res.status}).`);
+        }
 
-            return (await res.json()) as UserSession[];
-        } catch {
-            return [];
+        const data: unknown = await res.json();
+        if (!Array.isArray(data)) {
+            throw new Error("The recent sessions response was invalid.");
+        }
+        return data as UserSession[];
+    },
+
+    async revokeRecentSession(sessionId: string, accessToken?: string | null): Promise<void> {
+        if (!sessionId.trim()) {
+            throw new Error("A session ID is required.");
+        }
+
+        const headers: Record<string, string> = {};
+        if (accessToken) {
+            headers["Authorization"] = `Bearer ${accessToken}`;
+        }
+
+        const res = await fetch(
+            `${getApiBaseUrl()}/users/me/sessions/${encodeURIComponent(sessionId)}`,
+            { method: "DELETE", headers },
+        );
+        if (!res.ok) {
+            throw new Error(`Unable to revoke this session (${res.status}).`);
         }
     },
 };
