@@ -21,6 +21,7 @@ interface UseOfferFiltersReturn {
     setFilter: <K extends keyof OfferFilters>(key: K, value: OfferFilters[K]) => void;
     setDraftFilter: <K extends keyof OfferFilters>(key: K, value: OfferFilters[K]) => void;
     applyDraftFilters: () => void;
+    resetDraftFilters: () => void;
     clearFilters: () => void;
     isFiltersDefault: boolean;
 }
@@ -47,7 +48,9 @@ export function useOfferFilters(): UseOfferFiltersReturn {
     const pushToURL = useCallback(
         (next: OfferFilters) => {
             const qs = filtersToURLParams(next);
-            router.replace(qs ? `?${qs}` : "?", { scroll: false });
+            // Each applied filter change is a navigable state so Back/Forward
+            // restores the same marketplace view from its URL.
+            router.push(qs ? `?${qs}` : "?", { scroll: false });
         },
         [router]
     );
@@ -89,11 +92,16 @@ export function useOfferFilters(): UseOfferFiltersReturn {
         }
     }, [draftFilters, pushToURL]);
 
+    const resetDraftFilters = useCallback(() => {
+        setDraftFilters(filters);
+        setErrors({});
+    }, [filters]);
+
     // Reset everything — clears draft, errors, and removes all URL params
     const clearFilters = useCallback(() => {
         setDraftFilters(DEFAULT_FILTERS);
         setErrors({});
-        router.replace("?", { scroll: false });
+        router.push("?", { scroll: false });
     }, [router]);
 
     // Computed helpers
@@ -120,6 +128,7 @@ export function useOfferFilters(): UseOfferFiltersReturn {
         setFilter,
         setDraftFilter,
         applyDraftFilters,
+        resetDraftFilters,
         clearFilters,
         isFiltersDefault,
     };
