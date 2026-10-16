@@ -10,6 +10,7 @@ interface SendConfirmViewProps {
   amount: string;
   assetName: string;
   fee: string | null;
+  total: string | null;
   onBack: () => void;
   onConfirm: () => void;
   isLoading?: boolean;
@@ -20,16 +21,13 @@ export function SendConfirmView({
   amount,
   assetName,
   fee,
+  total,
   onBack,
   onConfirm,
   isLoading = false,
 }: SendConfirmViewProps) {
-  const feeNum = fee ? parseFloat(fee) : (parseFloat(amount || "0") * 0.003);
-  const amountNum = parseFloat(amount || "0");
-  const totalNum = amountNum + feeNum;
-
-  const feeDisplay = feeNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
-  const totalDisplay = totalNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
+  const feeDisplay = fee === null ? "Not provided" : fee === "0" ? "0 (no fee quoted)" : `${fee} ${assetName}`;
+  const totalDisplay = total ? `${total} ${assetName}` : `${amount} ${assetName}`;
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -83,19 +81,16 @@ export function SendConfirmView({
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-[#9BABB7]">Network / Protocol Fee (0.3%)</span>
-            <span className="text-white font-bold tabular-nums">
-              {feeDisplay} {assetName}
-            </span>
+            <span className="text-[#9BABB7]">Local-Settle platform fee <a href="#fee-details" className="text-[#55D6BE] underline">Details</a></span>
+            <span className="text-white font-bold tabular-nums">{feeDisplay}</span>
           </div>
           <div className="w-full h-px bg-[#11212E] my-2" />
           <div className="flex justify-between items-center text-base">
-            <span className="text-[#C2C7D0] font-semibold">Total Deducted</span>
-            <span className="text-[#55D6BE] font-black tabular-nums text-lg">
-              {totalDisplay} {assetName}
-            </span>
+            <span className="text-[#C2C7D0] font-semibold">Amount + platform fee</span>
+            <span className="text-[#55D6BE] font-black tabular-nums text-lg">{totalDisplay}</span>
           </div>
         </div>
+        <details id="fee-details" className="mt-4 text-xs text-[#9BABB7]"><summary className="cursor-pointer text-[#55D6BE]">How transfer fees work</summary><p className="mt-2">The platform fee and amount above come from the server&apos;s prepare response. Stellar also applies a network fee when the signed transaction is submitted; it is separate from the platform fee and is not included in this total.</p></details>
       </div>
 
       {/* Action buttons */}
