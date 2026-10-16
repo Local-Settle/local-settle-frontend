@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Landmark } from "lucide-react";
+import { useEffect, useState } from "react";
+import { clearUnreadMessages, getUnreadMessageCount, onUnreadMessagesChanged } from "@/features/chat/utils/unreadMessages";
 import type { Order } from "../models/order";
 
 function getRelativeTime(date: Date): string {
@@ -47,6 +49,13 @@ function statusLabel(order: Order): string {
 
 export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) {
     const router = useRouter();
+    const [unreadCount, setUnreadCount] = useState(0);
+    useEffect(() => {
+        if (!currentUserId) return;
+        const updateCount = () => setUnreadCount(getUnreadMessageCount(currentUserId, order.orderId));
+        updateCount();
+        return onUnreadMessagesChanged(updateCount);
+    }, [currentUserId, order.orderId]);
 
     const isBuying = currentUserId !== undefined && order.buyerId === currentUserId;
     const role = isBuying ? "BUYING" : "SELLING";
@@ -64,7 +73,10 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
         (isBuying ? order.seller?.preferredCurrency : order.buyer?.preferredCurrency) || "USD";
     const displayTime = order.createdAt ? getRelativeTime(new Date(order.createdAt)) : "—";
 
-    const openOrder = () => router.push(`/p2p/orders/${order.orderId}`);
+    const openOrder = () => {
+        if (currentUserId) clearUnreadMessages(currentUserId, order.orderId);
+        router.push(`/p2p/orders/${order.orderId}`);
+    };
 
     return (
         <div
@@ -151,14 +163,15 @@ export function ActiveOrderCard({ order, currentUserId }: ActiveOrderCardProps) 
                 {/* Time + Open button — items aligned at bottom */}
                 <div className="flex items-end justify-between">
                     <span className="text-[12px] text-[#9BABB7]">{displayTime}</span>
-                    <button
-                        onClick={openOrder}
-                        className="px-5 py-2 rounded-full bg-[#55D6BE] text-black text-[13px] font-bold
-                                   tracking-wide cursor-pointer transition-all duration-150
-                                   hover:opacity-90"
-                    >
-                        Open
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {unreadCount > 0 && <span aria-label={`${unreadCount} unread messages`} className="rounded-full bg-[#55D6BE] px-2 py-1 text-[11px] font-bold text-black">{unreadCount}</span>}
+                        <button
+                            onClick={openOrder}
+                            className="px-5 py-2 rounded-full bg-[#55D6BE] text-black text-[13px] font-bold tracking-wide cursor-pointer transition-all duration-150 hover:opacity-90"
+                        >
+                            Open
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
