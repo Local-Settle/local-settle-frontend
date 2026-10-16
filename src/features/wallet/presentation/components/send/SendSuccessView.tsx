@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Check, Copy, ExternalLink, ArrowRight, RotateCcw } from "lucide-react";
 import { truncateAddress } from "./send-types";
+import { getStellarExplorerTxUrl } from "@/features/transactions/utils/get-stellar-explorer-tx-url";
 
 interface SendSuccessViewProps {
   amount: string;
@@ -36,10 +37,7 @@ export function SendSuccessView({
     }
   };
 
-  const network = (process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "testnet").toLowerCase();
-  const explorerUrl = txHash
-    ? `https://stellar.expert/explorer/${network}/tx/${txHash}`
-    : null;
+  const explorerUrl = getStellarExplorerTxUrl(txHash);
 
   return (
     <div className="flex flex-col items-center justify-center py-6 px-2 gap-6 w-full text-center">
