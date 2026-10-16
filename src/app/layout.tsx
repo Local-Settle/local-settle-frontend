@@ -26,17 +26,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${spaceGrotesk.variable} ${spaceGrotesk.className}`}>
-        <QueryProvider>
-          <NotificationProvider>
-            <UserProvider>
+        <UserProvider>
+          <QueryProvider>
+            <NotificationProvider>
               <WalletProvider>
                 <WrongNetworkBanner />
                 {children}
                 <CookieConsentBanner />
               </WalletProvider>
-            </UserProvider>
-          </NotificationProvider>
-        </QueryProvider>
+            </NotificationProvider>
+          </QueryProvider>
+        </UserProvider>
       </body>
     </html>
   );
