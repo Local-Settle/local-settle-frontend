@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import { User, MoreVertical, SendHorizontal, Paperclip } from "lucide-react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useNotifications } from "@/features/notifications";
@@ -21,6 +21,25 @@ type ChatProps = {
     counterpartyProfileImageUrl?: string;
 };
 
+const CHAT_PAGE_SIZE = 50;
+type ChatHistoryPage = { items: Message[]; nextCursor?: string | null; hasMore?: boolean };
+
+function normalizeHistoryPage(value: unknown): ChatHistoryPage {
+    if (Array.isArray(value)) {
+        const items = value as Message[];
+        return { items, nextCursor: items[0]?.timestamp ?? null, hasMore: items.length === CHAT_PAGE_SIZE };
+    }
+    if (value && typeof value === "object" && Array.isArray((value as ChatHistoryPage).items)) {
+        const page = value as ChatHistoryPage;
+        return {
+            items: page.items,
+            nextCursor: page.nextCursor ?? page.items[0]?.timestamp ?? null,
+            hasMore: page.hasMore ?? page.items.length === CHAT_PAGE_SIZE,
+        };
+    }
+    throw new Error("Chat history response was invalid.");
+}
+
 export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileImageUrl }: ChatProps) => {
     const { currentUser, accessToken } = useUser();
     const { notify } = useNotifications();
@@ -28,8 +47,14 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
     const [inputText, setInputText] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [historyLoaded, setHistoryLoaded] = useState(false);
+    const [hasOlderMessages, setHasOlderMessages] = useState(false);
+    const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+    const [historyError, setHistoryError] = useState<string | null>(null);
     const [isCounterpartyTyping, setIsCounterpartyTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesListRef = useRef<HTMLElement>(null);
+    const olderCursorRef = useRef<string | null>(null);
+    const scrollAnchorRef = useRef<{ height: number; top: number } | null>(null);
 
     // Demo chat is only reachable when the demo flag is on; otherwise mock ids
     // fall through to the real chat flow (which loads from the backend).
@@ -40,7 +65,12 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
         messagesEndRef.current?.scrollIntoView({ behavior });
     }, []);
 
-    const mergeMessages = useCallback((incoming: Message | Message[]) => {
+    const isNearBottom = useCallback(() => {
+        const list = messagesListRef.current;
+        return !list || list.scrollHeight - list.scrollTop - list.clientHeight < 80;
+    }, []);
+
+    const mergeMessages = useCallback((incoming: Message | Message[], scrollToLatest = true) => {
         const additions = Array.isArray(incoming) ? incoming : [incoming];
         setMessages((previous) => {
             const byId = new Map(previous.map((message) => [message.messageId, message]));
@@ -58,8 +88,16 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                 (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
             );
         });
-        setTimeout(() => scrollToBottom("smooth"), 50);
+        if (scrollToLatest) setTimeout(() => scrollToBottom("smooth"), 50);
     }, [orderId, scrollToBottom]);
+
+    useLayoutEffect(() => {
+        const anchor = scrollAnchorRef.current;
+        const list = messagesListRef.current;
+        if (!anchor || !list) return;
+        list.scrollTop = anchor.top + (list.scrollHeight - anchor.height);
+        scrollAnchorRef.current = null;
+    }, [messages]);
 
     const handleSocketError = useCallback((error: ChatError) => {
         notify("error", error.message);
@@ -67,7 +105,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
 
     const handleIncomingMessage = useCallback(
         (message: Message) => {
-            mergeMessages(message);
+            mergeMessages(message, isNearBottom());
             if (currentUser && message.senderId !== currentUser.userId) {
                 notify({
                     type: "info",
@@ -77,7 +115,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                 });
             }
         },
-        [currentUser, mergeMessages, notify],
+        [currentUser, isNearBottom, mergeMessages, notify],
     );
 
     const { status: connectionStatus, sendMessage } = useChatSocket({
@@ -106,13 +144,16 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                     const headers: Record<string, string> = {};
                     if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
                     const response = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/chat-messages?orderId=${encodeURIComponent(orderId)}`,
+                        `${process.env.NEXT_PUBLIC_API_URL}/chat-messages?orderId=${encodeURIComponent(orderId)}&take=${CHAT_PAGE_SIZE}`,
                         { headers },
                     );
                     if (!response.ok) throw new Error("Unable to load chat history.");
-                    const history: Message[] = await response.json();
+                    const page = normalizeHistoryPage(await response.json());
                     if (!cancelled) {
-                        mergeMessages(history);
+                        const chronological = [...page.items].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+                        mergeMessages(chronological);
+                        olderCursorRef.current = page.nextCursor ?? chronological[0]?.timestamp ?? null;
+                        setHasOlderMessages(Boolean(page.hasMore && olderCursorRef.current));
                         setHistoryLoaded(true);
                     }
                 } catch (error) {
@@ -130,6 +171,37 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
             cancelled = true;
         };
     }, [orderId, currentUser, accessToken, isDemo, mergeMessages, notify, scrollToBottom]);
+
+    const loadOlderMessages = async () => {
+        const cursor = olderCursorRef.current;
+        const list = messagesListRef.current;
+        if (!cursor || !list || isLoadingOlder || !hasOlderMessages) return;
+        setIsLoadingOlder(true);
+        setHistoryError(null);
+        scrollAnchorRef.current = { height: list.scrollHeight, top: list.scrollTop };
+        try {
+            const headers: Record<string, string> = {};
+            if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+            const query = new URLSearchParams({ orderId, take: String(CHAT_PAGE_SIZE), before: cursor });
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat-messages?${query}`, { headers });
+            if (!response.ok) throw new Error("Unable to load older messages.");
+            const page = normalizeHistoryPage(await response.json());
+            const chronological = [...page.items].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+            if (!chronological.length) {
+                setHasOlderMessages(false);
+                scrollAnchorRef.current = null;
+                return;
+            }
+            mergeMessages(chronological, false);
+            olderCursorRef.current = page.nextCursor ?? chronological[0].timestamp;
+            setHasOlderMessages(Boolean(page.hasMore && olderCursorRef.current));
+        } catch (error) {
+            scrollAnchorRef.current = null;
+            setHistoryError(error instanceof Error ? error.message : "Unable to load older messages.");
+        } finally {
+            setIsLoadingOlder(false);
+        }
+    };
 
     const handleSend = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -233,7 +305,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
             </header>
             
             {/* Chat Messages Body */}
-            <main role="log" aria-live="polite" aria-label="Chat messages" className="flex-grow overflow-y-auto p-6 space-y-5 bg-[#0D1D2C]/10 scrollbar-thin flex flex-col">
+            <main ref={messagesListRef} role="log" aria-live="polite" aria-label="Chat messages" className="flex-grow overflow-y-auto p-6 space-y-5 bg-[#0D1D2C]/10 scrollbar-thin flex flex-col">
                 {/* Order Created status banner */}
                 <section className="flex items-center justify-center my-2 shrink-0">
                     <div className="bg-[#11212E] px-4 py-1.5 flex items-center justify-center rounded-full border border-[rgba(69,73,50,0.2)]">
@@ -244,6 +316,14 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                 </section>
 
                 <div className="flex-grow space-y-5 flex flex-col justify-end">
+                    {hasOlderMessages && (
+                        <div className="flex flex-col items-center gap-2">
+                            <button type="button" onClick={() => void loadOlderMessages()} disabled={isLoadingOlder} className="rounded-full border border-[#263949] px-3 py-1.5 text-xs font-semibold text-[#C2C7D0] hover:bg-white/5 disabled:opacity-50">
+                                {isLoadingOlder ? "Loading older messages…" : "Load older messages"}
+                            </button>
+                            {historyError && <p role="alert" className="text-xs text-red-300">{historyError}</p>}
+                        </div>
+                    )}
                     {messages.map((msg) => {
                         const isOwnMessage = currentUser && msg.senderId === currentUser.userId;
                         const timeStr = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
