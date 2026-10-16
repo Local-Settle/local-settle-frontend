@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useWallet } from "@/features/wallet";
+import { getSendErrorGuidance } from "@/features/wallet/application/send-error-guidance";
 
 export type SendStep =
   | "form"
@@ -35,6 +36,7 @@ export function useSend() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
   const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "TESTNET";
   const preparedXdrRef = useRef<string | null>(null);
+  const assetCodeRef = useRef("USDC");
 
   const [state, setState] = useState<SendState>({
     step: "form",
@@ -46,6 +48,7 @@ export function useSend() {
 
   const resolveAndPrepare = useCallback(
     async (query: string, amount: string, assetCode?: string) => {
+      assetCodeRef.current = assetCode && assetCode !== "native" ? assetCode : "XLM";
       setState(s => ({ ...s, step: "loading", errorMessage: null }));
       preparedXdrRef.current = null;
 
@@ -138,7 +141,10 @@ export function useSend() {
       });
       if (!submitRes.ok) {
         const body = await submitRes.json().catch(() => ({}));
-        throw new Error((body as { message?: string })?.message ?? "Transaction submission failed");
+          throw new Error(getSendErrorGuidance(
+            (body as { message?: string })?.message ?? "",
+            assetCodeRef.current,
+          ));
       }
       const result: { hash?: string } = await submitRes.json();
       setState(s => ({ ...s, step: "success", txHash: result.hash ?? null }));
