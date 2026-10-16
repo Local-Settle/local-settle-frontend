@@ -1,0 +1,9 @@
+{
+  "compression": "gzip",
+  "routes": {
+    "/p2p": { "manifestMatch": "p2p/page", "maxGzipBytes": 512000 },
+    "/p2p/orders/[orderId]": { "manifestMatch": "p2p/orders/[orderid]/page", "maxGzipBytes": 640000 },
+    "/send": { "manifestMatch": "send/page", "maxGzipBytes": 512000 }
+  },
+  "exceptions": {}
+}

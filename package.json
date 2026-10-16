@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "analyze:bundle": "next experimental-analyze --output",
+    "check:route-budgets": "node scripts/check-route-budgets.mjs"
   },
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "2.5.0",
