@@ -10,6 +10,8 @@ interface SendConfirmViewProps {
   amount: string;
   assetName: string;
   fee: string | null;
+  networkFee?: string | null;
+  total?: string | null;
   onBack: () => void;
   onConfirm: () => void;
   isLoading?: boolean;
@@ -20,16 +22,15 @@ export function SendConfirmView({
   amount,
   assetName,
   fee,
+  networkFee,
+  total,
   onBack,
   onConfirm,
   isLoading = false,
 }: SendConfirmViewProps) {
-  const feeNum = fee ? parseFloat(fee) : (parseFloat(amount || "0") * 0.003);
-  const amountNum = parseFloat(amount || "0");
-  const totalNum = amountNum + feeNum;
-
-  const feeDisplay = feeNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
-  const totalDisplay = totalNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 7 });
+  const feeDisplay = fee ? `${fee} ${assetName}` : "Not provided by server";
+  const networkFeeDisplay = networkFee ? `${networkFee} XLM` : "Not provided by server";
+  const totalDisplay = total ? `${total} ${assetName}` : "Not provided by server";
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -83,14 +84,20 @@ export function SendConfirmView({
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-[#9BABB7]">Network / Protocol Fee (0.3%)</span>
+            <span className="text-[#9BABB7]">Platform Fee</span>
             <span className="text-white font-bold tabular-nums">
-              {feeDisplay} {assetName}
+              {feeDisplay}
+            </span>
+          </div>
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-[#9BABB7]">Stellar Network Fee</span>
+            <span className="text-white font-bold tabular-nums">
+              {networkFeeDisplay}
             </span>
           </div>
           <div className="w-full h-px bg-[#11212E] my-2" />
           <div className="flex justify-between items-center text-base">
-            <span className="text-[#C2C7D0] font-semibold">Total Deducted</span>
+            <span className="text-[#C2C7D0] font-semibold">Total Debit</span>
             <span className="text-[#55D6BE] font-black tabular-nums text-lg">
               {totalDisplay} {assetName}
             </span>
