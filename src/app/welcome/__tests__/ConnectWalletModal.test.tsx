@@ -45,6 +45,8 @@ describe("ConnectWalletModal", () => {
 
         const dialog = screen.getByRole("dialog", { name: "Connect Your Wallet" });
         expect(dialog.getAttribute("aria-modal")).toBe("true");
+        expect(within(dialog).getByText(/separate transaction signature approves a payment/i)).toBeTruthy();
+        expect(within(dialog).getByText(/never asks for your secret or recovery phrase/i)).toBeTruthy();
     });
 
     it("renders nothing when closed", () => {

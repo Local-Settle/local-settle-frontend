@@ -138,6 +138,10 @@ export function ConnectWalletModal({
               Choose your preferred Stellar provider to access the LocalSettle ecosystem.
             </p>
 
+            <div className="mb-6 rounded-2xl border border-[#55D6BE]/25 bg-[#55D6BE]/10 p-4 text-sm leading-relaxed text-[#C2C7D0]">
+              <p><strong className="text-white">Wallet signatures</strong> verify that you control your address when you log in. A separate transaction signature approves a payment, and your wallet shows its details before you approve it. LocalSettle never asks for your secret or recovery phrase.</p>
+            </div>
+
             {/* Development Disclaimer Banner */}
             <div className="mb-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex gap-3 text-sm text-blue-200">
               <svg className="w-6 h-6 flex-shrink-0 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
