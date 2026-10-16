@@ -3,6 +3,16 @@
 import { useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 
+const KYC_STATUS_GUIDANCE: Record<string, { label: string; guidance: string; action: string }> = {
+    pending: { label: "Pending", guidance: "Verification has not started yet. Start the identity check to continue.", action: "Start verification" },
+    in_progress: { label: "In progress", guidance: "Finish the identity check in the verification window, then return here.", action: "Continue verification" },
+    in_review: { label: "In review", guidance: "Your documents are being reviewed. You can return later to check again.", action: "Check verification" },
+    approved: { label: "Approved", guidance: "Your identity verification is approved.", action: "" },
+    rejected: { label: "Rejected", guidance: "Your identity check was not approved. You can submit a new verification.", action: "Retry verification" },
+    expired: { label: "Expired", guidance: "This verification session expired. Start a new one to continue.", action: "Restart verification" },
+    abandoned: { label: "Not completed", guidance: "The verification session was not completed. You can start again when ready.", action: "Restart verification" },
+};
+
 export function KycBanner() {
     const { currentUser } = useUser();
     const [isLoading, setIsLoading] = useState(false);
@@ -11,6 +21,11 @@ export function KycBanner() {
     if (!currentUser || currentUser.kycStatus === "approved") {
         return null;
     }
+    const status = KYC_STATUS_GUIDANCE[currentUser.kycStatus?.toLowerCase()] ?? {
+        label: "Status unavailable",
+        guidance: "We could not identify your verification status. Refresh your account or contact support.",
+        action: "Refresh status",
+    };
 
     const handleStartKyc = async () => {
         if (!currentUser.userId) return;
@@ -49,11 +64,8 @@ export function KycBanner() {
             <div className="flex items-center gap-3">
                 <span className="text-2xl shrink-0">⚠️</span>
                 <div>
-                    <p className="font-bold text-sm text-[#f7931a] uppercase tracking-wide">Verification Required</p>
-                    <p className="text-xs text-gray-300">
-                        Your account status is currently <span className="font-semibold text-white uppercase">{currentUser.kycStatus}</span>. 
-                        Complete KYC verification with Didit to unlock trading and offer creation.
-                    </p>
+                    <p className="font-bold text-sm text-[#f7931a] uppercase tracking-wide">Verification: {status.label}</p>
+                    <p className="text-xs text-gray-300">{status.guidance}</p>
                     {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
                 </div>
             </div>
@@ -62,7 +74,7 @@ export function KycBanner() {
                 disabled={isLoading}
                 className="shrink-0 bg-[#f7931a] hover:bg-[#fca130] text-black font-bold text-xs uppercase px-5 py-3 rounded-xl transition-all duration-200 whitespace-nowrap disabled:opacity-50"
             >
-                {isLoading ? "Opening tab..." : "Verify Now →"}
+                {isLoading ? "Opening tab..." : `${status.action} →`}
             </button>
         </div>
     );
