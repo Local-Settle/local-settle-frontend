@@ -80,24 +80,24 @@ export const securitySettingsService = {
     },
 
     async getRecentSessions(accessToken?: string | null): Promise<UserSession[]> {
-        try {
-            const headers: Record<string, string> = {};
-            if (accessToken) {
-                headers["Authorization"] = `Bearer ${accessToken}`;
-            }
-
-            const res = await fetch(`${getApiBaseUrl()}/users/me/sessions`, {
-                method: "GET",
-                headers,
-            });
-
-            if (!res.ok) {
-                return [];
-            }
-
-            return (await res.json()) as UserSession[];
-        } catch {
-            return [];
+        const headers: Record<string, string> = {};
+        if (accessToken) {
+            headers["Authorization"] = `Bearer ${accessToken}`;
         }
+
+        const res = await fetch(`${getApiBaseUrl()}/users/me/sessions`, {
+            method: "GET",
+            headers,
+        });
+
+        if (!res.ok) {
+            throw new Error(`Unable to load recent sessions (${res.status}).`);
+        }
+
+        const data: unknown = await res.json();
+        if (!Array.isArray(data)) {
+            throw new Error("The recent sessions response was invalid.");
+        }
+        return data as UserSession[];
     },
 };

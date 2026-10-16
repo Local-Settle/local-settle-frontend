@@ -5,6 +5,7 @@ import { useRecentSessions } from "../hooks/useRecentSessions";
 
 export function RecentSessionsList() {
     const { sessions, isLoading, error, reload } = useRecentSessions();
+    const isStale = Boolean(error && sessions.length > 0);
 
     const formatDate = (dateStr: string) => {
         try {
@@ -65,12 +66,21 @@ export function RecentSessionsList() {
                             </div>
                         ))}
                     </div>
+                ) : error && sessions.length === 0 ? (
+                    <div role="alert" className="py-8 text-center text-sm text-[#F87171]">
+                        Could not load recent sessions. Use Refresh to try again.
+                    </div>
                 ) : sessions.length === 0 ? (
                     <div className="py-8 text-center text-sm text-[#9BABB7]">
                         No recent session activity is available.
                     </div>
                 ) : (
                     <div className="space-y-3">
+                        {isStale && (
+                            <p role="status" className="text-xs text-amber-200">
+                                Showing the last loaded session list. Refresh failed; retry to get current data.
+                            </p>
+                        )}
                         {sessions.map((session) => {
                             const isMobile =
                                 /mobile|android|iphone|ipad/i.test(session.device) ||
@@ -145,11 +155,6 @@ export function RecentSessionsList() {
                 )}
             </div>
 
-            {error && (
-                <div className="mt-4 rounded-lg bg-[#EF4444]/10 border border-[#EF4444]/20 p-3 text-xs text-[#F87171]">
-                    {error}
-                </div>
-            )}
         </div>
     );
 }
