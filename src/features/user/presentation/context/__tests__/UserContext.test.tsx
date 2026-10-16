@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider, useUser } from "../UserContext";
 import type { Users } from "@/features/user/models/users";
 import { walletService } from "@/features/wallet/application/wallet.service";
@@ -26,7 +27,13 @@ function makeToken(expiresInSeconds: number): string {
 }
 
 function renderUserContext() {
-    return renderHook(() => useUser(), { wrapper: UserProvider });
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <QueryClientProvider client={queryClient}>
+            <UserProvider>{children}</UserProvider>
+        </QueryClientProvider>
+    );
+    return { ...renderHook(() => useUser(), { wrapper }), queryClient };
 }
 
 describe("UserContext", () => {
@@ -72,7 +79,6 @@ describe("UserContext", () => {
             result.current.setAccessToken(token);
             result.current.setCurrentUser(sampleUser);
         });
-
         expect(result.current.accessToken).toBe(token);
         expect(result.current.currentUser).toEqual(sampleUser);
         expect(localStorage.getItem("ikash_token")).toBe(token);
@@ -81,13 +87,15 @@ describe("UserContext", () => {
 
     it("clears state, storage, and the wallet session on logout", () => {
         const token = makeToken(3600);
-        const { result } = renderUserContext();
+        const { result, queryClient } = renderUserContext();
         act(() => vi.advanceTimersByTime(0));
 
         act(() => {
             result.current.setAccessToken(token);
             result.current.setCurrentUser(sampleUser);
         });
+
+        queryClient.setQueryData(["private", "user"], { secret: "cached" });
 
         act(() => {
             result.current.logout();
@@ -98,6 +106,7 @@ describe("UserContext", () => {
         expect(localStorage.getItem("ikash_token")).toBeNull();
         expect(localStorage.getItem("ikash_user")).toBeNull();
         expect(localStorage.getItem("ikash_wallet_session")).toBeNull();
+        expect(queryClient.getQueryData(["private", "user"])).toBeUndefined();
         expect(mockedWalletService.clearSession).toHaveBeenCalled();
     });
 
