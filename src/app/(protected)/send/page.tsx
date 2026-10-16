@@ -324,7 +324,7 @@ function SendContent() {
                   {state.step === "confirm" && state.recipient && (
                     <SendConfirmView
                       recipient={state.recipient}
-                      amount={amount}
+                      amount={state.preparedAmount ?? amount}
                       assetName={assetName}
                       fee={state.fee}
                       networkFee={state.networkFee}
