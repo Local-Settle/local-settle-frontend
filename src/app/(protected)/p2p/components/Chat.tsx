@@ -189,6 +189,21 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
         }
     };
 
+    const retryMessage = async (message: Message) => {
+        if (!message.clientMessageId || !currentUser || connectionStatus !== "connected") return;
+        setMessages((previous) => previous.map((item) => item.messageId === message.messageId
+            ? { ...item, deliveryStatus: "sending" }
+            : item));
+        try {
+            mergeMessages(await sendMessage(message.content, message.clientMessageId));
+        } catch (error) {
+            setMessages((previous) => previous.map((item) => item.messageId === message.messageId
+                ? { ...item, deliveryStatus: "failed" }
+                : item));
+            notify("error", error instanceof Error ? error.message : "Message could not be sent.");
+        }
+    };
+
     const connectionLabel = isDemo
         ? "Demo chat"
         : ({
@@ -274,6 +289,11 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                                                 : "• Delivered"
                                     )}
                                 </span>
+                                {isOwnMessage && msg.deliveryStatus === "failed" && msg.clientMessageId && (
+                                    <button type="button" onClick={() => void retryMessage(msg)} className="text-[10px] text-[#55D6BE] underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE]">
+                                        Retry safely
+                                    </button>
+                                )}
                             </div>
                         );
                     })}
