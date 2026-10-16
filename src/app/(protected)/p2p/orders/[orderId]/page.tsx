@@ -16,6 +16,7 @@ import { canCancelOrder } from "@/features/order/utils/canCancelOrder";
 import { createDemoOrder } from "@/features/order/mocks/demo-order";
 import { DEMO_MODE } from "@/config/demo-mode";
 import { CancelOrderModal } from "../components/CancelOrderModal";
+import { DisputeDialog } from "../components/DisputeDialog";
 import { useNotifications } from "@/features/notifications";
 import { useEscrowStatusSync } from "@/features/escrow/hooks/useEscrowStatusSync";
 import { ArrowLeft, AlertTriangle, Ban, Loader2, RefreshCw } from "lucide-react";
@@ -41,6 +42,7 @@ export default function TradePage({ params }: PageProps) {
     const [errorMsg, setErrorMsg] = useState("");
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
+    const [showDisputeDialog, setShowDisputeDialog] = useState(false);
 
     // Demo orders are only fabricated when the demo flag is on. With the flag
     // off (production), /demo and mock-* ids fall through to the real order
@@ -376,11 +378,9 @@ export default function TradePage({ params }: PageProps) {
                                         </p>
                                     </div>
                                     
-                                    <div className="w-full flex flex-row items-center justify-end pt-2 shrink-0">
-                                        <button className="text-[#FF6B6B] hover:text-red-400 font-bold font-space uppercase text-[14px] tracking-[0.5px] transition-colors cursor-pointer">
-                                            Report Issue
-                                        </button>
-                                    </div>
+                                    {!isCompleted && escrowStatus !== "disputed" && escrowStatus !== "resolved" && <div className="w-full flex flex-row items-center justify-end pt-2 shrink-0">
+                                        <button type="button" onClick={() => setShowDisputeDialog(true)} className="text-[#FF6B6B] hover:text-red-400 font-bold font-space uppercase text-[14px] tracking-[0.5px] transition-colors cursor-pointer">Open dispute</button>
+                                    </div>}
                                     
                                 </div>
                             )}
@@ -397,6 +397,7 @@ export default function TradePage({ params }: PageProps) {
                     </div>
                 </main>
             </div>
+            {showDisputeDialog && <DisputeDialog orderId={order.orderId} onClose={() => setShowDisputeDialog(false)} onSubmitted={() => { notify("success", "Dispute sent to support. Escrow remains pending operator review."); void fetchOrder(); }} />}
 
             {showCancelModal && (
                 <CancelOrderModal
