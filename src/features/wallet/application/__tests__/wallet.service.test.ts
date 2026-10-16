@@ -185,6 +185,25 @@ describe("walletService", () => {
             expect(second).toBe("jwt-token");
             expect(authCalls()).toHaveLength(2);
         });
+
+        it("does not share an in-flight login between different wallet addresses", async () => {
+            mockAuthFetch([
+                { ok: true, json: async () => ({ challenge: "challenge-1" }) },
+                { ok: true, json: async () => ({ access_token: "token-1" }) },
+                { ok: true, json: async () => ({ challenge: "challenge-2" }) },
+                { ok: true, json: async () => ({ access_token: "token-2" }) },
+            ]);
+            mockedKit.signMessage.mockResolvedValueOnce("signature-1").mockResolvedValueOnce("signature-2");
+
+            const [first, second] = await Promise.all([
+                walletService.authenticate("G123"),
+                walletService.authenticate("G456"),
+            ]);
+
+            expect(first).toBe("token-1");
+            expect(second).toBe("token-2");
+            expect(authCalls()).toHaveLength(4);
+        });
     });
 });
 
