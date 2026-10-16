@@ -1,3 +1,6 @@
 export interface UpdateOffer {
-    status: string;
+    status?: string;
+    price?: string;
+    minAmount?: string;
+    maxAmount?: string;
 }

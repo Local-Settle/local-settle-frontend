@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 const CreateOfferModal = dynamic(() => import("./CreateOfferModal").then((mod) => mod.CreateOfferModal), { ssr: false });
 const ConfirmOrderModal = dynamic(() => import("./ConfirmOrderModal").then((mod) => mod.ConfirmOrderModal), { ssr: false });
 import { useOffers } from "@/features/offer/hooks/useOffers";
+import { EditOfferDialog } from "./EditOfferDialog";
 import { useOfferFilters } from "@/features/offer/hooks/useOfferFilters";
 import { useUsers } from "@/features/user/hooks/useUsers";
 import { useUser } from "@/features/user/presentation/context/UserContext";
@@ -148,6 +149,7 @@ function TradeDashboardInner() {
     const [tab, setTab] = useState("Buy");
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
+    const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
 
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
         const nextIndex = getRovingFocusIndex(event.key, index, tradeTabs.length, "horizontal");
@@ -178,7 +180,7 @@ function TradeDashboardInner() {
         [tab, filters]
     );
 
-    const { offers, isLoading } = useOffers(apiFilters);
+    const { offers, isLoading, updateOffer } = useOffers(apiFilters);
 
     // Start with non-executed offers (type + assetCode already filtered by backend).
     // paymentMethod, minAmount, maxAmount, and sort are applied here client-side
@@ -431,6 +433,7 @@ function TradeDashboardInner() {
                                         >
                                             {tab === "Buy" ? "BUY" : "SELL"}
                                         </button>
+                                        {currentUser?.userId === offer.creatorId && <button type="button" onClick={() => setEditingOffer(offer)} className="rounded-lg border border-[#52616d] px-3 py-2 text-xs font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#55D6BE]">Edit</button>}
                                     </div>
                                 </div>
                             );
@@ -452,6 +455,7 @@ function TradeDashboardInner() {
                     onClose={() => setSelectedOffer(null)}
                 />
             )}
+            {editingOffer && <EditOfferDialog offer={editingOffer} onSave={(update) => updateOffer(editingOffer.offerId, update)} onClose={() => setEditingOffer(null)} />}
         </div>
     );
 }
