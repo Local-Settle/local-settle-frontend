@@ -124,6 +124,36 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         };
     }, [state.isConnected, checkNetwork]);
 
+    // Wallet extensions can change accounts while the tab is in the background.
+    // Revalidate on return and discard the old authenticated session if the
+    // provider no longer exposes the account we authenticated.
+    useEffect(() => {
+        if (!state.isConnected || !state.publicKey) return;
+        let checking = false;
+        const verifyAccount = async () => {
+            if (checking) return;
+            checking = true;
+            try {
+                const session = await walletService.restoreSession();
+                if (!session || session.publicKey !== state.publicKey) {
+                    walletService.clearSession();
+                    setCurrentUser(null);
+                    setAccessToken(null);
+                    queryClient.clear();
+                    setState({ ...initialState, isLoading: false });
+                }
+            } finally {
+                checking = false;
+            }
+        };
+        window.addEventListener("focus", verifyAccount);
+        document.addEventListener("visibilitychange", verifyAccount);
+        return () => {
+            window.removeEventListener("focus", verifyAccount);
+            document.removeEventListener("visibilitychange", verifyAccount);
+        };
+    }, [state.isConnected, state.publicKey, setCurrentUser, setAccessToken, queryClient]);
+
     const connect = useCallback(async (walletId: string) => {
         // Switching wallets mid-session: clear the previous wallet's state
         // before establishing the new connection so a stale address never
