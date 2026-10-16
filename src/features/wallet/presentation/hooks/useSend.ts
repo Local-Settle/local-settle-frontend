@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useWallet } from "@/features/wallet";
+import { isValidSendAmount } from "@/features/wallet/application/send-amount";
 
 export type SendStep =
   | "form"
@@ -46,6 +47,10 @@ export function useSend() {
 
   const resolveAndPrepare = useCallback(
     async (query: string, amount: string, assetCode?: string) => {
+      if (!isValidSendAmount(amount)) {
+        setState(s => ({ ...s, step: "error", errorMessage: "Enter a positive amount with no more than 7 decimal places." }));
+        return;
+      }
       setState(s => ({ ...s, step: "loading", errorMessage: null }));
       preparedXdrRef.current = null;
 

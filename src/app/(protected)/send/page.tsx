@@ -11,6 +11,7 @@ import {
   type AssetBalance,
 } from "@/features/wallet";
 import { useSend } from "@/features/wallet/presentation/hooks/useSend";
+import { isValidSendAmount, toStroops } from "@/features/wallet/application/send-amount";
 import { useNotifications } from "@/features/notifications";
 import {
   SendAssetSelect,
@@ -115,14 +116,14 @@ function SendContent() {
       return;
     }
 
-    const numAmount = parseFloat(amount || "0");
-    if (isNaN(numAmount) || numAmount <= 0) {
-      setAmountError("Please enter an amount greater than 0");
+    const amountStroops = toStroops(amount);
+    if (amountStroops === null || amountStroops <= 0n) {
+      setAmountError("Enter a positive amount with no more than 7 decimal places.");
       return;
     }
 
-    const availBalance = parseFloat(selectedAsset.balance) || 0;
-    if (numAmount > availBalance) {
+    const availableStroops = toStroops(selectedAsset.balance);
+    if (availableStroops !== null && amountStroops > availableStroops) {
       setAmountError(
         `Amount exceeds available balance (${getFormattedBalance(selectedAsset)} ${assetName})`
       );
@@ -294,7 +295,7 @@ function SendContent() {
                           disabled={
                             !recipientInput.trim() ||
                             !amount ||
-                            parseFloat(amount) <= 0 ||
+                            !isValidSendAmount(amount) ||
                             isTransacting
                           }
                           className="w-full bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-sm font-black uppercase tracking-wider px-6 py-4 rounded-2xl transition-all shadow-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
