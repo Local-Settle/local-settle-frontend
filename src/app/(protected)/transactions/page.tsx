@@ -12,7 +12,7 @@ import { ShoppingCart, TrendingUp, ChevronRight, Loader2 } from "lucide-react";
 
 export default function TransactionsPage() {
     const { currentUser } = useUser();
-    const { orders, fetchUserOrders } = useOrders();
+    const { orders, fetchUserOrders, error: ordersError, refetch } = useOrders();
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -240,10 +240,19 @@ export default function TransactionsPage() {
                                         <Loader2 className="w-10 h-10 animate-spin text-[#55D6BE] mb-4" />
                                         <p className="font-bold">Loading transactions...</p>
                                     </div>
+                                ) : ordersError ? (
+                                    <div role="alert" className="flex flex-col items-center gap-3 p-20 text-center text-gray-400">
+                                        <p className="font-bold">Payment history is temporarily unavailable.</p>
+                                        <p className="text-sm">Check your connection and try again. No sample payments are shown.</p>
+                                        <p className="text-xs">Network: {process.env.NEXT_PUBLIC_STELLAR_NETWORK || "TESTNET"}</p>
+                                        <button type="button" onClick={() => refetch()} className="rounded-lg bg-[#55D6BE] px-4 py-2 font-bold text-black">Retry</button>
+                                    </div>
                                 ) : filteredOrders.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center p-20 text-gray-500">
                                         <ShoppingCart className="w-12 h-12 mb-4 stroke-1" />
-                                        <p className="font-bold text-center">There are no transactions available to export.</p>
+                                        <p className="font-bold text-center">{orders.length === 0 ? "No payments yet" : "No transactions match these filters"}</p>
+                                        <p className="mt-2 max-w-md text-center text-sm">{orders.length === 0 ? "Your payment history will appear here after your first transaction. No demo transactions are added to your account." : "Change or clear the filters to see more transaction history."}</p>
+                                        <p className="mt-2 text-xs">Network: {process.env.NEXT_PUBLIC_STELLAR_NETWORK || "TESTNET"}</p>
                                     </div>
                                 ) : (
                                     filteredOrders.map((o) => {
