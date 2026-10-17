@@ -2,7 +2,6 @@
 
 import React from "react";
 import type { RecipientInfo } from "./send-types";
-import { truncateAddress } from "./send-types";
 import { AlertTriangle, ArrowLeft, Send } from "lucide-react";
 
 interface SendConfirmViewProps {
@@ -48,8 +47,8 @@ export function SendConfirmView({
                 {recipient.alias}
               </span>
             )}
-            <span className="text-[#C2C7D0] text-xs font-mono break-all">
-              {truncateAddress(recipient.address)}
+            <span data-testid="resolved-recipient-address" className="text-[#C2C7D0] text-xs font-mono break-all">
+              {recipient.address}
             </span>
             {!recipient.exists && (
               <span className="text-amber-400 text-[10px] mt-1 font-medium">
