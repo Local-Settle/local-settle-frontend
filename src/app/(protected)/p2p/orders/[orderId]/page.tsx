@@ -18,6 +18,7 @@ import { DEMO_MODE } from "@/config/demo-mode";
 import { CancelOrderModal } from "../components/CancelOrderModal";
 import { useNotifications } from "@/features/notifications";
 import { useEscrowStatusSync } from "@/features/escrow/hooks/useEscrowStatusSync";
+import { getEscrowStatusPresentation } from "@/features/escrow/utils/escrow-status.utils";
 import { ArrowLeft, AlertTriangle, Ban, Loader2, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
@@ -213,6 +214,7 @@ export default function TradePage({ params }: PageProps) {
 
     const escrowId = order.escrow?.escrowId;
     const escrowStatus = order.escrow?.escrowStatus || "pending";
+    const statusPresentation = getEscrowStatusPresentation(escrowStatus, role);
     const buyerAddress = order.escrow?.buyerAddress || order.buyer?.publicKey;
     const sellerAddress = order.escrow?.sellerAddress || order.seller?.publicKey;
 
@@ -239,14 +241,10 @@ export default function TradePage({ params }: PageProps) {
                                 <ArrowLeft className="w-4 h-4 text-[#9CA3AF] stroke-[3px]" /> BACK TO ORDERS
                             </Link>
                             <div className="flex items-center gap-3 select-none">
-                                {!isCompleted && (
-                                    <>
-                                        <span className="w-2 h-2 rounded-full bg-[#55D6BE] animate-pulse shadow-[0_0_8px_rgba(218,255,0,0.6)]" />
-                                        <span className="text-[#55D6BE] text-[12px] font-bold tracking-[2.4px] uppercase font-space">
-                                            TRANSACTION IN PROGRESS
-                                        </span>
-                                    </>
-                                )}
+                                <span className={`w-2 h-2 rounded-full ${isCompleted ? "bg-[#55D6BE]" : "bg-[#55D6BE] animate-pulse"}`} />
+                                <span className="text-[#55D6BE] text-[12px] font-bold tracking-[2.4px] uppercase font-space" aria-label={`${statusPresentation.label}. ${statusPresentation.action}`}>
+                                    {statusPresentation.label}
+                                </span>
                                 {syncState.status === "reconnecting" && (
                                     <span className="flex items-center gap-1 text-[#9CA3AF] text-[10px] font-medium uppercase tracking-wider font-space">
                                         <RefreshCw className="w-3 h-3 animate-spin" />
