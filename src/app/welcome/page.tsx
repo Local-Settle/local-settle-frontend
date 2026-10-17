@@ -107,11 +107,14 @@ export function ConnectWalletModal({
         aria-modal="true"
         aria-labelledby={dialogTitleId}
         tabIndex={-1}
+        aria-describedby={dialogTitleId}
         className="relative w-full max-w-[500px] bg-[#0C1B27] border border-[#ffffff10] rounded-[32px] p-8 md:p-10 shadow-2xl z-10 text-white animate-[fadeInUp_0.3s_ease-out_forwards]"
       >
         {/* Close Button */}
         <button
           onClick={handleClose}
+          type="button"
+          aria-label="Close wallet connection dialog"
           className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors cursor-pointer"
         >
           <svg
