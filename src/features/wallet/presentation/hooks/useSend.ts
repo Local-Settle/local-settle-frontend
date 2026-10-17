@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useWallet } from "@/features/wallet";
+import { apiFailureMessage, messages, safeUserMessage } from "@/lib/messages";
 
 export type SendStep =
   | "form"
@@ -58,8 +59,7 @@ export function useSend() {
           { headers }
         );
         if (!resolveRes.ok) {
-          const body = await resolveRes.json().catch(() => ({}));
-          throw new Error((body as { message?: string })?.message ?? "Could not resolve recipient");
+          throw new Error(apiFailureMessage(resolveRes.status, messages.wallet.resolveFailed));
         }
         const recipient: RecipientInfo = await resolveRes.json();
 
@@ -77,15 +77,14 @@ export function useSend() {
           body: JSON.stringify(prepareBody),
         });
         if (!prepareRes.ok) {
-          const body = await prepareRes.json().catch(() => ({}));
-          throw new Error((body as { message?: string })?.message ?? "Failed to prepare transaction");
+          throw new Error(apiFailureMessage(prepareRes.status, messages.wallet.prepareFailed));
         }
         const prepared = await prepareRes.json() as Record<string, string>;
 
         const xdr = prepared.xdr ?? prepared.unsignedXdr ?? prepared.txXdr ?? prepared.transaction ?? prepared.envelope ?? null;
         if (!xdr) {
           console.error("[useSend] prepare response missing XDR field:", prepared);
-          throw new Error("Server response did not include a transaction to sign.");
+          throw new Error(messages.wallet.transactionMissing);
         }
 
         preparedXdrRef.current = xdr;
@@ -94,7 +93,7 @@ export function useSend() {
         setState(s => ({
           ...s,
           step: "error",
-          errorMessage: err instanceof Error ? err.message : "An unexpected error occurred",
+          errorMessage: safeUserMessage(err, messages.wallet.resolveFailed),
         }));
       }
     },
@@ -104,7 +103,7 @@ export function useSend() {
   const confirmSend = useCallback(async () => {
     const xdr = preparedXdrRef.current;
     if (!xdr) {
-      setState(s => ({ ...s, step: "error", errorMessage: "Transaction data missing — please go back and try again." }));
+      setState(s => ({ ...s, step: "error", errorMessage: messages.wallet.transactionMissing }));
       return;
     }
 
@@ -122,7 +121,7 @@ export function useSend() {
       setState(s => ({
         ...s,
         step: isCancelled ? "cancelled" : "error",
-        errorMessage: isCancelled ? null : msg,
+        errorMessage: isCancelled ? null : messages.wallet.signingFailed,
       }));
       return;
     }
@@ -137,8 +136,7 @@ export function useSend() {
         body: JSON.stringify({ signedXdr }),
       });
       if (!submitRes.ok) {
-        const body = await submitRes.json().catch(() => ({}));
-        throw new Error((body as { message?: string })?.message ?? "Transaction submission failed");
+        throw new Error(apiFailureMessage(submitRes.status, messages.wallet.submitFailed));
       }
       const result: { hash?: string } = await submitRes.json();
       setState(s => ({ ...s, step: "success", txHash: result.hash ?? null }));
@@ -146,7 +144,7 @@ export function useSend() {
       setState(s => ({
         ...s,
         step: "error",
-        errorMessage: err instanceof Error ? err.message : "Transaction submission failed",
+        errorMessage: safeUserMessage(err, messages.wallet.submitFailed),
       }));
     }
   }, [accessToken, apiUrl, signTransaction, network]);
