@@ -109,7 +109,7 @@ export function useEscrowStatusSync({
             (currentStatusRef.current !== null &&
                 isTerminalStatus(currentStatusRef.current))
         ) {
-            return;
+            return currentStatusRef.current;
         }
 
         isPollingRef.current = true;
@@ -130,11 +130,11 @@ export function useEscrowStatusSync({
                 { headers, signal: controller.signal },
             );
 
-            if (!mountedRef.current) return;
+            if (!mountedRef.current) return currentStatusRef.current;
 
             if (res.status === 401) {
                 logout();
-                return;
+                return currentStatusRef.current;
             }
 
             if (!res.ok) {
@@ -143,7 +143,7 @@ export function useEscrowStatusSync({
                     ...prev,
                     status: "error",
                 }));
-                return;
+                return currentStatusRef.current;
             }
 
             const data: EscrowStatusEvent = await res.json();
@@ -156,14 +156,16 @@ export function useEscrowStatusSync({
                     ? prev.status
                     : "polling",
             }));
+            return data.status;
         } catch (err: unknown) {
-            if (!mountedRef.current) return;
+            if (!mountedRef.current) return currentStatusRef.current;
             // AbortError means we intentionally cancelled — don't flag as error.
-            if (err instanceof DOMException && err.name === "AbortError") return;
+            if (err instanceof DOMException && err.name === "AbortError") return currentStatusRef.current;
             setSyncState((prev) => ({
                 ...prev,
                 status: "error",
             }));
+            return currentStatusRef.current;
         } finally {
             isPollingRef.current = false;
         }
@@ -322,8 +324,9 @@ export function useEscrowStatusSync({
 
     /* ── Manual refresh (e.g. after a user action) ──────────────── */
     const refresh = useCallback(() => {
+        if (isPollingRef.current) return Promise.resolve(null);
         seenKeysRef.current.clear();
-        pollStatus();
+        return pollStatus();
     }, [pollStatus]);
 
     return {
