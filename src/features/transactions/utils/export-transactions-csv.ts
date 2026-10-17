@@ -17,7 +17,9 @@ export function exportTransactionsCsv(records: ExportTransactionRecord[], filena
         "Payment Method",
         "Status",
         "Transaction Hash",
-        "Counterparty Alias"
+        "Counterparty Alias",
+        "Your Address",
+        "Counterparty Address"
     ];
 
     const escapeCsvValue = (val: string | number | undefined | null): string => {
@@ -30,7 +32,13 @@ export function exportTransactionsCsv(records: ExportTransactionRecord[], filena
         return str;
     };
 
-    const csvRows = [headers.map(escapeCsvValue).join(",")];
+    const exportedAt = new Date().toISOString();
+    const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK || "TESTNET";
+    const csvRows = [
+        `Network,${escapeCsvValue(network)}`,
+        `Exported At (UTC),${escapeCsvValue(exportedAt)}`,
+        headers.map(escapeCsvValue).join(",")
+    ];
     for (const record of records) {
         const row = [
             record.orderId,
@@ -44,7 +52,9 @@ export function exportTransactionsCsv(records: ExportTransactionRecord[], filena
             record.paymentMethod,
             record.status,
             record.transactionHash,
-            record.counterpartyAlias
+            record.counterpartyAlias,
+            record.sourceAddress,
+            record.counterpartyAddress
         ];
         csvRows.push(row.map(escapeCsvValue).join(","));
     }

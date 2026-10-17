@@ -57,6 +57,7 @@ export const transactionExportService = {
             // Counterparty
             const counterparty = isBuyer ? o.seller : o.buyer;
             const counterpartyAlias = counterparty?.alias || counterparty?.username || (isBuyer ? "Merchant" : "Client");
+            const sourceAddress = isBuyer ? o.escrow?.buyerAddress || o.buyer?.publicKey : o.escrow?.sellerAddress || o.seller?.publicKey;
 
             return {
                 orderId: o.orderId,
@@ -70,7 +71,9 @@ export const transactionExportService = {
                 paymentMethod,
                 status,
                 transactionHash,
-                counterpartyAlias
+                counterpartyAlias,
+                sourceAddress: sourceAddress || "",
+                counterpartyAddress: counterparty?.publicKey || (isBuyer ? o.escrow?.sellerAddress : o.escrow?.buyerAddress) || ""
             };
         });
     },
@@ -84,7 +87,10 @@ export const transactionExportService = {
         format: "csv" | "pdf",
         filters?: ExportFilters
     ): Promise<void> {
-        const records = this.mapOrdersToExportRecords(orders, currentUserId);
+        const mappedRecords = this.mapOrdersToExportRecords(orders, currentUserId);
+        const records = filters?.fields
+            ? mappedRecords.map(record => Object.fromEntries(Object.entries(record).map(([key, value]) => [key, filters.fields?.includes(key as keyof ExportTransactionRecord) ? value : ""])) as unknown as ExportTransactionRecord)
+            : mappedRecords;
         
         // Generate filename prefix with current date: e.g. localsettle-transactions-2026-07-14
         const todayStr = new Date().toISOString().split("T")[0];

@@ -11,6 +11,8 @@ export interface ExportTransactionRecord {
     status: string;
     transactionHash: string;
     counterpartyAlias: string;
+    sourceAddress?: string;
+    counterpartyAddress?: string;
 }
 
 export interface ExportFilters {
@@ -20,4 +22,5 @@ export interface ExportFilters {
         from?: string; // YYYY-MM-DD
         to?: string;   // YYYY-MM-DD
     };
+    fields?: (keyof ExportTransactionRecord)[];
 }
