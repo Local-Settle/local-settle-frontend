@@ -316,6 +316,7 @@ function SendContent() {
                       onRetry={
                         state.step === "cancelled" ? backToConfirm : reset
                       }
+                      onEdit={state.step === "cancelled" ? reset : undefined}
                       onClose={reset}
                     />
                   )}

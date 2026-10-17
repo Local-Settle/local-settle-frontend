@@ -24,6 +24,7 @@ interface SendStatusViewProps {
   errorMessage?: string | null;
   onRetry: () => void;
   onClose?: () => void;
+  onEdit?: () => void;
 }
 
 export function SendStatusView({
@@ -31,6 +32,7 @@ export function SendStatusView({
   errorMessage,
   onRetry,
   onClose,
+  onEdit,
 }: SendStatusViewProps) {
   const isTransacting = step === "loading" || step === "signing" || step === "submitting";
 
@@ -74,6 +76,15 @@ export function SendStatusView({
         </div>
 
         <div className="flex gap-3 w-full max-w-xs mt-2">
+          {onEdit && (
+            <button
+              type="button"
+              onClick={onEdit}
+              className="flex-1 flex items-center justify-center gap-1.5 bg-[#11212E] hover:bg-[#172B3A] text-white text-xs font-bold uppercase px-4 py-3 rounded-xl transition-all border border-[#172B3A] cursor-pointer"
+            >
+              Edit details
+            </button>
+          )}
           {onClose && (
             <button
               type="button"

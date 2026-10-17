@@ -222,6 +222,14 @@ describe("Send Flow Presentation Components", () => {
       expect(onRetry).toHaveBeenCalledTimes(1);
     });
 
+    it("offers a way to edit recipient and amount after a cancelled signature", () => {
+      const onEdit = vi.fn();
+      render(<SendStatusView step="cancelled" onRetry={vi.fn()} onEdit={onEdit} />);
+
+      fireEvent.click(screen.getByRole("button", { name: /edit details/i }));
+      expect(onEdit).toHaveBeenCalledTimes(1);
+    });
+
     it("renders error state with error message and retry option", () => {
       const onRetry = vi.fn();
       render(

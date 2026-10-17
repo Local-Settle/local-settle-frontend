@@ -201,6 +201,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
               step={state.step}
               errorMessage={state.errorMessage}
               onRetry={state.step === "cancelled" ? backToConfirm : reset}
+              onEdit={state.step === "cancelled" ? reset : undefined}
               onClose={handleClose}
             />
           </div>
