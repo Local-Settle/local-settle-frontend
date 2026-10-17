@@ -7,9 +7,10 @@ interface CancelOrderModalProps {
     onConfirm: () => void;
     onClose: () => void;
     isCancelling: boolean;
+    canCancel?: boolean;
 }
 
-export function CancelOrderModal({ onConfirm, onClose, isCancelling }: CancelOrderModalProps) {
+export function CancelOrderModal({ onConfirm, onClose, isCancelling, canCancel = true }: CancelOrderModalProps) {
     const panelRef = useFocusTrap<HTMLDivElement>({
         onClose: !isCancelling ? onClose : undefined,
     });
@@ -52,7 +53,9 @@ export function CancelOrderModal({ onConfirm, onClose, isCancelling }: CancelOrd
                             Cancel this order?
                         </h3>
                         <p className="text-[#9BABB7] text-sm font-space leading-relaxed max-w-[360px]">
-                            This action will stop the current trade. You can only cancel while payment has not been marked as completed.
+                            {canCancel
+                                ? "You can cancel only before escrow is funded. Cancellation does not refund or reverse an already funded escrow."
+                                : "This order can no longer be cancelled because its status has changed. Escrow funding is not reversed or refunded by cancellation."}
                         </p>
                     </div>
 
@@ -60,7 +63,7 @@ export function CancelOrderModal({ onConfirm, onClose, isCancelling }: CancelOrd
                         <button
                             type="button"
                             onClick={onConfirm}
-                            disabled={isCancelling}
+                            disabled={isCancelling || !canCancel}
                             className="w-full bg-[#FF6B6B] hover:bg-[#ff5252] text-[#1B0505] font-bold text-lg py-4 rounded-lg shadow-[0_0_30px_rgba(255,107,107,0.15)] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-space"
                         >
                             {isCancelling ? (

@@ -95,6 +95,13 @@ export default function TradePage({ params }: PageProps) {
             return;
         }
 
+        if (!canCancelOrder(order, currentUser?.userId ?? "")) {
+            setShowCancelModal(false);
+            notify("warning", "This order can no longer be cancelled because its status has changed.");
+            await fetchOrder();
+            return;
+        }
+
         setIsCancelling(true);
         try {
             await cancelOrder(order.orderId);
@@ -116,7 +123,7 @@ export default function TradePage({ params }: PageProps) {
         } finally {
             setIsCancelling(false);
         }
-    }, [order, isDemoOrder, cancelOrder, notify, fetchOrder]);
+    }, [order, isDemoOrder, currentUser, cancelOrder, notify, fetchOrder]);
 
     if (!currentUser) {
         return (
@@ -403,6 +410,7 @@ export default function TradePage({ params }: PageProps) {
                     onConfirm={handleCancelOrder}
                     onClose={() => setShowCancelModal(false)}
                     isCancelling={isCancelling}
+                    canCancel={canCancel}
                 />
             )}
         </div>
