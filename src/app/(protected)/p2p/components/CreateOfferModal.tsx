@@ -36,6 +36,16 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
 
     const [checked, setChecked] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const selectedPaymentMethodNames = [
+        ...(currentUser?.paymentMethods ?? []).map((pm) => ({
+            id: String(pm.paymentId ?? pm.payment_id ?? pm.id ?? ""),
+            name: pm.payment_provider?.name || pm.paymentProvider?.name || pm.bankName || pm.type || "Payment Method",
+        })),
+        ...(currentUser?.payment_method ?? []).map((pm) => ({
+            id: String(pm.payment_id ?? pm.paymentId ?? pm.id ?? ""),
+            name: pm.payment_provider?.name || pm.paymentProvider?.name || pm.type || "Payment Method",
+        })),
+    ].filter((method) => checked.includes(method.id)).map((method) => method.name);
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
         const nextIndex = getRovingFocusIndex(event.key, index, offerTypeTabs.length, "horizontal");
         if (nextIndex === null) return;
@@ -103,7 +113,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                         </div>
                         <h3 className="text-[#55D6BE] font-semibold text-xl tracking-wide animate-pulse mb-2">Creating Offer...</h3>
                         <p className="text-gray-400 text-sm text-center max-w-[280px] px-4 leading-relaxed">
-                            Please wait while we process your request and secure your offer details in the blockchain.
+                            Please wait while we publish your USDC offer terms. This does not move local currency.
                         </p>
                     </div>
                 )}
@@ -171,6 +181,9 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                             </div>
                             <p className="text-[#64748B] text-[11px] mt-2 leading-relaxed">
                                 Currently our system only supports fund locking of USDC. Please swap your assets if required.
+                            </p>
+                            <p className="mt-2 rounded-lg border border-[#55D6BE]/20 bg-[#11212E] p-3 text-xs leading-relaxed text-[#CBD5E1]">
+                                USDC is the on-chain escrow asset. Buyer and seller arrange and verify local payment directly; LocalSettle does not transfer fiat or promise automatic refunds.
                             </p>
                         </div>
                         <div className='mt-3'>
@@ -312,6 +325,13 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                 )}
                             </div>
                         </div>
+                        <section aria-label="Offer review" className="mt-5 rounded-xl border border-white/10 bg-[#11212E] p-4 text-sm text-[#CBD5E1]">
+                            <h3 className="mb-2 font-semibold text-white">Review your offer</h3>
+                            <p>{tab} {usdcAsset.value} at {form.price || "—"} USD per USDC</p>
+                            <p>Trade range: {form.minAmount || "—"} to {form.maxAmount || "—"} USDC</p>
+                            <p>Local payment methods: {selectedPaymentMethodNames.length ? selectedPaymentMethodNames.join(", ") : "None selected"}</p>
+                            <p className="mt-2 text-xs leading-relaxed text-[#94A3B8]">Only USDC is locked in escrow. Local currency is paid directly between participants.</p>
+                        </section>
                         <div className="flex w-full items-center justify-center gap-3 mt-10">
                             <button
                                 type='submit'
