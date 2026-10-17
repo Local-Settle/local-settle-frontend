@@ -68,6 +68,11 @@ export function ProfileTab() {
             return;
         }
 
+        if (username.trim().length > 50 || bio.length > 280 || alias.length > 30) {
+            setSaveMessage("Display name and alias must be 50 and 30 characters or less; bio must be 280 characters or less.");
+            return;
+        }
+
         if (aliasError) return;
 
         setIsSaving(true);
@@ -92,7 +97,7 @@ export function ProfileTab() {
             await updateUser(currentUser.userId, payload);
             setSaveMessage("Profile saved successfully!");
         } catch {
-            setSaveMessage("Error saving profile");
+            setSaveMessage("Could not save your profile. Your changes are still here; please try again.");
         } finally {
             setIsSaving(false);
             setTimeout(() => setSaveMessage(""), 3000);
@@ -363,6 +368,7 @@ export function ProfileTab() {
                                         <input
                                             type="text"
                                             value={username}
+                                            maxLength={50}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="Enter display name"
                                             className="mt-2.5 h-14 w-full rounded-[12px] border border-[#172B3A] bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] focus:border-[#55D6BE]"
@@ -377,6 +383,7 @@ export function ProfileTab() {
                                             <input
                                                 type="text"
                                                 value={alias}
+                                                maxLength={30}
                                                 onChange={handleAliasChange}
                                                 placeholder="Enter unique alias"
                                                 className={`h-14 w-full rounded-[12px] border bg-[#05070C] px-4 text-[#F1F5F9] outline-none transition-colors placeholder:text-[#516072] ${
@@ -422,6 +429,7 @@ export function ProfileTab() {
                                     </label>
                                     <textarea
                                         value={bio}
+                                        maxLength={280}
                                         onChange={(e) => setBio(e.target.value)}
                                         placeholder="Write a short description about yourself..."
                                         rows={5}
