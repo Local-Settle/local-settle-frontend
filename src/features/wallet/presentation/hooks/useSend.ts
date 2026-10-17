@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { useUser } from "@/features/user/presentation/context/UserContext";
+import { useApi } from "@/lib/api";
 import { useWallet } from "@/features/wallet";
 
 export type SendStep =
@@ -30,9 +30,8 @@ export interface SendState {
 }
 
 export function useSend() {
-  const { accessToken } = useUser();
+  const { apiFetch } = useApi();
   const { signTransaction } = useWallet();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
   const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "TESTNET";
   const preparedXdrRef = useRef<string | null>(null);
 
@@ -50,18 +49,10 @@ export function useSend() {
       preparedXdrRef.current = null;
 
       try {
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
-        if (accessToken) headers["Authorization"] = `Bearer ${accessToken}`;
-
-        const resolveRes = await fetch(
-          `${apiUrl}/send/resolve?recipient=${encodeURIComponent(query)}`,
-          { headers }
+        const recipient = await apiFetch<RecipientInfo>(
+          `/send/resolve?recipient=${encodeURIComponent(query)}`,
+          { defaultError: "Could not resolve recipient" },
         );
-        if (!resolveRes.ok) {
-          const body = await resolveRes.json().catch(() => ({}));
-          throw new Error((body as { message?: string })?.message ?? "Could not resolve recipient");
-        }
-        const recipient: RecipientInfo = await resolveRes.json();
 
         const prepareBody: { recipient: string; amount: string; asset?: string } = {
           recipient: recipient.address,
@@ -71,16 +62,11 @@ export function useSend() {
           prepareBody.asset = assetCode;
         }
 
-        const prepareRes = await fetch(`${apiUrl}/send/prepare`, {
+        const prepared = await apiFetch<Record<string, string>>("/send/prepare", {
           method: "POST",
-          headers,
-          body: JSON.stringify(prepareBody),
+          body: prepareBody,
+          defaultError: "Failed to prepare transaction",
         });
-        if (!prepareRes.ok) {
-          const body = await prepareRes.json().catch(() => ({}));
-          throw new Error((body as { message?: string })?.message ?? "Failed to prepare transaction");
-        }
-        const prepared = await prepareRes.json() as Record<string, string>;
 
         const xdr = prepared.xdr ?? prepared.unsignedXdr ?? prepared.txXdr ?? prepared.transaction ?? prepared.envelope ?? null;
         if (!xdr) {
@@ -98,7 +84,7 @@ export function useSend() {
         }));
       }
     },
-    [accessToken, apiUrl]
+    [apiFetch]
   );
 
   const confirmSend = useCallback(async () => {
@@ -129,18 +115,11 @@ export function useSend() {
 
     setState(s => ({ ...s, step: "submitting" }));
     try {
-      const submitHeaders: Record<string, string> = { "Content-Type": "application/json" };
-      if (accessToken) submitHeaders["Authorization"] = `Bearer ${accessToken}`;
-      const submitRes = await fetch(`${apiUrl}/send/submit`, {
+      const result = await apiFetch<{ hash?: string }>("/send/submit", {
         method: "POST",
-        headers: submitHeaders,
-        body: JSON.stringify({ signedXdr }),
+        body: { signedXdr },
+        defaultError: "Transaction submission failed",
       });
-      if (!submitRes.ok) {
-        const body = await submitRes.json().catch(() => ({}));
-        throw new Error((body as { message?: string })?.message ?? "Transaction submission failed");
-      }
-      const result: { hash?: string } = await submitRes.json();
       setState(s => ({ ...s, step: "success", txHash: result.hash ?? null }));
     } catch (err) {
       setState(s => ({
@@ -149,7 +128,7 @@ export function useSend() {
         errorMessage: err instanceof Error ? err.message : "Transaction submission failed",
       }));
     }
-  }, [accessToken, apiUrl, signTransaction, network]);
+  }, [apiFetch, signTransaction, network]);
 
   const reset = useCallback(() => {
     preparedXdrRef.current = null;
