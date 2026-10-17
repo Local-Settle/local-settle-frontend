@@ -3,6 +3,16 @@ interface KitLikeError {
     message?: string | { message?: string };
 }
 
+export function isWalletConnectionCancelled(err: unknown): boolean {
+    if (typeof err !== "object" || err === null) return false;
+    const kitErr = err as KitLikeError;
+    if (kitErr.code === -4) return true;
+    const message = typeof kitErr.message === "string"
+        ? kitErr.message
+        : kitErr.message?.message;
+    return typeof message === "string" && /cancel|reject|declin/i.test(message);
+}
+
 // Maps kit/module errors (IKitError, extension-not-found, user-rejected, ...)
 // to short user-facing copy. Never surfaces raw SDK stack traces.
 export function mapWalletError(err: unknown): string {
