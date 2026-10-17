@@ -21,6 +21,54 @@ type ChatProps = {
     counterpartyProfileImageUrl?: string;
 };
 
+/** Render chat text as text, turning only validated web URLs into links. */
+const renderMessageContent = (content: string) => {
+    const urlPattern = /https?:\/\/[^\s<>"']+/gi;
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = urlPattern.exec(content)) !== null) {
+        let candidate = match[0];
+        // Sentence punctuation is usually not part of a pasted URL.
+        const trailing = candidate.match(/[.,!?;:]+$/)?.[0] ?? "";
+        if (trailing) candidate = candidate.slice(0, -trailing.length);
+
+        let safeHref: string | null = null;
+        try {
+            const parsed = new URL(candidate);
+            if ((parsed.protocol === "http:" || parsed.protocol === "https:") && parsed.hostname && !parsed.username && !parsed.password) {
+                safeHref = parsed.href;
+            }
+        } catch {
+            // Invalid URLs remain ordinary message text.
+        }
+
+        if (!safeHref || candidate.length === 0) continue;
+
+        const linkStart = match.index;
+        const linkEnd = linkStart + candidate.length;
+        if (linkStart > lastIndex) parts.push(content.slice(lastIndex, linkStart));
+        parts.push(
+            <a
+                key={`link-${linkStart}`}
+                href={safeHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 break-all"
+            >
+                {candidate}
+            </a>,
+        );
+        if (trailing) parts.push(trailing);
+        lastIndex = linkEnd + trailing.length;
+        urlPattern.lastIndex = lastIndex;
+    }
+
+    if (lastIndex < content.length) parts.push(content.slice(lastIndex));
+    return parts;
+};
+
 export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileImageUrl }: ChatProps) => {
     const { currentUser, accessToken } = useUser();
     const { notify } = useNotifications();
@@ -261,7 +309,7 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                                             : "bg-[#11212E] text-[#C2C7D0] font-medium rounded-bl-[4px] border border-white/[0.01]"
                                     }`}
                                 >
-                                    {msg.content}
+                                    <span className="whitespace-pre-wrap">{renderMessageContent(msg.content)}</span>
                                 </div>
                                 <span className={`text-[9px] font-bold px-1 ${
                                     msg.deliveryStatus === "failed" ? "text-red-400" : "text-[#9BABB7]"
