@@ -28,6 +28,14 @@ function isExpiredChallengeError(error: unknown): boolean {
     return message.toLowerCase().includes("expired");
 }
 
+function isRevokedWalletAccess(error: unknown): boolean {
+    if (typeof error !== "object" || error === null) return false;
+    const value = error as { message?: unknown; code?: unknown };
+    const message = typeof value.message === "string" ? value.message.toLowerCase() : "";
+    return message.includes("permission revoked") || message.includes("access revoked") ||
+        message.includes("permission denied") || message.includes("unauthorized");
+}
+
 let authInFlight: Promise<string> | null = null;
 
 async function requestChallenge(publicKey: string): Promise<ChallengeResponse> {
@@ -80,8 +88,11 @@ export const walletService = {
             }
 
             return { publicKey: address, walletId: savedWalletId };
-        } catch {
-            this.clearSession();
+        } catch (error) {
+            // A temporarily unavailable extension must not erase the saved
+            // provider and account. The caller stays disconnected and can
+            // retry when the wallet becomes available again.
+            if (isRevokedWalletAccess(error)) this.clearSession();
             return null;
         }
     },
