@@ -168,6 +168,7 @@ function TradeDashboardInner() {
         setFilter,
         setDraftFilter,
         applyDraftFilters,
+        applyPreset,
         clearFilters,
         isFiltersDefault,
     } = useOfferFilters();
@@ -322,6 +323,7 @@ function TradeDashboardInner() {
                         onFilterChange={setFilter}
                         onDraftFilterChange={setDraftFilter}
                         onApplyDraft={applyDraftFilters}
+                        onApplyPreset={applyPreset}
                         onClearFilters={clearFilters}
                     />
                 </div>
