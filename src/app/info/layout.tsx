@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { BookOpen, ShieldCheck, Compass, ArrowLeft } from "lucide-react";
+import { BookOpen, ShieldCheck, Compass, ArrowLeft, Network } from "lucide-react";
 
 export default function InfoLayout({
   children,
@@ -30,6 +30,12 @@ export default function InfoLayout({
       href: "/info/security",
       icon: ShieldCheck,
       description: "Wallet signing & system trust boundaries",
+    },
+    {
+      label: "Network & Assets",
+      href: "/info/network",
+      icon: Network,
+      description: "Configured Stellar network and USDC issuer",
     },
   ];
 

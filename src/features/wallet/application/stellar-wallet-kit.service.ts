@@ -15,10 +15,10 @@ import type {
     StellarNetwork,
     DetectedStellarNetwork,
 } from "../types/wallet-network.types";
+import { getConfiguredStellarNetwork } from "../config/stellar-network";
 
 export function getExpectedStellarNetwork(): StellarNetwork {
-    const raw = (process.env.NEXT_PUBLIC_STELLAR_NETWORK || "testnet").toLowerCase();
-    return raw === "mainnet" || raw === "public" ? "mainnet" : "testnet";
+    return getConfiguredStellarNetwork();
 }
 
 export function getExpectedNetworkPassphrase(): Networks {
