@@ -327,6 +327,7 @@ function SendContent() {
                       amount={amount}
                       assetName={assetName}
                       fee={state.fee}
+                      network={state.network}
                       onBack={reset}
                       onConfirm={confirmSend}
                       isLoading={isTransacting}
