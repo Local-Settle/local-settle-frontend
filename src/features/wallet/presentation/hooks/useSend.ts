@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useWallet } from "@/features/wallet";
+import { trackSendStage } from "../utils/send-analytics";
 
 export type SendStep =
   | "form"
@@ -46,6 +47,7 @@ export function useSend() {
 
   const resolveAndPrepare = useCallback(
     async (query: string, amount: string, assetCode?: string) => {
+      trackSendStage("resolve", "started");
       setState(s => ({ ...s, step: "loading", errorMessage: null }));
       preparedXdrRef.current = null;
 
@@ -89,8 +91,10 @@ export function useSend() {
         }
 
         preparedXdrRef.current = xdr;
+        trackSendStage("resolve", "success");
         setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null }));
       } catch (err) {
+        trackSendStage("resolve", "failure");
         setState(s => ({
           ...s,
           step: "error",
@@ -109,6 +113,8 @@ export function useSend() {
     }
 
     setState(s => ({ ...s, step: "signing", errorMessage: null }));
+    trackSendStage("confirmation", "success");
+    trackSendStage("signing", "started");
 
     let signedXdr: string;
     try {
@@ -119,6 +125,7 @@ export function useSend() {
         typeof err === "string" ? err :
         "Signing failed";
       const isCancelled = /cancel|decline|reject|denied|user rejected/i.test(msg);
+      trackSendStage("signing", isCancelled ? "cancelled" : "failure");
       setState(s => ({
         ...s,
         step: isCancelled ? "cancelled" : "error",
@@ -128,6 +135,8 @@ export function useSend() {
     }
 
     setState(s => ({ ...s, step: "submitting" }));
+    trackSendStage("signing", "success");
+    trackSendStage("submit", "started");
     try {
       const submitHeaders: Record<string, string> = { "Content-Type": "application/json" };
       if (accessToken) submitHeaders["Authorization"] = `Bearer ${accessToken}`;
@@ -141,8 +150,10 @@ export function useSend() {
         throw new Error((body as { message?: string })?.message ?? "Transaction submission failed");
       }
       const result: { hash?: string } = await submitRes.json();
+      trackSendStage("submit", "success");
       setState(s => ({ ...s, step: "success", txHash: result.hash ?? null }));
     } catch (err) {
+      trackSendStage("submit", "failure");
       setState(s => ({
         ...s,
         step: "error",
