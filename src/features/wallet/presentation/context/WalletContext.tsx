@@ -135,7 +135,17 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         }));
 
         try {
-            const publicKey = await walletService.connect(walletId);
+            let publicKey: string;
+            try {
+                publicKey = await walletService.connect(walletId);
+            } catch (err) {
+                const walletError = err as { code?: number; message?: string };
+                const cancelled = walletError?.code === -4 || /cancel|reject|declin/i.test(walletError?.message || "");
+                if (!cancelled && typeof window !== "undefined") {
+                    window.dispatchEvent(new CustomEvent("localsettle:connectivity", { detail: "wallet-unavailable" }));
+                }
+                throw err;
+            }
 
             // Check network immediately upon connection
             const detected = await walletService.detectNetwork();

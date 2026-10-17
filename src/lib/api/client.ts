@@ -15,6 +15,23 @@ const CSRF_HEADER = "x-csrf-token";
 const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 let csrfToken: string | null = null;
 
+function publishConnectivityState(state: "offline" | "online" | "api-unavailable"): void {
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("localsettle:connectivity", { detail: state }));
+    }
+}
+
+async function request(url: string, init: RequestInit): Promise<Response> {
+    try {
+        const response = await fetch(url, init);
+        publishConnectivityState(response.status >= 500 ? "api-unavailable" : "online");
+        return response;
+    } catch (error) {
+        publishConnectivityState(typeof navigator !== "undefined" && !navigator.onLine ? "offline" : "api-unavailable");
+        throw error;
+    }
+}
+
 export function getApiBaseUrl(): string {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     if (!apiUrl) throw new Error("Backend API URL is not configured.");
@@ -86,6 +103,11 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
     const { authenticated = true, headers = {}, body, defaultError = "Request failed", ...init } = options;
     const method = init.method ?? "GET";
 
+    if (isMutatingRequest(method) && typeof navigator !== "undefined" && !navigator.onLine) {
+        publishConnectivityState("offline");
+        throw new ApiError("You are offline. Reconnect before making changes.", 0, "OFFLINE");
+    }
+
     const buildRequest = async (tokenOverride?: string | null): Promise<RequestInit> => {
         const requestHeaders: Record<string, string> = { ...headers };
         const token = authenticated ? tokenOverride ?? tokenProvider?.() ?? null : null;
@@ -115,12 +137,12 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
         return { ...init, credentials: "include", headers: requestHeaders, body: requestBody };
     };
 
-    let res = await fetch(`${getApiBaseUrl()}${path}`, await buildRequest(tokenProvider?.()));
+    let res = await request(`${getApiBaseUrl()}${path}`, await buildRequest(tokenProvider?.()));
 
     if (res.status === 401 && authenticated) {
         const newToken = refreshTokenHandler ? await refreshTokenHandler() : null;
         if (newToken) {
-            res = await fetch(`${getApiBaseUrl()}${path}`, await buildRequest(newToken));
+            res = await request(`${getApiBaseUrl()}${path}`, await buildRequest(newToken));
         } else {
             await unauthorizedHandler?.();
             throw new ApiError("Sesión expirada. Por favor, inicia sesión nuevamente.", 401);
