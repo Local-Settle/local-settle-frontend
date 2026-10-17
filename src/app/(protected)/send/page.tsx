@@ -48,37 +48,30 @@ function SendContent() {
     searchParams.get("recipient") ||
     searchParams.get("to") ||
     "";
-  const initialAsset = searchParams.get("asset") || "";
   const initialAmount = searchParams.get("amount") || "";
 
-  const [selectedAssetCode, setSelectedAssetCode] = useState<string | null>(
-    initialAsset ? initialAsset.toUpperCase() : "USDC"
-  );
   const [recipientInput, setRecipientInput] = useState(initialRecipient);
   const [amount, setAmount] = useState(initialAmount);
   const [inputError, setInputError] = useState<string | null>(null);
   const [amountError, setAmountError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
+  const configuredUsdcIssuer = process.env.NEXT_PUBLIC_USDC_ISSUER?.trim() || null;
+  const supportedUsdcBalance = balances.find(
+    (balance) => balance.asset_code === "USDC" && (!configuredUsdcIssuer || balance.asset_issuer === configuredUsdcIssuer),
+  );
+  const supportedBalances = supportedUsdcBalance ? [supportedUsdcBalance] : [];
+
   // Derive selected asset from balances and user selection
   const selectedAsset: AssetBalance = React.useMemo(() => {
-    if (balances.length > 0) {
-      if (selectedAssetCode) {
-        const match = balances.find(
-          (b) => getAssetName(b).toUpperCase() === selectedAssetCode.toUpperCase()
-        );
-        if (match) return match;
-      }
-      const usdc = balances.find((b) => b.asset_code === "USDC");
-      return usdc || balances[0];
-    }
+    if (supportedUsdcBalance) return supportedUsdcBalance;
     return {
       asset_type: "credit_alphanum4",
-      asset_code: selectedAssetCode || "USDC",
-      asset_issuer: null,
+      asset_code: "USDC",
+      asset_issuer: configuredUsdcIssuer,
       balance: "0.00",
     };
-  }, [balances, selectedAssetCode]);
+  }, [supportedUsdcBalance, configuredUsdcIssuer]);
 
   const assetName = getAssetName(selectedAsset);
   const isTransacting =
@@ -267,14 +260,17 @@ function SendContent() {
                       />
 
                       <SendAssetSelect
-                        balances={balances}
+                        balances={supportedBalances}
                         selectedAsset={selectedAsset}
-                        onSelectAsset={(asset) => {
-                          setSelectedAssetCode(getAssetName(asset));
+                        onSelectAsset={() => {
                           setAmountError(null);
                         }}
                         disabled={isTransacting}
                       />
+                      <p className="-mt-4 text-xs text-[#9BABB7]">
+                        Supported transfer: USDC on {(process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "testnet").toLowerCase()}.
+                        {" "}Issuer: {supportedUsdcBalance?.asset_issuer ?? configuredUsdcIssuer ?? "not present in this wallet"}.
+                      </p>
 
                       <SendAmountInput
                         amount={amount}
