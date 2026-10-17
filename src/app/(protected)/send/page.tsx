@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition, Suspense } from "react";
+import React, { useState, useEffect, useTransition, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Aside } from "@/app/components/Aside";
 import { Header } from "@/app/components/Header";
@@ -41,6 +41,13 @@ function SendContent() {
   const { balances, isLoading: isBalancesLoading } = useWalletBalance(publicKey);
   const { state, resolveAndPrepare, confirmSend, reset, backToConfirm } = useSend();
   const { notify } = useNotifications();
+  const stepHeadingRef = useRef<HTMLHeadingElement>(null);
+  const previousStepRef = useRef(state.step);
+
+  useEffect(() => {
+    if (previousStepRef.current !== state.step) stepHeadingRef.current?.focus();
+    previousStepRef.current = state.step;
+  }, [state.step]);
 
   // Read URL query params
   const initialRecipient =
@@ -220,7 +227,13 @@ function SendContent() {
                   {/* Card Header */}
                   <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#263949]">
                     <div className="flex flex-col">
-                      <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                      <h2
+                        ref={stepHeadingRef}
+                        tabIndex={-1}
+                        aria-live="polite"
+                        aria-atomic="true"
+                        className="text-xl md:text-2xl font-black uppercase tracking-tight text-white flex items-center gap-2 focus:outline-none"
+                      >
                         <Zap size={22} className="text-[#55D6BE]" />
                         {state.step === "form" && "New Transfer"}
                         {state.step === "confirm" && "Review Transaction"}
@@ -242,12 +255,12 @@ function SendContent() {
                     </div>
 
                     {state.step === "form" && (
-                      <span className="px-3 py-1 bg-[#55D6BE]/10 border border-[#55D6BE]/20 rounded-full text-[10px] font-extrabold uppercase text-[#55D6BE] tracking-wider">
+                      <span role="progressbar" aria-label="Transfer progress" aria-valuemin={1} aria-valuemax={2} aria-valuenow={1} className="px-3 py-1 bg-[#55D6BE]/10 border border-[#55D6BE]/20 rounded-full text-[10px] font-extrabold uppercase text-[#55D6BE] tracking-wider">
                         Step 1 of 2
                       </span>
                     )}
                     {state.step === "confirm" && (
-                      <span className="px-3 py-1 bg-[#55D6BE]/10 border border-[#55D6BE]/20 rounded-full text-[10px] font-extrabold uppercase text-[#55D6BE] tracking-wider">
+                      <span role="progressbar" aria-label="Transfer progress" aria-valuemin={1} aria-valuemax={2} aria-valuenow={2} className="px-3 py-1 bg-[#55D6BE]/10 border border-[#55D6BE]/20 rounded-full text-[10px] font-extrabold uppercase text-[#55D6BE] tracking-wider">
                         Step 2 of 2
                       </span>
                     )}
