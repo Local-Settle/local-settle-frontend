@@ -24,8 +24,19 @@ const windows: { key: TimeWindow; label: string }[] = [
 ];
 
 export function WaitlistGrowth({ timeLine, activeWindow, onWindowChange }: WaitlistGrowthProps) {
+    const firstCount = timeLine[0]?.count;
+    const lastCount = timeLine.at(-1)?.count;
+    const change = firstCount !== undefined && lastCount !== undefined
+        ? lastCount - firstCount
+        : undefined;
+    const trendSummary = timeLine.length === 0
+        ? "No waitlist growth data is available for this period."
+        : `Waitlist count ${change === undefined ? "is shown" : `${change >= 0 ? "increased" : "decreased"} by ${Math.abs(change)}`} across ${timeLine.length} recorded periods; latest count is ${lastCount}.`;
+
     return (
         <div className="relative w-full h-full min-h-[300px]">
+            <h3 className="sr-only">Waitlist growth</h3>
+            <p className="sr-only" id="waitlist-growth-summary">{trendSummary}</p>
             <div className="absolute -top-10 right-0 flex gap-1.5 z-10">
                 {windows.map((w) => (
                     <button
@@ -41,6 +52,7 @@ export function WaitlistGrowth({ timeLine, activeWindow, onWindowChange }: Waitl
                     </button>
                 ))}
             </div>
+            <div role="img" aria-label={`Waitlist growth chart. ${trendSummary}`}>
             <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={timeLine} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
                     <defs>
@@ -88,6 +100,33 @@ export function WaitlistGrowth({ timeLine, activeWindow, onWindowChange }: Waitl
                     />
                 </AreaChart>
             </ResponsiveContainer>
+            </div>
+            <details className="mt-3 text-sm text-[#E3E2E2]">
+                <summary className="w-fit cursor-pointer rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#55D6BE]">
+                    View waitlist growth data
+                </summary>
+                <div className="mt-2 max-h-48 overflow-auto rounded border border-[#FFFFFF1A]">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Waitlist counts by recorded period</caption>
+                        <thead className="sticky top-0 bg-[#1A1A1A]">
+                            <tr>
+                                <th scope="col" className="px-3 py-2">Date</th>
+                                <th scope="col" className="px-3 py-2">Waitlist count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {timeLine.length === 0 ? (
+                                <tr><td colSpan={2} className="px-3 py-2">No data available</td></tr>
+                            ) : timeLine.map((point, index) => (
+                                <tr key={`${point.date}-${index}`} className="border-t border-[#FFFFFF1A]">
+                                    <th scope="row" className="px-3 py-2 font-normal">{point.date}</th>
+                                    <td className="px-3 py-2">{point.count}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
         </div>
     );
 }
