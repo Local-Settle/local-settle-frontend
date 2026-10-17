@@ -8,6 +8,7 @@ import { useSignatureCancellation } from "@/features/wallet/hooks/useSignatureCa
 import { CircleCheck, Loader2, Eye, Search } from "lucide-react";
 import { SignatureCancelledModal } from "../../components/SignatureCancelledModal";
 import { useNotifications } from "@/features/notifications";
+import { ApiError } from "@/lib/api";
 
 export interface EvidencePreviewProps {
     orderId: string;
@@ -21,6 +22,7 @@ export interface EvidencePreviewProps {
     canCancel: boolean;
     isCancelling: boolean;
     onCancelOrder: () => void;
+    orderExpired?: boolean;
 }
 
 export function EvidencePreview({
@@ -34,7 +36,8 @@ export function EvidencePreview({
     onStatusChange,
     canCancel,
     isCancelling,
-    onCancelOrder
+    onCancelOrder,
+    orderExpired = false,
 }: EvidencePreviewProps) {
     const { fundEscrow, releaseEscrow, syncEscrow } = useEscrows();
     const { updateOrder } = useOrders();
@@ -47,8 +50,12 @@ export function EvidencePreview({
     const sig = useSignatureCancellation();
 
     useEffect(() => {
-        if (!expiresAt) return;
-        const target = new Date(expiresAt).getTime();
+        const target = expiresAt ? Date.parse(expiresAt) : Number.NaN;
+        if (!Number.isFinite(target)) {
+            setTimeLeft("--:--");
+            setIsExpired(false);
+            return;
+        }
         
         const updateTimer = () => {
             const now = Date.now();
@@ -66,11 +73,18 @@ export function EvidencePreview({
         
         updateTimer();
         const interval = setInterval(updateTimer, 1000);
-        return () => clearInterval(interval);
+        const refresh = () => updateTimer();
+        document.addEventListener("visibilitychange", refresh);
+        window.addEventListener("focus", refresh);
+        return () => {
+            clearInterval(interval);
+            document.removeEventListener("visibilitychange", refresh);
+            window.removeEventListener("focus", refresh);
+        };
     }, [expiresAt]);
 
     const handleFundAction = async () => {
-        if (isSubmitting || !sellerAddress || !escrowId){
+        if (orderExpired || isSubmitting || !sellerAddress || !escrowId){
             alert("Cannot fund escrow: missing required information.");
             console.warn("Fund action blocked due to missing data:", { sellerAddress, escrowId });
             return;
@@ -91,6 +105,11 @@ export function EvidencePreview({
                 setPendingAction("fund");
                 return;
             }
+            if (err instanceof ApiError && err.status === 409) {
+                notify("warning", "This order changed or expired. Refreshing its latest status.");
+                await onStatusChange();
+                return;
+            }
             alert(`Error: ${err instanceof Error ? err.message : String(err)}`);
         } finally {
             setIsSubmitting(false);
@@ -98,7 +117,7 @@ export function EvidencePreview({
     };
 
     const handleReleaseAction = async () => {
-        if (isSubmitting || !sellerAddress || !escrowId) return;
+        if (orderExpired || isSubmitting || !sellerAddress || !escrowId) return;
         setIsSubmitting(true);
         try {
             const res = await releaseEscrow({ escrowId, releaseSigner: sellerAddress });
@@ -116,6 +135,11 @@ export function EvidencePreview({
                 setPendingAction("release");
                 return;
             }
+            if (err instanceof ApiError && err.status === 409) {
+                notify("warning", "This order changed or expired. Refreshing its latest status.");
+                await onStatusChange();
+                return;
+            }
             alert(`Error releasing crypto: ${err instanceof Error ? err.message : String(err)}`);
         } finally {
             setIsSubmitting(false);
@@ -128,7 +152,7 @@ export function EvidencePreview({
     };
 
     const handleSignatureRetry = async () => {
-        if (!escrowId || !pendingAction) return;
+        if (orderExpired || !escrowId || !pendingAction) return;
         setIsSubmitting(true);
         try {
             const signedXdr = await sig.retry();
@@ -145,6 +169,12 @@ export function EvidencePreview({
             onStatusChange();
         } catch (err: unknown) {
             if (isSignatureCancelled(err)) {
+                return;
+            }
+            if (err instanceof ApiError && err.status === 409) {
+                notify("warning", "This order changed or expired. Refreshing its latest status.");
+                await onStatusChange();
+                setPendingAction(null);
                 return;
             }
             alert(`Error: ${err instanceof Error ? err.message : String(err)}`);
@@ -300,7 +330,7 @@ export function EvidencePreview({
                     <button 
                         type="button" 
                         onClick={handleFundAction}
-                        disabled={isSubmitting}
+                        disabled={orderExpired || isSubmitting}
                         className="bg-[#55D6BE] w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#dcff15] hover:cursor-pointer uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
                     >
                         {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
@@ -321,7 +351,7 @@ export function EvidencePreview({
                     <button 
                         type="button" 
                         onClick={handleReleaseAction}
-                        disabled={isSubmitting}
+                        disabled={orderExpired || isSubmitting}
                         className="bg-[#55D6BE] w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
                     >
                         {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
@@ -338,7 +368,7 @@ export function EvidencePreview({
                     <button 
                         type="button" 
                         onClick={handleCancel}
-                        disabled={!canCancel || isCancelling}
+                        disabled={!canCancel || orderExpired || isCancelling}
                         className="bg-transparent hover:bg-[#FF6B6B]/5 hover:border-[#FF6B6B]/50 hover:text-[#FF6B6B] disabled:hover:bg-transparent disabled:hover:border-[rgba(69,73,50,0.3)] disabled:hover:text-[#C2C7D0] w-full h-[58px] text-[#C2C7D0] border border-[rgba(69,73,50,0.3)] font-bold text-[16px] leading-[24px] rounded-[12px] uppercase transition-all duration-200 tracking-[-0.4px] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                         {isCancelling ? "CANCELLING..." : "CANCEL OPERATION"}

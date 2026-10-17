@@ -7,6 +7,7 @@ import { useSignatureCancellation } from "@/features/wallet/hooks/useSignatureCa
 import { Info, Upload, FileUp, CircleCheck, Loader2, Search, Trash2 } from "lucide-react";
 import { SignatureCancelledModal } from "../../components/SignatureCancelledModal";
 import { useNotifications } from "@/features/notifications";
+import { ApiError } from "@/lib/api";
 
 export interface TradeEvidenceUploaderProps {
     orderId: string;
@@ -18,6 +19,7 @@ export interface TradeEvidenceUploaderProps {
     onStatusChange: () => void;
     canCancel: boolean;
     isCancelling: boolean;
+    isExpired?: boolean;
     onCancelOrder: () => void;
 }
 
@@ -29,7 +31,8 @@ export function TradeEvidenceUploader({
     onStatusChange,
     canCancel,
     isCancelling,
-    onCancelOrder
+    onCancelOrder,
+    isExpired = false,
 }: TradeEvidenceUploaderProps) {
     const { markFiatSent, syncEscrow, uploadEvidence } = useEscrows();
 
@@ -70,6 +73,7 @@ export function TradeEvidenceUploader({
     }, [evidenceUrl, escrowStatus, uploadedTime]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isExpired) return;
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             setUploadedFile(file);
@@ -84,6 +88,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleDragOver = (e: React.DragEvent) => {
+        if (isExpired) return;
         e.preventDefault();
         setIsDragging(true);
     };
@@ -93,6 +98,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleDrop = (e: React.DragEvent) => {
+        if (isExpired) return;
         e.preventDefault();
         setIsDragging(false);
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
@@ -109,11 +115,12 @@ export function TradeEvidenceUploader({
     };
 
     const triggerUpload = () => {
+        if (isExpired) return;
         fileInputRef.current?.click();
     };
 
     const handleUploadToServer = async () => {
-        if (!uploadedFile || !escrowId) return;
+        if (isExpired || !uploadedFile || !escrowId) return;
         setUploadState('uploading');
         try {
             const uploadRes = await uploadEvidence(escrowId, uploadedFile);
@@ -132,6 +139,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleRemove = () => {
+        if (isExpired) return;
         if (previewUrl) {
             URL.revokeObjectURL(previewUrl);
         }
@@ -167,7 +175,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleAction = async () => {
-        if (isSubmitting || !buyerAddress || !escrowId || !evidenceUrlState) return;
+        if (isExpired || isSubmitting || !buyerAddress || !escrowId || !evidenceUrlState) return;
         setIsSubmitting(true);
         try {
             if (escrowStatus === "funded") {
@@ -186,6 +194,11 @@ export function TradeEvidenceUploader({
             }
         } catch (err: unknown) {
             if (isSignatureCancelled(err)) return;
+            if (err instanceof ApiError && err.status === 409) {
+                notify("warning", "This order changed or expired. Refreshing its latest status.");
+                onStatusChange();
+                return;
+            }
             alert(`Error processing action: ${err instanceof Error ? err.message : String(err)}`);
         } finally {
             setIsSubmitting(false);
@@ -198,7 +211,7 @@ export function TradeEvidenceUploader({
     };
 
     const handleSignatureRetry = async () => {
-        if (!escrowId) return;
+        if (isExpired || !escrowId) return;
         setIsSubmitting(true);
         try {
             const signedXdr = await sig.retry();
@@ -207,6 +220,11 @@ export function TradeEvidenceUploader({
             onStatusChange();
         } catch (err: unknown) {
             if (isSignatureCancelled(err)) return;
+            if (err instanceof ApiError && err.status === 409) {
+                notify("warning", "This order changed or expired. Refreshing its latest status.");
+                onStatusChange();
+                return;
+            }
             notify("error", `Error: ${err instanceof Error ? err.message : String(err)}`);
         } finally {
             setIsSubmitting(false);
@@ -289,7 +307,7 @@ export function TradeEvidenceUploader({
                     <button 
                         type="button" 
                         onClick={uploadState === 'idle' ? triggerUpload : handleUploadToServer}
-                        disabled={escrowStatus !== "funded" || uploadState === 'uploading' || uploadState === 'uploaded'}
+                        disabled={isExpired || escrowStatus !== "funded" || uploadState === 'uploading' || uploadState === 'uploaded'}
                         className="bg-[#55D6BE] disabled:bg-[#11212E] disabled:text-[rgba(155,171,183,0.5)] w-full h-[48px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 flex items-center justify-center gap-2 select-none tracking-[-0.4px] disabled:cursor-not-allowed shrink-0 cursor-pointer"
                     >
                         {uploadState === 'uploading' ? (
@@ -411,6 +429,7 @@ export function TradeEvidenceUploader({
                                 <button 
                                     type="button" 
                                     onClick={handleRemove}
+                                    disabled={isExpired}
                                     className="flex items-center gap-1.5 text-[#FF6B6B] hover:text-red-400 text-[13px] font-bold uppercase mt-2 tracking-wide w-fit transition-colors cursor-pointer"
                                 >
                                     <Trash2 className="w-4 h-4 text-[#FF6B6B]" /> REMOVE
@@ -431,7 +450,7 @@ export function TradeEvidenceUploader({
                     <button 
                         type="button" 
                         onClick={handleAction}
-                        disabled={isSubmitting || uploadState !== 'uploaded'}
+                        disabled={isExpired || isSubmitting || uploadState !== 'uploaded'}
                         className="bg-[#55D6BE] disabled:bg-[#11212E] disabled:text-[rgba(155,171,183,0.5)] disabled:cursor-not-allowed w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#38B99F] uppercase transition-all duration-200 flex items-center justify-center gap-2 tracking-[-0.4px] cursor-pointer"
                     >
                         {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
