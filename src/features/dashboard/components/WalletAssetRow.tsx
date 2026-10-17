@@ -8,6 +8,7 @@ interface WalletAssetRowProps {
 }
 
 export function WalletAssetRow({ asset }: WalletAssetRowProps) {
+    const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK?.toLowerCase() === "public" ? "Mainnet" : "Testnet";
     return (
         <li
             data-testid="wallet-asset-row"
@@ -35,6 +36,20 @@ export function WalletAssetRow({ asset }: WalletAssetRowProps) {
                     <p className="text-[#9BABB7] text-[12px] tracking-[0.15em] uppercase truncate">
                         {asset.name}
                     </p>
+                    <p className="text-[#9BABB7] text-xs mt-1 break-all" aria-label={`${asset.code} issuer`}>
+                        {asset.issuer ? `Issuer: ${asset.issuer}` : "Native XLM — no issuer"}
+                    </p>
+                    <p className="text-[#9BABB7] text-xs">Network: {network}</p>
+                    {asset.issuer && (
+                        <button
+                            type="button"
+                            aria-label={`Copy ${asset.code} issuer`}
+                            onClick={() => { void navigator.clipboard?.writeText(asset.issuer!); }}
+                            className="text-[#55D6BE] text-xs underline underline-offset-2"
+                        >
+                            Copy issuer
+                        </button>
+                    )}
                 </div>
             </div>
 
