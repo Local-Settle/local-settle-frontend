@@ -22,7 +22,7 @@ export default function DashboardPage() {
                     name={displayName}
                     mobileLabel="Welcome back"
                 />
-                <main className="flex flex-col w-full min-w-0">
+                <main id="main-content" tabIndex={-1} className="flex flex-col w-full min-w-0 focus:outline-none">
                     <Suspense fallback={
                         <div className="w-full flex items-center justify-center p-8">
                             <div className="w-8 h-8 border-4 border-[#55D6BE] border-t-transparent rounded-full animate-spin" />

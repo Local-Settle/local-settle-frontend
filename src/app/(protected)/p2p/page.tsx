@@ -11,7 +11,7 @@ export default function p2pPage() {
             <div className="flex flex-col min-w-0 flex-1 pb-20 md:pb-0">
                 <Header description="trading floor" title="p2p marketplace" />
                 <OrderNavbar />
-                <main className="flex-1 pt-0 flex flex-col lg:flex-row gap-4">
+                <main id="main-content" tabIndex={-1} className="flex-1 pt-0 flex flex-col lg:flex-row gap-4 focus:outline-none">
                     <div className="px-4 lg:px-8 h-full flex-1 lg:flex-[7]">
                         <TradeDashboard />
                     </div>

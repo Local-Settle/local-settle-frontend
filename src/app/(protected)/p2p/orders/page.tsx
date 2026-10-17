@@ -119,7 +119,7 @@ export default function OrdersPage() {
         <Header description="trading floor" title="p2p marketplace" />
         <OrderNavbar />
 
-        <main className="flex-1 px-4 md:px-16 pb-12 pt-0 w-full flex flex-col lg:flex-row gap-8 items-start">
+        <main id="main-content" tabIndex={-1} className="flex-1 px-4 md:px-16 pb-12 pt-0 w-full flex flex-col lg:flex-row gap-8 items-start focus:outline-none">
           
           {/* SECCIÓN FILTROS (Columna Izquierda) */}
           <div className="w-full lg:w-[378.88px] flex flex-col gap-6 shrink-0 pt-4 lg:pt-12">
