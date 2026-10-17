@@ -350,7 +350,7 @@ function TradeDashboardInner() {
                             return (
                                 <div
                                     key={offer.offerId}
-                                    className="flex flex-col xl:flex-row bg-[#0D1D2C] border border-[#263949] rounded-2xl p-6 hover:border-[#55D6BE] hover:bg-[#1A1A1C] transition-all duration-300 group gap-6 xl:gap-0"
+                                    className="flex min-w-0 w-full flex-col xl:flex-row bg-[#0D1D2C] border border-[#263949] rounded-2xl p-4 sm:p-6 hover:border-[#55D6BE] hover:bg-[#1A1A1C] transition-all duration-300 group gap-6 xl:gap-0"
                                 >
                                     {/* Left: Identity and Capacity */}
                                     <div className="flex flex-col gap-6 xl:w-[40%]">
@@ -373,14 +373,14 @@ function TradeDashboardInner() {
                                         </div>
 
                                         {/* Capacity */}
-                                        <div className="flex gap-12">
+                                        <div className="flex flex-wrap gap-x-8 gap-y-4">
                                             <div className="flex flex-col gap-1.5">
                                                 <span className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">Available</span>
-                                                <span className="text-white font-bold text-sm"><MerchantBalance publicKey={userFound[offer.creatorId]?.publicKey} assetCode={offer.assetCode} /> {offer.assetCode || "BTC"}</span>
+                                                <span className="min-w-0 break-words text-white font-bold text-sm"><MerchantBalance publicKey={userFound[offer.creatorId]?.publicKey} assetCode={offer.assetCode} /> {offer.assetCode || "BTC"}</span>
                                             </div>
                                             <div className="flex flex-col gap-1.5">
                                                 <span className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">Limits</span>
-                                                <span className="text-white font-bold text-sm">${offer.minAmount} - ${offer.maxAmount}</span>
+                                                <span className="min-w-0 break-words text-white font-bold text-sm">${offer.minAmount} - ${offer.maxAmount}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -391,7 +391,7 @@ function TradeDashboardInner() {
                                         <div className="flex flex-col gap-2.5">
                                             {paymentMethods.length > 0 ? (
                                                 paymentMethods.slice(0, 3).map((pm, i) => (
-                                                    <span key={i} className="text-white font-bold text-sm uppercase tracking-wide">
+                                                    <span key={i} className="break-words text-white font-bold text-sm uppercase tracking-wide">
                                                         {typeof pm === 'string' ? pm : resolvePaymentMethodName(pm)}
                                                     </span>
                                                 ))

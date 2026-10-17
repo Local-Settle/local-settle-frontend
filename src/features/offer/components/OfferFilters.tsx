@@ -274,11 +274,15 @@ function MobileFilterDrawer({
 
             {/* Sheet */}
             <div
-                className="relative z-10 w-full bg-[#081521] border-t border-[#263949] rounded-t-3xl p-6 pb-8 flex flex-col gap-5"
+                id="mobile-filter-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="mobile-filter-title"
+                className="relative z-10 w-full max-h-[85dvh] overflow-y-auto bg-[#081521] border-t border-[#263949] rounded-t-3xl p-6 pb-8 flex flex-col gap-5"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-white font-bold text-base">Filters &amp; Sorting</h3>
+                    <h3 id="mobile-filter-title" className="text-white font-bold text-base">Filters &amp; Sorting</h3>
                     <button onClick={onClose} className="text-[#6b7280] hover:text-white transition-colors p-1">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M18 6L6 18M6 6l12 12" />
@@ -398,6 +402,8 @@ export function OfferFilters({
                                bg-[#1a1a1c] border border-[#263949] text-white text-sm font-bold
                                hover:border-[#55D6BE]/40 transition-colors duration-200 relative"
                     aria-label={`Open filters${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ""}`}
+                    aria-expanded={isDrawerOpen}
+                    aria-controls="mobile-filter-dialog"
                 >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
