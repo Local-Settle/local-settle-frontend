@@ -415,21 +415,25 @@ function TradeDashboardInner() {
                                                 <span className="text-[#9BABB7] font-bold text-sm">USD</span>
                                             </div>
                                         </div>
+                                        {currentUser?.userId === offer.creatorId && (
+                                            <span className="mb-2 rounded-full border border-[#55D6BE]/40 px-3 py-1 text-xs text-[#55D6BE]">Your offer</span>
+                                        )}
                                         <button
-                                            disabled={!isVerified}
+                                            disabled={!isVerified || currentUser?.userId === offer.creatorId}
                                             onClick={() => {
+                                                if (currentUser?.userId === offer.creatorId) return;
                                                 if (!isVerified) {
                                                     alert("KYC verification required to trade.");
                                                     return;
                                                 }
                                                 setSelectedOffer(offer);
                                             }}
-                                            className={`w-full max-w-[220px] py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${isVerified
+                                            className={`w-full max-w-[220px] py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 ${isVerified && currentUser?.userId !== offer.creatorId
                                                 ? "bg-[#55D6BE] text-black hover:shadow-[0_0_20px_rgba(85,214,190,0.25)] hover:scale-[1.02] active:scale-[0.98]"
                                                 : "bg-gray-700 text-gray-400 cursor-not-allowed"
                                                 }`}
                                         >
-                                            {tab === "Buy" ? "BUY" : "SELL"}
+                                            {currentUser?.userId === offer.creatorId ? "YOUR OFFER" : tab === "Buy" ? "BUY" : "SELL"}
                                         </button>
                                     </div>
                                 </div>
