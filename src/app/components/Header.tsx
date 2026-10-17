@@ -1,6 +1,6 @@
 'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, Settings } from 'lucide-react'
@@ -18,9 +18,32 @@ type HeaderProps = {
 
 export function Header({ description, title, name, mobileLabel, showUser = true }: HeaderProps) {
     const router = useRouter()
+    const pathname = usePathname()
     const { disconnect } = useWallet()
     const { setCurrentUser, setAccessToken } = useUser()
     const [menuOpen, setMenuOpen] = useState(false)
+    const menuTriggerRef = useRef<HTMLButtonElement>(null)
+    const wasMenuOpenRef = useRef(false)
+
+    useEffect(() => {
+        if (!menuOpen) return
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setMenuOpen(false)
+        }
+        document.addEventListener('keydown', closeOnEscape)
+        return () => document.removeEventListener('keydown', closeOnEscape)
+    }, [menuOpen])
+
+    useEffect(() => {
+        if (menuOpen) {
+            wasMenuOpenRef.current = true
+        } else if (wasMenuOpenRef.current) {
+            wasMenuOpenRef.current = false
+            menuTriggerRef.current?.focus()
+        }
+    }, [menuOpen])
+
+    const closeMenu = () => setMenuOpen(false)
 
     const handleLogout = () => {
         disconnect()
@@ -49,6 +72,7 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
                 {!menuOpen ? (
                     <div className="flex items-center gap-4">
                         <button
+                            ref={menuTriggerRef}
                             onClick={() => setMenuOpen(true)}
                             className="p-1"
                             aria-label="Open menu"
@@ -71,23 +95,39 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
                 ) : (
                     <nav className="flex flex-col gap-5" aria-label="Mobile Header Navigation">
                         <button
-                            onClick={() => setMenuOpen(false)}
+                            onClick={closeMenu}
                             className="text-left text-[#55D6BE] text-base font-bold tracking-widest uppercase"
                             aria-label="Close menu"
                             aria-expanded={menuOpen}
                         >
                             Menu
                         </button>
+                        {[
+                            { href: '/dashboard', label: 'Home' },
+                            { href: '/p2p', label: 'P2P' },
+                            { href: '/transactions', label: 'Transactions' },
+                        ].map(({ href, label }) => (
+                            <Link
+                                key={href}
+                                href={href}
+                                onClick={closeMenu}
+                                aria-current={pathname === href ? 'page' : undefined}
+                                className="text-white text-[17px] hover:text-[#55D6BE] transition-colors"
+                            >
+                                {label}
+                            </Link>
+                        ))}
                         <Link
                             href="/settings"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={closeMenu}
+                            aria-current={pathname.startsWith('/settings') ? 'page' : undefined}
                             className="flex items-center gap-3 text-white text-[17px] hover:text-[#55D6BE] transition-colors"
                         >
                             <Settings size={24} strokeWidth={2} />
                             Settings
                         </Link>
                         <button
-                            onClick={() => { setMenuOpen(false); handleLogout() }}
+                            onClick={() => { closeMenu(); handleLogout() }}
                             className="flex items-center gap-3 text-white text-[17px] hover:text-[#55D6BE] transition-colors"
                         >
                             <Image src='/logout-icon.svg' width={24} height={24} alt='logout' />
@@ -101,7 +141,7 @@ export function Header({ description, title, name, mobileLabel, showUser = true 
             {menuOpen && (
                 <div
                     className="md:hidden fixed inset-0 z-40 transition-opacity duration-200"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={closeMenu}
                     style={{
                         backdropFilter: 'blur(8px)',
                         WebkitBackdropFilter: 'blur(8px)',
