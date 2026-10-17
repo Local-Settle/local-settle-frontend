@@ -140,19 +140,19 @@ describe("WalletContext", () => {
         expect(result.current.walletId).toBe("lobstr-id");
     });
 
-    it("surfaces a rejected connection as an error and notifies the user", async () => {
+    it("treats a user-rejected connection as a cancellation", async () => {
         mockedWalletService.connect.mockRejectedValueOnce({ code: -4, message: "The user rejected this request." });
 
         const { result } = renderWalletContext();
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
         await act(async () => {
-            await expect(result.current.connect("freighter-id")).rejects.toBeTruthy();
+            await result.current.connect("freighter-id");
         });
 
         expect(result.current.isConnected).toBe(false);
-        expect(result.current.error).toBe("Connection request was rejected.");
-        expect(mockNotify).toHaveBeenCalledWith("error", "Connection request was rejected.");
+        expect(result.current.error).toBeNull();
+        expect(mockNotify).not.toHaveBeenCalled();
     });
 
     it("rejects connection when the account isn't funded on Testnet", async () => {

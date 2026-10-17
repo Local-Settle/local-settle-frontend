@@ -4,6 +4,7 @@ import { ApiError, apiFetch } from "@/lib/api";
 // Última wallet usada
 const WALLET_ID_KEY = "wallet:provider";
 const PUBLICKEY_KEY = "wallet:publicKey";
+const WALLET_CONNECT_TIMEOUT_MS = 30_000;
 
 interface ChallengeResponse {
     challenge: string;
@@ -88,7 +89,21 @@ export const walletService = {
 
     // Conecta la wallet indicada a través de Stellar Wallets Kit
     async connect(walletId: string): Promise<string> {
-        const publicKey = await stellarWalletKitService.connect(walletId);
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+        let publicKey: string;
+        try {
+            publicKey = await Promise.race([
+                stellarWalletKitService.connect(walletId),
+                new Promise<never>((_, reject) => {
+                    timeoutId = setTimeout(
+                        () => reject(new Error("Wallet connection timed out. Please try again.")),
+                        WALLET_CONNECT_TIMEOUT_MS,
+                    );
+                }),
+            ]);
+        } finally {
+            if (timeoutId) clearTimeout(timeoutId);
+        }
 
         localStorage.setItem(WALLET_ID_KEY, walletId);
         localStorage.setItem(PUBLICKEY_KEY, publicKey);
