@@ -19,8 +19,8 @@ vi.mock("@creit.tech/stellar-wallets-kit", () => ({
     Networks: { TESTNET: TESTNET_PASSPHRASE, PUBLIC: PUBLIC_PASSPHRASE },
 }));
 
-vi.mock("@creit.tech/stellar-wallets-kit/modules/freighter", () => ({ FreighterModule: class {} }));
-vi.mock("@creit.tech/stellar-wallets-kit/modules/lobstr", () => ({ LobstrModule: class {} }));
+vi.mock("@creit.tech/stellar-wallets-kit/modules/freighter", () => ({ FreighterModule: class { productId = "freighter-id"; signMessage() {} } }));
+vi.mock("@creit.tech/stellar-wallets-kit/modules/lobstr", () => ({ LobstrModule: class { productId = "lobstr-id"; } }));
 vi.mock("@creit.tech/stellar-wallets-kit/modules/albedo", () => ({ AlbedoModule: class {} }));
 vi.mock("@creit.tech/stellar-wallets-kit/modules/xbull", () => ({ xBullModule: class {} }));
 vi.mock("@creit.tech/stellar-wallets-kit/modules/rabet", () => ({ RabetModule: class {} }));
@@ -119,6 +119,13 @@ describe("stellarWalletKitService", () => {
         const service = await loadService();
 
         await expect(service.refreshSupportedWallets()).resolves.toEqual(wallets);
+    });
+
+    it("detects which configured wallet modules implement SEP-43 message signing", async () => {
+        const service = await loadService();
+
+        expect(service.supportsMessageSigning("freighter-id")).toBe(true);
+        expect(service.supportsMessageSigning("lobstr-id")).toBe(false);
     });
 
     it("refreshSupportedWallets() falls back to an empty list on failure", async () => {

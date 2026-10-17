@@ -10,6 +10,7 @@ vi.mock("../stellar-wallet-kit.service", () => ({
         connect: vi.fn(),
         signTransaction: vi.fn(),
         signMessage: vi.fn(),
+        supportsMessageSigning: vi.fn().mockReturnValue(true),
         disconnect: vi.fn(),
     },
 }));
@@ -170,6 +171,16 @@ describe("walletService", () => {
 
             await expect(walletService.authenticate("G123")).rejects.toThrow("Wallet signature is required to verify ownership and complete login.");
             expect(authCalls()).toHaveLength(1);
+        });
+
+        it("detects wallets without SEP-43 support before requesting a challenge", async () => {
+            mockedKit.supportsMessageSigning.mockReturnValueOnce(false);
+
+            await expect(walletService.authenticate("G123")).rejects.toThrow(/does not support SEP-43 message signing/i);
+
+            expect(mockedKit.supportsMessageSigning).toHaveBeenCalledWith("freighter-id");
+            expect(authCalls()).toHaveLength(0);
+            expect(mockedKit.signMessage).not.toHaveBeenCalled();
         });
 
         it("prevents duplicate authentication requests while one is in flight", async () => {

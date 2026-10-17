@@ -122,6 +122,12 @@ export const walletService = {
             let currentChallenge = "";
 
             try {
+            const walletId = localStorage.getItem(WALLET_ID_KEY);
+            if (!walletId) throw new Error("No wallet connected");
+            if (!stellarWalletKitService.supportsMessageSigning(walletId)) {
+                throw new Error("This wallet does not support SEP-43 message signing. Choose a wallet that supports message signing to sign in.");
+            }
+
                 const challengeResponse = await requestChallenge(publicKey);
                 currentChallenge = challengeResponse.challenge;
 
