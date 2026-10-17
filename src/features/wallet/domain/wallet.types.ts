@@ -30,6 +30,7 @@ export interface WalletActions {
     disconnect: () => void;
     signTransaction: (xdr: string, network?: string) => Promise<string>;
     checkNetwork: () => Promise<DetectedStellarNetwork>;
+    assertCorrectNetwork: () => Promise<void>;
 }
 
 export type WalletContext = WalletState & WalletActions;

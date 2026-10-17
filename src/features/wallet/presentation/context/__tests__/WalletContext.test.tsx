@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { WalletProvider, useWalletContext } from "../WalletContext";
 import * as walletServiceModule from "../../../application/wallet.service";
@@ -63,6 +63,10 @@ describe("WalletContext", () => {
             }
             return new Response(JSON.stringify({}), { status: 200 });
         }) as unknown as typeof fetch;
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     it("connects successfully, stores the address and redirects to dashboard", async () => {
@@ -279,6 +283,33 @@ describe("WalletContext", () => {
 
             expect(result.current.currentNetwork).toBe("testnet");
             expect(result.current.isCorrectNetwork).toBe(true);
+        });
+
+        it.each([
+            ["testnet", "mainnet"],
+            ["mainnet", "testnet"],
+        ] as const)("detects an active-session switch from %s to %s", async (initialNetwork, switchedNetwork) => {
+            vi.useFakeTimers();
+            mockedWalletService.connect.mockResolvedValueOnce("GABCPUBLICKEY");
+            mockedWalletService.detectNetwork.mockResolvedValue(initialNetwork);
+
+            const { result } = renderWalletContext();
+            await act(async () => {
+                await Promise.resolve();
+                await Promise.resolve();
+            });
+            await act(async () => {
+                await result.current.connect("freighter-id");
+            });
+            expect(result.current.currentNetwork).toBe(initialNetwork);
+
+            mockedWalletService.detectNetwork.mockResolvedValue(switchedNetwork);
+            await act(async () => {
+                await vi.advanceTimersByTimeAsync(2_000);
+            });
+
+            expect(result.current.currentNetwork).toBe(switchedNetwork);
+            expect(result.current.isCorrectNetwork).toBe(switchedNetwork === "testnet");
         });
 
         it("blocks signTransaction when on wrong network", async () => {
