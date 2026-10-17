@@ -3,6 +3,7 @@
 import { useWallet } from "@/features/wallet";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { ConnectivityBanner } from "@/app/components/ConnectivityBanner";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { isConnected, isLoading } = useWallet();
@@ -26,5 +27,5 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (!canAccess) return null;
 
-  return <>{children}</>;
+  return <><ConnectivityBanner />{children}</>;
 }
