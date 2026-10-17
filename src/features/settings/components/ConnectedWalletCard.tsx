@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { Wallet, Copy, Check, Eye, EyeOff, ShieldCheck, AlertCircle } from "lucide-react";
 import { useWalletContext } from "@/features/wallet/presentation/context/WalletContext";
+import { walletOptions } from "@/features/wallet/config/wallet-options";
 
 export function ConnectedWalletCard() {
-    const { publicKey, walletId, isConnected } = useWalletContext();
+    const { publicKey, walletId, isConnected, currentNetwork, expectedNetwork } = useWalletContext();
     const [copied, setCopied] = useState(false);
     const [showFullAddress, setShowFullAddress] = useState(false);
 
@@ -23,6 +24,7 @@ export function ConnectedWalletCard() {
     const shortenedAddress = publicKey
         ? `${publicKey.slice(0, 6)}...${publicKey.slice(-6)}`
         : "";
+    const walletName = walletOptions.find((wallet) => wallet.id === walletId)?.name ?? walletId ?? "Unknown";
 
     return (
         <div className="rounded-xl border border-[#172B3A] bg-[#0E121B]/60 p-6 backdrop-blur-sm">
@@ -60,15 +62,24 @@ export function ConnectedWalletCard() {
                         <div>
                             <span className="text-xs font-medium text-[#9BABB7]">Stellar Public Key</span>
                             <div className="mt-1.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border border-[#172B3A] bg-[#081521] p-3.5">
-                                <div className="font-mono text-sm text-white break-all select-all">
+                                <div
+                                    className="font-mono text-sm text-white break-all select-all"
+                                    aria-label={`Stellar public key: ${publicKey}`}
+                                >
                                     {showFullAddress ? publicKey : shortenedAddress}
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
                                     <button
                                         type="button"
                                         onClick={() => setShowFullAddress((prev) => !prev)}
+                                        onKeyDown={(event) => {
+                                            if (event.key === "Enter" || event.key === " ") {
+                                                event.preventDefault();
+                                                setShowFullAddress((prev) => !prev);
+                                            }
+                                        }}
                                         className="inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium text-[#9BABB7] hover:bg-[#172B3A] hover:text-white transition cursor-pointer"
-                                        aria-label={showFullAddress ? "Hide full address" : "View full address"}
+                                        aria-label={`${showFullAddress ? "Hide" : "View"} full Stellar public key ${publicKey}`}
                                     >
                                         {showFullAddress ? (
                                             <>
@@ -85,8 +96,14 @@ export function ConnectedWalletCard() {
                                     <button
                                         type="button"
                                         onClick={handleCopy}
+                                        onKeyDown={(event) => {
+                                            if (event.key === "Enter" || event.key === " ") {
+                                                event.preventDefault();
+                                                void handleCopy();
+                                            }
+                                        }}
                                         className="inline-flex items-center gap-1 rounded-md bg-[#55D6BE]/15 px-3 py-1.5 text-xs font-medium text-[#55D6BE] hover:bg-[#55D6BE]/25 transition cursor-pointer"
-                                        aria-label="Copy wallet address"
+                                        aria-label={`Copy Stellar public key ${publicKey}`}
                                     >
                                         {copied ? (
                                             <>
@@ -104,11 +121,18 @@ export function ConnectedWalletCard() {
                             </div>
                         </div>
 
-                        {walletId && (
-                            <div className="text-xs text-[#9BABB7]">
-                                Wallet Provider: <span className="font-medium text-white capitalize">{walletId}</span>
-                            </div>
-                        )}
+                        <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-[#9BABB7]">
+                            <span>
+                                Wallet Provider: <span className="font-medium text-white">{walletName}</span>
+                            </span>
+                            <span>
+                                Stellar Network: <span className="font-medium text-white capitalize">{currentNetwork === "unknown" ? `${expectedNetwork} (unable to verify)` : currentNetwork}</span>
+                            </span>
+                        </div>
+
+                        <span className="sr-only" role="status" aria-live="polite">
+                            {copied ? `Copied Stellar public key ${publicKey}` : ""}
+                        </span>
 
                         <div className="rounded-lg bg-[#55D6BE]/5 border border-[#55D6BE]/10 p-3 text-xs text-[#9BABB7]">
                             🔒 <strong className="text-white">Security Note:</strong> Your connected wallet keeps its own private keys. The platform also uses a separately configured operator key for escrow deployment.
