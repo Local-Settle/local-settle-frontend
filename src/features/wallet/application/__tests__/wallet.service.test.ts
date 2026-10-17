@@ -13,6 +13,9 @@ vi.mock("../stellar-wallet-kit.service", () => ({
         disconnect: vi.fn(),
     },
 }));
+vi.mock("../config/wallet-options", () => ({
+    walletOptions: [{ id: "freighter-id", name: "Freighter", enabled: true }],
+}));
 
 const mockedKit = vi.mocked(stellarWalletKitService);
 const fetchMock = vi.fn();
@@ -60,6 +63,16 @@ describe("walletService", () => {
             await expect(walletService.restoreSession()).resolves.toBeNull();
         });
 
+        it("forgets an invalid saved provider without attempting restoration", async () => {
+            localStorage.setItem("wallet:provider", "removed-provider");
+            localStorage.setItem("wallet:publicKey", "GOLD_ADDRESS");
+
+            await expect(walletService.restoreSession()).resolves.toBeNull();
+
+            expect(mockedKit.setWallet).not.toHaveBeenCalled();
+            expect(localStorage.getItem("wallet:provider")).toBeNull();
+        });
+
         it("restores a session when the kit confirms the same address", async () => {
             localStorage.setItem("wallet:provider", "freighter-id");
             localStorage.setItem("wallet:publicKey", "GADDRESS");
@@ -105,6 +118,16 @@ describe("walletService", () => {
             expect(localStorage.getItem("wallet:publicKey")).toBeNull();
             expect(mockedKit.disconnect).toHaveBeenCalled();
         });
+    });
+
+    it("forgets the saved wallet selection", () => {
+        localStorage.setItem("wallet:provider", "freighter-id");
+        localStorage.setItem("wallet:publicKey", "GADDRESS");
+
+        walletService.forgetWalletSelection();
+
+        expect(localStorage.getItem("wallet:provider")).toBeNull();
+        expect(localStorage.getItem("wallet:publicKey")).toBeNull();
     });
 
     describe("authenticate", () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,6 +17,7 @@ import { useWalletAvailability } from "../../features/wallet/presentation/hooks/
 import { walletOptions } from "../../features/wallet/config/wallet-options";
 import { useRouter } from "next/navigation";
 import { useFocusTrap } from "../hooks/useFocusTrap";
+import { walletService } from "../../features/wallet/application/wallet.service";
 
 // --- CONNECT WALLET MODAL COMPONENT (WITH TESTNET & ENVIRONMENT VALIDATION) ---
 export function ConnectWalletModal({
@@ -34,6 +35,11 @@ export function ConnectWalletModal({
   >("select");
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const [savedWalletId, setSavedWalletId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) setSavedWalletId(localStorage.getItem("wallet:provider"));
+  }, [isOpen]);
 
   // Reset modal state whenever it transitions from closed to open. Adjusting
   // state during render (rather than in an Effect) avoids the extra
@@ -137,6 +143,18 @@ export function ConnectWalletModal({
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Choose your preferred Stellar provider to access the LocalSettle ecosystem.
             </p>
+            {savedWalletId && (
+              <button
+                type="button"
+                onClick={() => {
+                  walletService.forgetWalletSelection();
+                  setSavedWalletId(null);
+                }}
+                className="mb-4 text-sm text-[#55D6BE] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                Forget saved wallet selection
+              </button>
+            )}
 
             {/* Development Disclaimer Banner */}
             <div className="mb-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex gap-3 text-sm text-blue-200">
