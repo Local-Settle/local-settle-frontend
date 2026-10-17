@@ -35,6 +35,7 @@ export function useSend() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
   const network = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "TESTNET";
   const preparedXdrRef = useRef<string | null>(null);
+  const confirmInFlightRef = useRef(false);
 
   const [state, setState] = useState<SendState>({
     step: "form",
@@ -103,32 +104,37 @@ export function useSend() {
 
   const confirmSend = useCallback(async () => {
     const xdr = preparedXdrRef.current;
+    if (confirmInFlightRef.current) return;
     if (!xdr) {
       setState(s => ({ ...s, step: "error", errorMessage: "Transaction data missing — please go back and try again." }));
       return;
     }
 
-    setState(s => ({ ...s, step: "signing", errorMessage: null }));
-
-    let signedXdr: string;
+    confirmInFlightRef.current = true;
     try {
-      signedXdr = await signTransaction(xdr, network);
-    } catch (err) {
-      const msg =
-        err instanceof Error ? err.message :
-        typeof err === "string" ? err :
-        "Signing failed";
-      const isCancelled = /cancel|decline|reject|denied|user rejected/i.test(msg);
-      setState(s => ({
-        ...s,
-        step: isCancelled ? "cancelled" : "error",
-        errorMessage: isCancelled ? null : msg,
-      }));
-      return;
-    }
+      setState(s => ({ ...s, step: "signing", errorMessage: null }));
 
-    setState(s => ({ ...s, step: "submitting" }));
-    try {
+      let signedXdr: string;
+      try {
+        signedXdr = await signTransaction(xdr, network);
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message :
+          typeof err === "string" ? err :
+          "Signing failed";
+        const isCancelled = /cancel|decline|reject|denied|user rejected/i.test(msg);
+        setState(s => ({
+          ...s,
+          step: isCancelled ? "cancelled" : "error",
+          errorMessage: isCancelled ? null : msg,
+        }));
+        return;
+      }
+
+      setState(s => ({ ...s, step: "submitting" }));
+      // A submission timeout has an unknown outcome. Consume the prepared XDR
+      // before sending so retrying cannot submit the same payment twice.
+      preparedXdrRef.current = null;
       const submitHeaders: Record<string, string> = { "Content-Type": "application/json" };
       if (accessToken) submitHeaders["Authorization"] = `Bearer ${accessToken}`;
       const submitRes = await fetch(`${apiUrl}/send/submit`, {
@@ -148,6 +154,8 @@ export function useSend() {
         step: "error",
         errorMessage: err instanceof Error ? err.message : "Transaction submission failed",
       }));
+    } finally {
+      confirmInFlightRef.current = false;
     }
   }, [accessToken, apiUrl, signTransaction, network]);
 

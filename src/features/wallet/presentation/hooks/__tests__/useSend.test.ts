@@ -226,6 +226,32 @@ describe("useSend hook", () => {
     expect(result.current.state.txHash).toBe("0xabcdef1234567890abcdef1234567890");
   });
 
+  it("ignores repeated confirmation while the wallet signature is pending", async () => {
+    const recipient = {
+      address: "GRECIPIENT1234567890123456789012345678901234567890123456",
+      alias: "alex.localsettle",
+      exists: true,
+      hasUsdcTrustline: true,
+    };
+    globalThis.fetch = vi.fn().mockImplementation((url: string) => {
+      if (url.includes("/send/resolve")) return Promise.resolve({ ok: true, json: () => Promise.resolve(recipient) });
+      if (url.includes("/send/prepare")) return Promise.resolve({ ok: true, json: () => Promise.resolve({ xdr: "AAAA_UNSIGNED_XDR" }) });
+      if (url.includes("/send/submit")) return Promise.resolve({ ok: true, json: () => Promise.resolve({ hash: "accepted-hash" }) });
+      return Promise.reject(new Error(`Unexpected URL: ${url}`));
+    });
+    mockSignTransaction.mockResolvedValue("AAAA_SIGNED_XDR");
+
+    const { result } = renderHook(() => useSend());
+    await act(async () => result.current.resolveAndPrepare("alex.localsettle", "10.0000000", "USDC"));
+    await act(async () => {
+      await Promise.all([result.current.confirmSend(), result.current.confirmSend()]);
+    });
+
+    expect(mockSignTransaction).toHaveBeenCalledTimes(1);
+    expect(globalThis.fetch).toHaveBeenCalledTimes(3);
+    expect(result.current.state.txHash).toBe("accepted-hash");
+  });
+
   it("handles user cancelling or declining signature", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
