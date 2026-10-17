@@ -9,6 +9,7 @@ import { Header } from "@/app/components/Header";
 import { TransactionExportMenu } from "@/features/transactions/components/TransactionExportMenu";
 import { transactionExportService } from "@/features/transactions/services/transaction-export.service";
 import { ShoppingCart, TrendingUp, ChevronRight, Loader2 } from "lucide-react";
+import { formatAssetAmount, formatFiatAmount } from "@/lib/formatCurrency";
 
 export default function TransactionsPage() {
     const { currentUser } = useUser();
@@ -256,7 +257,7 @@ export default function TransactionsPage() {
                                             
                                         // Asset amount format
                                         const assetAmountNum = parseFloat(o.assetAmount) || 0;
-                                        const formattedAsset = assetAmountNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+                                        const formattedAsset = formatAssetAmount(o.assetAmount || "0");
                                         const assetCode = o.offer?.assetCode || o.assetCode || "USDC";
 
                                         // Fiat amount format
@@ -264,8 +265,8 @@ export default function TransactionsPage() {
                                         const totalFiat = parseFloat(o.fiatAmount) || (assetAmountNum * priceNum);
                                         const parseCurrency = (pref?: string) => pref ? pref.split(" ")[0] : null;
                                         const fiatCurrency = parseCurrency(o.buyer?.preferredCurrency) || parseCurrency(o.seller?.preferredCurrency) || "EUR";
-                                        const fiatSymbol = fiatCurrency === "EUR" ? "€" : fiatCurrency === "CRC" ? "₡" : "$";
-                                        const formattedFiat = totalFiat.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                        const currencyCode = /^[A-Z]{3}$/i.test(fiatCurrency) ? fiatCurrency.toUpperCase() : "EUR";
+                                        const formattedFiat = formatFiatAmount(o.fiatAmount || String(totalFiat), currencyCode);
 
                                         const cleanStatus = o.orderStatus === "completed" || o.escrow?.escrowStatus === "released"
                                             ? "completed"
@@ -312,7 +313,7 @@ export default function TransactionsPage() {
 
                                                 {/* Fiat Amount */}
                                                 <div className="text-sm font-black text-white text-right pr-2">
-                                                    {fiatSymbol}{formattedFiat} <span className="text-[10px] text-[#64748B] font-bold">{fiatCurrency}</span>
+                                                    {formattedFiat} <span className="text-[10px] text-[#64748B] font-bold">{currencyCode}</span>
                                                 </div>
 
                                                 {/* Status */}

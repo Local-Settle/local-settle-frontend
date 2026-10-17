@@ -3,6 +3,7 @@ import type {
     WalletAssetViewModel,
     WalletBalanceViewModel,
 } from "../types/wallet-balance.types";
+import { formatAssetAmount, formatFiatNumber } from "@/lib/formatCurrency";
 
 export const DISPLAY_CURRENCY = "USD";
 
@@ -30,13 +31,14 @@ function buildAsset(
     rawBalance: number,
     issuer: string | null,
     rates: Record<string, number>,
+    displayBalance: string | number = rawBalance,
 ): WalletAssetViewModel {
     const metadata = ASSET_METADATA[code];
     return {
         code,
         name: metadata?.name ?? code,
         icon: metadata?.icon,
-        balance: formatAmount(rawBalance),
+        balance: formatAssetAmount(displayBalance),
         rawBalance,
         issuer,
         isPriced: typeof rates[code] === "number",
@@ -46,17 +48,6 @@ function buildAsset(
 function resolveCode(asset: AssetBalance): string {
     if (asset.asset_type === "native") return "XLM";
     return asset.asset_code || "UNKNOWN";
-}
-
-const DISPLAY_DECIMALS = 4;
-
-function formatAmount(value: number): string {
-    const factor = 10 ** DISPLAY_DECIMALS;
-    const truncated = Math.trunc(value * factor) / factor;
-    return truncated.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: DISPLAY_DECIMALS,
-    });
 }
 
 export function mapWalletBalance(
@@ -73,6 +64,7 @@ export function mapWalletBalance(
             Number.isFinite(parsed) ? parsed : 0,
             asset.asset_issuer ?? null,
             rates,
+            Number.isFinite(parsed) ? asset.balance : "0",
         );
     });
 
@@ -94,7 +86,7 @@ export function mapWalletBalance(
     }, 0);
 
     return {
-        totalBalance: formatAmount(total),
+        totalBalance: formatFiatNumber(total, currency),
         currency,
         assets,
         unpricedAssetCount: assets.filter(
