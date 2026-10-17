@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "contract:check": "node scripts/check-backend-contract.mjs",
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {

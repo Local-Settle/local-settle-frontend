@@ -1,8 +1,12 @@
 export interface PaymentMethod {
     paymentId: string;
     userId: string;
-    bankName: string;
-    accountDetails: string;
+    providerId: string;
+    type: string;
+    accountIdentifier: string;
+    beneficiaryName: string | null;
+    identificationNumber: string | null;
+    description: string | null;
     isActive: boolean;
 }
 

@@ -37,6 +37,8 @@ jobs:
 
       - run: pnpm run test
 
+      - run: pnpm run contract:check
+
   build:
     name: Build Docker image
     needs: test

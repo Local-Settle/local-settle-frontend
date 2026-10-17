@@ -1,5 +1,8 @@
 export interface CreatePaymentMethod {
     userId: string;
-    bankName: string;
-    accountDetails: string;
+    providerId: string;
+    accountIdentifier: string;
+    beneficiaryName?: string;
+    identificationNumber?: string;
+    description?: string;
 }
