@@ -6,6 +6,7 @@ export interface Offer {
     type: string,
     assetCode: string,
     price: string,
+    createdAt?: string,
     minAmount: string,
     maxAmount: string,
     status: string,
