@@ -82,7 +82,7 @@ export default function TradePage({ params }: PageProps) {
         await fetchOrder();
     }, [fetchOrder]);
 
-    const { syncState } = useEscrowStatusSync({
+    const { syncState, refresh } = useEscrowStatusSync({
         orderId,
         escrowId: order?.escrow?.escrowId,
         onStatusChange: handleEscrowStatusChange,
@@ -258,6 +258,17 @@ export default function TradePage({ params }: PageProps) {
                                         Sync issue — will retry
                                     </span>
                                 )}
+                                {order?.escrow?.escrowId && !isCompleted && (
+                                    <button
+                                        type="button"
+                                        onClick={refresh}
+                                        disabled={syncState.status === "syncing"}
+                                        aria-label="Refresh escrow status"
+                                        className="flex items-center gap-1 text-[#9CA3AF] hover:text-[#55D6BE] text-[10px] font-medium disabled:opacity-50"
+                                    >
+                                        <RefreshCw className="w-3 h-3" /> Refresh status
+                                    </button>
+                                )}
                             </div>
                             <div className="flex items-center gap-4">
                                 <h2 className="text-white font-black text-[20px] leading-7 uppercase tracking-normal font-space hidden md:block">
@@ -265,6 +276,13 @@ export default function TradePage({ params }: PageProps) {
                                 </h2>
                             </div>
                         </div>
+
+                        {order?.escrow?.escrowId && (
+                            <p className="px-4 md:px-[60px] pb-2 text-[#9CA3AF] text-[11px]" aria-live="polite">
+                                Status source: {syncState.source === "websocket" ? "live connection" : syncState.source === "polling" ? "periodic refresh" : "waiting for update"}
+                                {syncState.lastUpdated && ` · Last updated ${new Date(syncState.lastUpdated).toLocaleString()}`}
+                            </p>
+                        )}
 
                         {/* Contenedor Principal Escalado por Rol */}
                         <div className="grow flex flex-col p-4 md:p-[32px_64px_40px_64px] overflow-auto justify-between items-center min-h-0 w-full">
