@@ -231,6 +231,10 @@ export const Chat = ({ orderId, chatName = "Merchant Chat", counterpartyProfileI
                     <MoreVertical className="w-5 h-5 text-[#9BABB7]" />
                 </button>
             </header>
+
+            <aside aria-label="Message policy" className="border-b border-white/10 bg-[#11212E] px-6 py-3 text-xs leading-relaxed text-[#C2C7D0]">
+                Sent messages are currently immutable and remain in the order history. To correct a message, send a follow-up; LocalSettle does not silently edit or remove chat records.
+            </aside>
             
             {/* Chat Messages Body */}
             <main role="log" aria-live="polite" aria-label="Chat messages" className="flex-grow overflow-y-auto p-6 space-y-5 bg-[#0D1D2C]/10 scrollbar-thin flex flex-col">

@@ -76,6 +76,9 @@ describe("Chat real-time notifications", () => {
     it("creates a notification when a real-time chat message is received", async () => {
         renderChat();
 
+        expect(screen.getByRole("complementary", { name: "Message policy" }).textContent)
+            .toContain("Sent messages are currently immutable");
+
         await act(async () => {
             onMessageCapture.current?.(incomingMessage());
         });
