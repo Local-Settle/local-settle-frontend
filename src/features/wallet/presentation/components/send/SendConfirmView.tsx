@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { RecipientInfo } from "./send-types";
 import { truncateAddress } from "./send-types";
 import { AlertTriangle, ArrowLeft, Send } from "lucide-react";
@@ -24,6 +24,13 @@ export function SendConfirmView({
   onConfirm,
   isLoading = false,
 }: SendConfirmViewProps) {
+  const [trustlineAcknowledged, setTrustlineAcknowledged] = useState(false);
+  const needsTrustlineAcknowledgement = assetName === "USDC" && !recipient.hasUsdcTrustline;
+
+  useEffect(() => {
+    setTrustlineAcknowledged(false);
+  }, [recipient.address, recipient.hasUsdcTrustline]);
+
   const feeNum = fee ? parseFloat(fee) : (parseFloat(amount || "0") * 0.003);
   const amountNum = parseFloat(amount || "0");
   const totalNum = amountNum + feeNum;
@@ -64,9 +71,20 @@ export function SendConfirmView({
           <div className="mt-4 p-3 bg-amber-950/30 border border-amber-500/40 rounded-xl flex items-start gap-2.5">
             <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <p className="text-amber-300 text-xs leading-relaxed">
-              Recipient account might not have established a USDC trustline yet. The transfer could fail if not funded.
+              The recipient does not have a USDC trustline. They must establish one before this account can receive USDC; otherwise the transfer will fail.
             </p>
           </div>
+        )}
+        {needsTrustlineAcknowledgement && (
+          <label className="mt-3 flex items-start gap-2 text-xs text-[#C2C7D0]">
+            <input
+              type="checkbox"
+              checked={trustlineAcknowledged}
+              onChange={(event) => setTrustlineAcknowledged(event.target.checked)}
+              className="mt-0.5 accent-[#55D6BE]"
+            />
+            I understand the recipient needs a USDC trustline before I sign this transfer.
+          </label>
         )}
       </div>
 
@@ -111,7 +129,7 @@ export function SendConfirmView({
         <button
           type="button"
           onClick={onConfirm}
-          disabled={isLoading}
+          disabled={isLoading || (needsTrustlineAcknowledgement && !trustlineAcknowledged)}
           className="flex-1 flex items-center justify-center gap-2 bg-[#55D6BE] hover:bg-[#55D6BE] text-black text-xs font-black uppercase tracking-wider px-5 py-3.5 rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 cursor-pointer"
         >
           <Send size={15} className="stroke-[2.5]" /> Sign & Send
