@@ -4,7 +4,7 @@ import { useWalletContext } from "../context/WalletContext";
 import { WalletButtonProps } from "../utils/WalletButtonProps";
 
 export function ConnectButton({ label, description, walletId, icon, menuItem = false }: WalletButtonProps) {
-    const { isConnected, isLoading, error, connect, disconnect } = useWalletContext();
+    const { isConnected, isLoading, error, connect, disconnect, expectedNetwork } = useWalletContext();
 
     if (isConnected) {
         return (
@@ -23,6 +23,10 @@ export function ConnectButton({ label, description, walletId, icon, menuItem = f
 
     return (
         <div>
+            <p className="px-4 pb-2 text-xs text-gray-400" role="note">
+                Connect on <strong className="text-white">{expectedNetwork === "mainnet" ? "Mainnet" : "Testnet"}</strong>.
+                Switch networks in your wallet before approving if needed.
+            </p>
             <button
                 type="button"
                 role={menuItem ? "menuitem" : undefined}
