@@ -39,7 +39,7 @@ function SendContent() {
   const searchParams = useSearchParams();
   const { isConnected, publicKey, connect, isLoading: isWalletLoading } = useWallet();
   const { balances, isLoading: isBalancesLoading } = useWalletBalance(publicKey);
-  const { state, resolveAndPrepare, confirmSend, reset, backToConfirm } = useSend();
+  const { state, resolveAndPrepare, confirmSend, reset, backToConfirm, clearRecipientError } = useSend();
   const { notify } = useNotifications();
 
   // Read URL query params
@@ -261,8 +261,10 @@ function SendContent() {
                         onChange={(val) => {
                           setRecipientInput(val);
                           setInputError(null);
+                          clearRecipientError();
                         }}
-                        error={inputError}
+                        error={inputError || state.recipientError}
+                        onError={setInputError}
                         disabled={isTransacting}
                       />
 
