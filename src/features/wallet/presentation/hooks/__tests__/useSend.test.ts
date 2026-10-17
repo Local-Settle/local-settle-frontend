@@ -226,6 +226,35 @@ describe("useSend hook", () => {
     expect(result.current.state.txHash).toBe("0xabcdef1234567890abcdef1234567890");
   });
 
+  it("preserves seven-decimal amounts and the recipient trustline result", async () => {
+    const recipientWithoutTrustline = {
+      address: "GRECIPIENT1234567890123456789012345678901234567890123456",
+      alias: "alex.localsettle",
+      exists: true,
+      hasUsdcTrustline: false,
+    };
+    let preparedBody: { amount?: string } | undefined;
+    globalThis.fetch = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+      if (url.includes("/send/resolve")) {
+        return Promise.resolve({ ok: true, json: () => Promise.resolve(recipientWithoutTrustline) });
+      }
+      if (url.includes("/send/prepare")) {
+        preparedBody = JSON.parse(String(init?.body)) as { amount?: string };
+        return Promise.resolve({ ok: true, json: () => Promise.resolve({ xdr: "AAAA_FIXTURE_UNSIGNED_XDR", fee: "0.00001" }) });
+      }
+      return Promise.reject(new Error(`Unexpected URL: ${url}`));
+    });
+
+    const { result } = renderHook(() => useSend());
+    await act(async () => {
+      await result.current.resolveAndPrepare(recipientWithoutTrustline.address, "0.0000001", "USDC");
+    });
+
+    expect(preparedBody?.amount).toBe("0.0000001");
+    expect(result.current.state.recipient?.hasUsdcTrustline).toBe(false);
+    expect(result.current.state.step).toBe("confirm");
+  });
+
   it("handles user cancelling or declining signature", async () => {
     const mockRecipient = {
       address: "GRECIPIENT1234567890123456789012345678901234567890123456",
