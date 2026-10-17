@@ -7,6 +7,7 @@ import { useSignatureCancellation } from "@/features/wallet/hooks/useSignatureCa
 import { Info, Upload, FileUp, CircleCheck, Loader2, Search, Trash2 } from "lucide-react";
 import { SignatureCancelledModal } from "../../components/SignatureCancelledModal";
 import { useNotifications } from "@/features/notifications";
+import { escrowErrorGuidance } from "@/features/escrow/utils/escrow-error-guidance";
 
 export interface TradeEvidenceUploaderProps {
     orderId: string;
@@ -16,6 +17,7 @@ export interface TradeEvidenceUploaderProps {
     amount: number;
     evidenceUrl?: string | null;
     onStatusChange: () => void;
+    refreshStatus: () => Promise<string | null | undefined>;
     canCancel: boolean;
     isCancelling: boolean;
     onCancelOrder: () => void;
@@ -27,6 +29,7 @@ export function TradeEvidenceUploader({
     buyerAddress,
     evidenceUrl,
     onStatusChange,
+    refreshStatus,
     canCancel,
     isCancelling,
     onCancelOrder
@@ -186,7 +189,7 @@ export function TradeEvidenceUploader({
             }
         } catch (err: unknown) {
             if (isSignatureCancelled(err)) return;
-            alert(`Error processing action: ${err instanceof Error ? err.message : String(err)}`);
+            notify("error", escrowErrorGuidance(err));
         } finally {
             setIsSubmitting(false);
         }
@@ -201,13 +204,18 @@ export function TradeEvidenceUploader({
         if (!escrowId) return;
         setIsSubmitting(true);
         try {
+            const status = await refreshStatus();
+            if (status !== "funded") {
+                notify("warning", "Escrow status could not confirm that retrying is safe. Refresh the trade before signing again.");
+                return;
+            }
             const signedXdr = await sig.retry();
             await syncEscrow({ escrowId, action: "fiat_sent", signedXdr });
             notify("success", "Payment confirmed and registered successfully!");
             onStatusChange();
         } catch (err: unknown) {
             if (isSignatureCancelled(err)) return;
-            notify("error", `Error: ${err instanceof Error ? err.message : String(err)}`);
+            notify("error", escrowErrorGuidance(err));
         } finally {
             setIsSubmitting(false);
         }
