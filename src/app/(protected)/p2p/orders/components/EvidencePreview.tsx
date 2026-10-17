@@ -43,8 +43,15 @@ export function EvidencePreview({
     const [timeLeft, setTimeLeft] = useState<string>("00:00");
     const [isExpired, setIsExpired] = useState(false);
     const [pendingAction, setPendingAction] = useState<"fund" | "release" | null>(null);
+    const [awaitingFunding, setAwaitingFunding] = useState(false);
     const { notify } = useNotifications();
     const sig = useSignatureCancellation();
+
+    useEffect(() => {
+        if (escrowStatus === "funded" || escrowStatus === "fiat_sent" || escrowStatus === "released") {
+            setAwaitingFunding(false);
+        }
+    }, [escrowStatus]);
 
     useEffect(() => {
         if (!expiresAt) return;
@@ -83,8 +90,8 @@ export function EvidencePreview({
             if (!fundXdr) throw new Error("Funding failed: no unsigned XDR returned");
             const signedXdr = await sig.sign(fundXdr);
             await syncEscrow({ escrowId, action: "fund", signedXdr });
-            await updateOrder({ orderStatus: "locked" }, orderId);
-            notify("success", "Escrow funded successfully on-chain!");
+            setAwaitingFunding(true);
+            notify("info", "Funding submitted. Waiting for on-chain confirmation before payment instructions are available.");
             onStatusChange();
         } catch (err: unknown) {
             if (isSignatureCancelled(err)) {
@@ -134,8 +141,8 @@ export function EvidencePreview({
             const signedXdr = await sig.retry();
             if (pendingAction === "fund") {
                 await syncEscrow({ escrowId, action: "fund", signedXdr });
-                await updateOrder({ orderStatus: "locked" }, orderId);
-                notify("success", "Escrow funded successfully on-chain!");
+                setAwaitingFunding(true);
+                notify("info", "Funding submitted. Waiting for on-chain confirmation before payment instructions are available.");
             } else {
                 await syncEscrow({ escrowId, action: "release", signedXdr });
                 await updateOrder({ orderStatus: "released" }, orderId);
@@ -181,11 +188,11 @@ export function EvidencePreview({
             {/* Minimalist Central Body View Area */}
             <div className="flex-1 flex flex-col justify-center items-center gap-4 shrink-0 min-h-0 w-full h-50">
                 {isUnfunded && (
-                    <div className="w-full flex flex-col items-center justify-center h-full border border-white/[0.02] bg-[#0D1D2C]/40 rounded-[12px] p-4 text-center">
+                    <div role={awaitingFunding ? "status" : undefined} aria-live={awaitingFunding ? "polite" : undefined} className="w-full flex flex-col items-center justify-center h-full border border-white/[0.02] bg-[#0D1D2C]/40 rounded-[12px] p-4 text-center">
                         <span className="text-3xl mb-2">🔒</span>
-                        <p className="text-[15px] font-bold text-[#C2C7D0]">Escrow Contract Awaiting Funds</p>
+                        <p className="text-[15px] font-bold text-[#C2C7D0]">{awaitingFunding ? "Funding Submitted — Awaiting Confirmation" : "Escrow Contract Awaiting Funds"}</p>
                         <p className="text-[12px] text-[rgba(155,171,183,0.8)] mt-1 max-w-[240px]">
-                            Lock your assets in escrow to establish a secure trading environment.
+                            {awaitingFunding ? "Do not send fiat yet. Payment instructions will be available after the network confirms escrow funding." : "Lock your assets in escrow to establish a secure trading environment."}
                         </p>
                     </div>
                 )}
@@ -300,11 +307,11 @@ export function EvidencePreview({
                     <button 
                         type="button" 
                         onClick={handleFundAction}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || awaitingFunding}
                         className="bg-[#55D6BE] w-full h-[56px] text-[#081521] font-extrabold text-[16px] leading-[24px] rounded-[12px] hover:bg-[#dcff15] hover:cursor-pointer uppercase transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 tracking-[-0.4px]"
                     >
                         {isSubmitting ? <Loader2 className="w-5 h-5 text-[#081521] animate-spin" /> : <CircleCheck className="w-5 h-5 text-[#081521] stroke-[3px]" />}
-                        {isSubmitting ? "PROCESSING..." : "FUND ESCROW"}
+                        {isSubmitting ? "PROCESSING..." : awaitingFunding ? "WAITING FOR CONFIRMATION" : "FUND ESCROW"}
                     </button>
                 ) : isWaitingForBuyer ? (
                     isExpired ? (
