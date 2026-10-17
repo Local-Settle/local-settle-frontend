@@ -36,6 +36,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
 
     const [checked, setChecked] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [validationError, setValidationError] = useState("");
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
         const nextIndex = getRovingFocusIndex(event.key, index, offerTypeTabs.length, "horizontal");
         if (nextIndex === null) return;
@@ -63,6 +64,27 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
             alert("KYC verification required to publish offers.");
             return;
         }
+
+        const price = Number(form.price);
+        const minAmount = Number(form.minAmount);
+        const maxAmount = Number(form.maxAmount);
+        if (![price, minAmount, maxAmount].every(Number.isFinite) || price <= 0 || minAmount <= 0 || maxAmount <= 0) {
+            setValidationError("Enter a positive price and positive minimum and maximum amounts.");
+            return;
+        }
+        if (minAmount > maxAmount) {
+            setValidationError("Minimum amount cannot exceed maximum amount.");
+            return;
+        }
+        if ([form.price, form.minAmount, form.maxAmount].some(value => !/^\d+(\.\d{1,7})?$/.test(value))) {
+            setValidationError("Price and amounts can have at most 7 decimal places.");
+            return;
+        }
+        if (checked.length === 0) {
+            setValidationError("Select at least one payment method.");
+            return;
+        }
+        setValidationError("");
 
         setIsSubmitting(true);
         try {
@@ -124,6 +146,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
 
                 <div className="w-99.75 h-12">
                     <form onSubmit={handleSubmit}>
+                        {validationError && <p role="alert" className="mb-3 text-sm text-red-400">{validationError}</p>}
                         <div>
                             <p className="text-[#64748B]">Offer type</p>
                             <div className="flex flex-col h-full items-center justify-center mb-6">
@@ -177,6 +200,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                             <p className="text-[#CBD5E1]">Price per Unit</p>
                             <div className="relative mt-3">
                                 <input
+                                    aria-label="Price per Unit"
                                     type="number"
                                     name='price'
                                     value={form.price}
@@ -203,6 +227,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                 <p className="text-[#CBD5E1]">Min Amount</p>
                                 <div className="relative mt-3">
                                     <input
+                                        aria-label="Minimum amount"
                                         type="number"
                                         name='minAmount'
                                         value={form.minAmount}
@@ -222,6 +247,7 @@ export function CreateOfferModal({ onClose }: CloseModalProps) {
                                 <p className="text-[#CBD5E1]">Max Amount</p>
                                 <div className="relative mt-3">
                                     <input
+                                        aria-label="Maximum amount"
                                         type="number"
                                         name='maxAmount'
                                         value={form.maxAmount}
