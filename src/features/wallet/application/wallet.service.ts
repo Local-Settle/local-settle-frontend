@@ -17,7 +17,12 @@ interface LoginResponse {
 }
 
 function normalizeSignature(signature: string): string {
-    return signature.trim();
+    const value = signature.trim();
+    const validBase64 = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+    if (!value || value.length % 4 !== 0 || !validBase64.test(value)) {
+        throw new Error("The wallet returned an invalid signature. Reconnect and sign the login request again.");
+    }
+    return value;
 }
 
 function isExpiredChallengeError(error: unknown): boolean {

@@ -135,7 +135,7 @@ describe("walletService", () => {
                 { ok: true, json: async () => ({ challenge: "abc123", expiresAt: "2026-07-14T15:00:00.000Z" }) },
                 { ok: true, json: async () => ({ access_token: "jwt-token" }) },
             ]);
-            mockedKit.signMessage.mockResolvedValueOnce("signed-message");
+            mockedKit.signMessage.mockResolvedValueOnce("c2lnbmVkLW1lc3NhZ2U=");
 
             const token = await walletService.authenticate("G123");
 
@@ -145,8 +145,18 @@ describe("walletService", () => {
             expect(authCalls()).toHaveLength(2);
             expect(fetchMock).toHaveBeenCalledWith("http://127.0.0.1:3001/auth/login", expect.objectContaining({
                 method: "POST",
-                body: JSON.stringify({ publicKey: "G123", challenge: "abc123", signature: "signed-message" }),
+                body: JSON.stringify({ publicKey: "G123", challenge: "abc123", signature: "c2lnbmVkLW1lc3NhZ2U=" }),
             }));
+        });
+
+        it("does not send an empty or malformed signature to the login endpoint", async () => {
+            mockAuthFetch([
+                { ok: true, json: async () => ({ challenge: "abc123" }) },
+            ]);
+            mockedKit.signMessage.mockResolvedValueOnce("not base64!");
+
+            await expect(walletService.authenticate("G123")).rejects.toThrow("invalid signature");
+            expect(authCalls()).toHaveLength(1);
         });
 
         it("sends the CSRF token with the login request", async () => {
