@@ -234,6 +234,8 @@ function DesktopFilterBar({
                 error={errors.maxAmount}
                 onChange={handleMaxChange}
             />
+            <UncontrolledAmountInput id="desktop-min-price" label="Min Price (USD)" defaultValue={filters.minPrice} resetKey={`min-price-${filters.minPrice === "" ? "empty" : "set"}`} placeholder="0.00" error={errors.minPrice} onChange={(v) => onFilterChange("minPrice", v)} />
+            <UncontrolledAmountInput id="desktop-max-price" label="Max Price (USD)" defaultValue={filters.maxPrice} resetKey={`max-price-${filters.maxPrice === "" ? "empty" : "set"}`} placeholder="No limit" error={errors.maxPrice} onChange={(v) => onFilterChange("maxPrice", v)} />
             <div className="flex flex-col gap-1.5">
                 <label className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">Sort By</label>
                 <OfferSortSelect
@@ -323,6 +325,10 @@ function MobileFilterDrawer({
                         onChange={(v) => onDraftFilterChange("maxAmount", v)}
                     />
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                    <AmountInput id="mobile-min-price" label="Min Price (USD)" value={draftFilters.minPrice} placeholder="0.00" error={errors.minPrice} onChange={(v) => onDraftFilterChange("minPrice", v)} />
+                    <AmountInput id="mobile-max-price" label="Max Price (USD)" value={draftFilters.maxPrice} placeholder="No limit" error={errors.maxPrice} onChange={(v) => onDraftFilterChange("maxPrice", v)} />
+                </div>
                 <div className="flex flex-col gap-1.5">
                     <span className="text-[#9BABB7] text-[10px] font-bold tracking-widest uppercase">Sort By</span>
                     <OfferSortSelect
@@ -376,6 +382,8 @@ export function OfferFilters({
         filters.asset === DEFAULT_FILTERS.asset &&
         filters.minAmount === DEFAULT_FILTERS.minAmount &&
         filters.maxAmount === DEFAULT_FILTERS.maxAmount &&
+        filters.minPrice === DEFAULT_FILTERS.minPrice &&
+        filters.maxPrice === DEFAULT_FILTERS.maxPrice &&
         filters.sort === DEFAULT_FILTERS.sort;
 
     return (

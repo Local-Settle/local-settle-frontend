@@ -102,6 +102,8 @@ export function useOfferFilters(): UseOfferFiltersReturn {
         filters.asset,
         filters.minAmount,
         filters.maxAmount,
+        filters.minPrice,
+        filters.maxPrice,
         filters.sort !== "best_match" ? filters.sort : "",
     ].filter(Boolean).length;
 
@@ -110,6 +112,8 @@ export function useOfferFilters(): UseOfferFiltersReturn {
         filters.asset === DEFAULT_FILTERS.asset &&
         filters.minAmount === DEFAULT_FILTERS.minAmount &&
         filters.maxAmount === DEFAULT_FILTERS.maxAmount &&
+        filters.minPrice === DEFAULT_FILTERS.minPrice &&
+        filters.maxPrice === DEFAULT_FILTERS.maxPrice &&
         filters.sort === DEFAULT_FILTERS.sort;
 
     return {

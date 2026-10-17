@@ -48,6 +48,8 @@ export function parseFiltersFromURL(searchParams: URLSearchParams): OfferFilters
 
     const minAmount = searchParams.get("minAmount") ?? "";
     const maxAmount = searchParams.get("maxAmount") ?? "";
+    const minPrice = searchParams.get("minPrice") ?? "";
+    const maxPrice = searchParams.get("maxPrice") ?? "";
 
     // Reject negative or non-numeric values
     const sanitizeAmount = (v: string) => {
@@ -61,6 +63,8 @@ export function parseFiltersFromURL(searchParams: URLSearchParams): OfferFilters
         asset: searchParams.get("asset") ?? DEFAULT_FILTERS.asset,
         minAmount: sanitizeAmount(minAmount),
         maxAmount: sanitizeAmount(maxAmount),
+        minPrice: sanitizeAmount(minPrice),
+        maxPrice: sanitizeAmount(maxPrice),
         sort,
     };
 }
@@ -74,6 +78,8 @@ export function filtersToURLParams(filters: OfferFilters): string {
     if (filters.asset) params.set("asset", filters.asset);
     if (filters.minAmount) params.set("minAmount", filters.minAmount);
     if (filters.maxAmount) params.set("maxAmount", filters.maxAmount);
+    if (filters.minPrice) params.set("minPrice", filters.minPrice);
+    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
     if (filters.sort !== "best_match") params.set("sort", filters.sort);
     return params.toString();
 }
@@ -86,6 +92,8 @@ export function validateFilters(filters: OfferFilters): FilterValidationErrors {
 
     const min = parseFloat(filters.minAmount);
     const max = parseFloat(filters.maxAmount);
+    const minPrice = parseFloat(filters.minPrice);
+    const maxPrice = parseFloat(filters.maxPrice);
 
     if (filters.minAmount !== "" && (isNaN(min) || min < 0)) {
         errors.minAmount = "Minimum amount must be a non-negative number.";
@@ -101,6 +109,11 @@ export function validateFilters(filters: OfferFilters): FilterValidationErrors {
         min > max
     ) {
         errors.minAmount = "Minimum amount cannot exceed maximum amount.";
+    }
+    if (filters.minPrice !== "" && (isNaN(minPrice) || minPrice < 0)) errors.minPrice = "Minimum price must be a non-negative number.";
+    if (filters.maxPrice !== "" && (isNaN(maxPrice) || maxPrice < 0)) errors.maxPrice = "Maximum price must be a non-negative number.";
+    if (filters.minPrice !== "" && filters.maxPrice !== "" && !isNaN(minPrice) && !isNaN(maxPrice) && minPrice > maxPrice) {
+        errors.minPrice = "Minimum price cannot exceed maximum price.";
     }
 
     return errors;

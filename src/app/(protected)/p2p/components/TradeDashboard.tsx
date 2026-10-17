@@ -217,8 +217,15 @@ function TradeDashboardInner() {
             result = result.filter(o => parseFloat(o.minAmount) <= max);
         }
 
+        if (filters.minPrice && parseFloat(filters.minPrice) > 0) {
+            result = result.filter(o => parseFloat(o.price) >= parseFloat(filters.minPrice));
+        }
+        if (filters.maxPrice && parseFloat(filters.maxPrice) > 0) {
+            result = result.filter(o => parseFloat(o.price) <= parseFloat(filters.maxPrice));
+        }
+
         return sortOffers(result, filters.sort);
-    }, [offers, filters.paymentMethod, filters.minAmount, filters.maxAmount, filters.sort]);
+    }, [offers, filters.paymentMethod, filters.minAmount, filters.maxAmount, filters.minPrice, filters.maxPrice, filters.sort]);
 
     // Derive available payment methods and assets from current offer set
     const availablePaymentMethods = useMemo(() => {
