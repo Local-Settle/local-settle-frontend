@@ -118,9 +118,17 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         window.addEventListener("focus", handleCheck);
         document.addEventListener("visibilitychange", handleCheck);
 
+        // Wallet extensions do not expose a shared network-change event, so
+        // poll while the tab is active. This also catches a switch made in
+        // the extension without requiring the user to refocus the app.
+        const interval = window.setInterval(() => {
+            if (document.visibilityState === "visible") handleCheck();
+        }, 2_000);
+
         return () => {
             window.removeEventListener("focus", handleCheck);
             document.removeEventListener("visibilitychange", handleCheck);
+            window.clearInterval(interval);
         };
     }, [state.isConnected, checkNetwork]);
 
@@ -199,18 +207,22 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         });
     }, [logout]);
 
-    const signTransaction = useCallback(async (xdr: string) => {
-        const detected = await walletService.detectNetwork();
+    const assertCorrectNetwork = useCallback(async () => {
+        const detected = await checkNetwork();
         if (detected !== expectedNetwork) {
             const expCap = expectedNetwork === "testnet" ? "Testnet" : "Mainnet";
             const curCap = detected === "unknown" ? "unknown network" : detected;
             throw new Error(`Wrong Stellar network detected. LocalSettle is configured for ${expCap}, but your wallet is connected to ${curCap}. Switch your wallet to ${expCap} before continuing.`);
         }
+    }, [checkNetwork]);
+
+    const signTransaction = useCallback(async (xdr: string) => {
+        await assertCorrectNetwork();
         return await walletService.signTransaction(xdr);
-    }, []);
+    }, [assertCorrectNetwork]);
 
     return (
-        <Context.Provider value={{ ...state, connect, disconnect, signTransaction, checkNetwork }}>
+        <Context.Provider value={{ ...state, connect, disconnect, signTransaction, checkNetwork, assertCorrectNetwork }}>
             {children}
         </Context.Provider>
     );

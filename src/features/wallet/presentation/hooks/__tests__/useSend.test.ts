@@ -3,6 +3,7 @@ import { renderHook, act } from "@testing-library/react";
 import { useSend } from "../useSend";
 
 const mockSignTransaction = vi.fn();
+const mockAssertCorrectNetwork = vi.fn();
 const mockUserContext = {
   accessToken: "mock-token-123",
   currentUser: { userId: "user-1", publicKey: "GSOURCE" },
@@ -15,6 +16,7 @@ vi.mock("@/features/user/presentation/context/UserContext", () => ({
 vi.mock("@/features/wallet", () => ({
   useWallet: () => ({
     signTransaction: mockSignTransaction,
+    assertCorrectNetwork: mockAssertCorrectNetwork,
   }),
 }));
 
@@ -24,6 +26,7 @@ describe("useSend hook", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSignTransaction.mockReset();
+    mockAssertCorrectNetwork.mockReset();
   });
 
   afterEach(() => {
@@ -100,6 +103,20 @@ describe("useSend hook", () => {
     expect(result.current.state.step).toBe("error");
     expect(result.current.state.errorMessage).toBe("Recipient not found");
     expect(result.current.state.recipient).toBeNull();
+  });
+
+  it("does not resolve or prepare a send while the wallet is on the wrong network", async () => {
+    mockAssertCorrectNetwork.mockRejectedValueOnce(new Error("Wrong Stellar network detected"));
+    globalThis.fetch = vi.fn();
+
+    const { result } = renderHook(() => useSend());
+    await act(async () => {
+      await result.current.resolveAndPrepare("alex.localsettle", "5.00");
+    });
+
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+    expect(result.current.state.step).toBe("error");
+    expect(result.current.state.errorMessage).toMatch(/Wrong Stellar network/);
   });
 
   it("handles prepare transaction API failure", async () => {
