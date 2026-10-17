@@ -1,6 +1,5 @@
 import { ExportTransactionRecord, ExportFilters } from "../types/transaction-export.types";
-
-const stellarNetwork = process.env.NEXT_PUBLIC_STELLAR_NETWORK || "TESTNET";
+import { getStellarNetworkConfig } from "@/features/wallet/config/stellar-network";
 
 function shortenHash(hash: string): string {
     if (!hash) return "";
@@ -201,7 +200,8 @@ export async function exportTransactionsPdf(
         // 7. Clickable Transaction Hash
         if (record.transactionHash) {
             const shortHash = shortenHash(record.transactionHash);
-            const url = getExplorerUrl(record.transactionHash, stellarNetwork);
+            const network = getStellarNetworkConfig().network === "mainnet" ? "PUBLIC" : "TESTNET";
+            const url = getExplorerUrl(record.transactionHash, network);
             doc.setTextColor(2, 132, 199); // Blue-600
             doc.text(shortHash, currentX + 2, y + 5);
             // Clickable link
