@@ -59,6 +59,8 @@ export default function SettingsPage() {
                 </div>
 
                 <main
+                    id="main-content"
+                    tabIndex={-1}
                     id={`settings-panel-${activeTab}`}
                     role="tabpanel"
                     aria-labelledby={`settings-tab-${activeTab}`}

@@ -26,5 +26,15 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   if (!canAccess) return null;
 
-  return <>{children}</>;
+  return (
+    <>
+      <a
+        href="#main-content"
+        className="sr-only z-[200] rounded bg-[#55D6BE] px-4 py-3 font-semibold text-[#081521] focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to main content
+      </a>
+      {children}
+    </>
+  );
 }

@@ -124,7 +124,7 @@ export default function TradePage({ params }: PageProps) {
                 <Aside />
                 <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                     <Header description="trading floor" title="p2p marketplace" />
-                    <main className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
+                    <main id="main-content" tabIndex={-1} className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
                         <p className="text-white text-lg font-bold font-space">Please log in to view this trade.</p>
                     </main>
                 </div>
@@ -138,7 +138,7 @@ export default function TradePage({ params }: PageProps) {
                 <Aside />
                 <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                     <Header description="trading floor" title="p2p marketplace" />
-                    <main className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
+                    <main id="main-content" tabIndex={-1} className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
                         <Loader2 className="animate-spin h-12 w-12 text-[#55D6BE]" />
                         <p className="text-[#C2C7D0] mt-4 font-semibold font-space">Loading transaction details...</p>
                     </main>
@@ -153,7 +153,7 @@ export default function TradePage({ params }: PageProps) {
                 <Aside />
                 <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                     <Header description="trading floor" title="p2p marketplace" />
-                    <main className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
+                    <main id="main-content" tabIndex={-1} className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
                         <AlertTriangle className="w-12 h-12 text-[#55D6BE] mb-2" />
                         <p className="text-white text-lg font-bold font-space">{errorMsg || "Transaction details unavailable"}</p>
                     </main>
@@ -171,7 +171,7 @@ export default function TradePage({ params }: PageProps) {
                 <Aside />
                 <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                     <Header description="trading floor" title="p2p marketplace" />
-                    <main className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
+                    <main id="main-content" tabIndex={-1} className="flex flex-col items-center justify-center flex-1 bg-[#081521]">
                         <Ban className="w-12 h-12 text-red-500 mb-2" />
                         <p className="text-white text-lg font-bold font-space">You are not authorized to view this trade.</p>
                     </main>
@@ -225,7 +225,7 @@ export default function TradePage({ params }: PageProps) {
             <Aside />
             <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                 <Header description="trading floor" title="p2p marketplace" />
-                <main className="flex flex-col md:flex-row items-start w-full h-[calc(100vh-96px)] overflow-hidden bg-[#081521] min-h-0 select-none">
+                <main id="main-content" tabIndex={-1} className="flex flex-col md:flex-row items-start w-full h-[calc(100vh-96px)] overflow-hidden bg-[#081521] min-h-0 select-none">
                     
                     {/* COLUMNA IZQUIERDA: Panel de Transacción */}
                     <div className="w-full md:w-[1172px] h-full flex flex-col border-r border-[rgba(69,73,50,0.1)] bg-[#081521] shrink-0 min-h-0">

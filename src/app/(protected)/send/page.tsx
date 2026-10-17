@@ -153,7 +153,7 @@ function SendContent() {
           mobileLabel="Send"
         />
 
-        <main className="flex-1 px-4 md:px-12 py-8 max-w-7xl w-full mx-auto">
+        <main id="main-content" tabIndex={-1} className="flex-1 px-4 md:px-12 py-8 max-w-7xl w-full mx-auto focus:outline-none">
           {!isConnected ? (
             /* Wallet Not Connected State */
             <div className="max-w-xl mx-auto mt-8 bg-[#0D1D2C] border border-[#263949] rounded-3xl p-8 text-center flex flex-col items-center gap-6 shadow-2xl">

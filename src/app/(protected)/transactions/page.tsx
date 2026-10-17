@@ -109,7 +109,7 @@ export default function TransactionsPage() {
             <div className="flex flex-col flex-1 min-w-0 pb-20 md:pb-0">
                 <Header description="history & exports" title="Transactions" />
 
-                <main className="flex-1 px-4 md:px-16 pb-12 pt-0 w-full flex flex-col lg:flex-row gap-8 items-start">
+                <main id="main-content" tabIndex={-1} className="flex-1 px-4 md:px-16 pb-12 pt-0 w-full flex flex-col lg:flex-row gap-8 items-start focus:outline-none">
                     
                     {/* FILTERS PANEL */}
                     <div className="w-full lg:w-[320px] flex flex-col gap-6 shrink-0 pt-4 lg:pt-12">

@@ -55,7 +55,7 @@ export default function SetupAccount() {
     };
 
     return (
-        <div className="relative flex flex-col justify-start items-center min-h-screen w-full overflow-y-auto overflow-x-hidden [@media(min-height:900px)]:pb-[72px] [@media(min-height:900px)]:pt-[72px]">
+        <main id="main-content" tabIndex={-1} className="relative flex flex-col justify-start items-center min-h-screen w-full overflow-y-auto overflow-x-hidden focus:outline-none [@media(min-height:900px)]:pb-[72px] [@media(min-height:900px)]:pt-[72px]">
             <div className="absolute top-0 [@media(min-height:900px)]:top-[72px] left-0 w-full">
                 <Line />
             </div>
@@ -85,6 +85,6 @@ export default function SetupAccount() {
             <div className="absolute bottom-0 [@media(min-height:900px)]:bottom-[72px] left-0 w-full">
                 <Line />
             </div>
-        </div>
+        </main>
     );
 }
