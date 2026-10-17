@@ -215,6 +215,12 @@ export default function TradePage({ params }: PageProps) {
     const escrowStatus = order.escrow?.escrowStatus || "pending";
     const buyerAddress = order.escrow?.buyerAddress || order.buyer?.publicKey;
     const sellerAddress = order.escrow?.sellerAddress || order.seller?.publicKey;
+    const explorerNetwork = (process.env.NEXT_PUBLIC_STELLAR_NETWORK || "testnet").toLowerCase();
+    const explorerNetworkPath = explorerNetwork === "public" || explorerNetwork === "mainnet" ? "public" : "testnet";
+    const escrowTransactions = [
+        { label: "Escrow locked", hash: order.escrow?.txHashLock },
+        { label: "Escrow released", hash: order.escrow?.txHashRelease },
+    ].filter((transaction): transaction is { label: string; hash: string } => Boolean(transaction.hash));
 
     const counterpartyUser = isBuyer ? order.seller : order.buyer;
     const isCompleted = order.escrow?.escrowStatus === 'released';
@@ -375,6 +381,21 @@ export default function TradePage({ params }: PageProps) {
                                             ). Third-party payments are against our terms of service.
                                         </p>
                                     </div>
+
+                                    {escrowTransactions.length > 0 && (
+                                        <section aria-labelledby="escrow-transactions-title" className="w-full rounded-xl border border-[#172B3A] bg-[#0D1D2C] p-5">
+                                            <h3 id="escrow-transactions-title" className="mb-3 text-sm font-bold uppercase tracking-wide text-white">Escrow transactions</h3>
+                                            <ul className="space-y-2">
+                                                {escrowTransactions.map(({ label, hash }) => (
+                                                    <li key={label}>
+                                                        <a className="text-sm text-[#55D6BE] underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" href={`https://stellar.expert/explorer/${explorerNetworkPath}/tx/${encodeURIComponent(hash)}`} target="_blank" rel="noopener noreferrer">
+                                                            {label}: {hash}
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </section>
+                                    )}
                                     
                                     <div className="w-full flex flex-row items-center justify-end pt-2 shrink-0">
                                         <button className="text-[#FF6B6B] hover:text-red-400 font-bold font-space uppercase text-[14px] tracking-[0.5px] transition-colors cursor-pointer">
