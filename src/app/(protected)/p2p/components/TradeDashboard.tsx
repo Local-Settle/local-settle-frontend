@@ -12,6 +12,7 @@ import { useUser } from "@/features/user/presentation/context/UserContext";
 import { KycBanner } from "@/app/components/KycBanner";
 import { useWalletBalance } from "@/features/wallet/presentation/hooks/useWalletBalance";
 import { Offer } from "@/features/offer/models/offer";
+import { formatOfferPrice } from "@/features/offer/utils/format-offer-price";
 import { OfferFilters } from "@/features/offer/components/OfferFilters";
 import { buildOfferQuery } from "@/features/offer/utils/build-offer-query";
 import { PaymentMethodOption } from "@/features/paymentMethod/models/paymentMethod";
@@ -410,9 +411,8 @@ function TradeDashboardInner() {
                                             <span className="text-[#A1969C] text-[10px] font-bold tracking-widest uppercase">Unit Price</span>
                                             <div className="flex items-baseline gap-1.5">
                                                 <span className="text-[#55D6BE] font-bold text-[32px] tabular-nums tracking-tight leading-none">
-                                                    {parseFloat(offer.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                    {formatOfferPrice(offer.price, offer.fiatCurrency ?? offer.currency)}
                                                 </span>
-                                                <span className="text-[#9BABB7] font-bold text-sm">USD</span>
                                             </div>
                                         </div>
                                         <button
