@@ -11,6 +11,7 @@ const Chat = dynamic(() => import("../../components/Chat").then((mod) => mod.Cha
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import type { Order } from "@/features/order/models/order";
 import { useOrders } from "@/features/order/hooks/useOrders";
+import { useOrderExpiry } from "@/features/order/hooks/useOrderExpiry";
 import { ApiError } from "@/lib/api";
 import { canCancelOrder } from "@/features/order/utils/canCancelOrder";
 import { createDemoOrder } from "@/features/order/mocks/demo-order";
@@ -69,6 +70,10 @@ export default function TradePage({ params }: PageProps) {
             setIsLoading(false);
         }
     }, [orderId, getOrder, isDemoOrder, currentUser]);
+
+    const expiry = useOrderExpiry(order?.expiresAt, () => {
+        void fetchOrder();
+    });
 
     useEffect(() => {
         if (currentUser) {
@@ -258,6 +263,15 @@ export default function TradePage({ params }: PageProps) {
                                         Sync issue — will retry
                                     </span>
                                 )}
+                                {expiry.hasExpiry && (
+                                    <span
+                                        role="timer"
+                                        aria-label={`Order ${expiry.label.toLowerCase()}`}
+                                        className={`text-[11px] font-bold uppercase tracking-wider font-space ${expiry.isExpired ? "text-red-400" : "text-[#C2C7D0]"}`}
+                                    >
+                                        {expiry.isExpired ? "EXPIRED" : `${expiry.label} REMAINING`}
+                                    </span>
+                                )}
                             </div>
                             <div className="flex items-center gap-4">
                                 <h2 className="text-white font-black text-[20px] leading-7 uppercase tracking-normal font-space hidden md:block">
@@ -298,9 +312,10 @@ export default function TradePage({ params }: PageProps) {
                                                 amount={amountVal}
                                                 evidenceUrl={order.escrow?.evidenceUrl}
                                                 onStatusChange={fetchOrder}
-                                                canCancel={canCancel}
+                                                canCancel={canCancel && !expiry.isExpired}
                                                 isCancelling={isCancelling}
                                                 onCancelOrder={() => setShowCancelModal(true)}
+                                                isExpired={expiry.isExpired}
                                             />
                                         </div>
                                     </div>
@@ -322,11 +337,11 @@ export default function TradePage({ params }: PageProps) {
                                                 </span>
                                             </div>
                                             <div className="flex flex-col items-end justify-center">
-                                                <span className="text-white font-black text-[28px] font-space leading-none tracking-wide">
-                                                    14:52
+                                                <span className="text-white font-black text-[18px] font-space leading-none tracking-wide">
+                                                    {expiry.hasExpiry ? expiry.label : "—"}
                                                 </span>
                                                 <span className="text-[#9CA3AF] text-[10px] font-bold uppercase tracking-[1px] font-space mt-1">
-                                                    REMAINING TIME
+                                                    {expiry.hasExpiry ? (expiry.isExpired ? "ORDER EXPIRED" : "REMAINING TIME") : "EXPIRY UNAVAILABLE"}
                                                 </span>
                                             </div>
                                         </div>
@@ -356,9 +371,10 @@ export default function TradePage({ params }: PageProps) {
                                             expiresAt={order.expiresAt as string | undefined}
                                             evidenceUrl={order.escrow?.evidenceUrl}
                                             onStatusChange={fetchOrder}
-                                            canCancel={canCancel}
+                                            canCancel={canCancel && !expiry.isExpired}
                                             isCancelling={isCancelling}
                                             onCancelOrder={() => setShowCancelModal(true)}
+                                            orderExpired={expiry.isExpired}
                                         />
                                     </div>
 
