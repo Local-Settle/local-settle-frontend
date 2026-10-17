@@ -58,14 +58,32 @@ function MerchantBalance({ publicKey, assetCode }: { publicKey?: string; assetCo
 // ----------------------------------------------------------
 function sortOffers(offers: Offer[], sort: string): Offer[] {
     const arr = [...offers];
+    const compareIds = (a: Offer, b: Offer) =>
+        a.offerId < b.offerId ? -1 : a.offerId > b.offerId ? 1 : 0;
+    const comparePrice = (direction: 1 | -1) => (a: Offer, b: Offer) => {
+        const aPrice = Number.parseFloat(a.price);
+        const bPrice = Number.parseFloat(b.price);
+        const aValid = Number.isFinite(aPrice);
+        const bValid = Number.isFinite(bPrice);
+        if (aValid !== bValid) return aValid ? -1 : 1;
+        if (aValid && aPrice !== bPrice) return (aPrice - bPrice) * direction;
+        return compareIds(a, b);
+    };
     switch (sort) {
         case "price_asc":
-            return arr.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+            return arr.sort(comparePrice(1));
         case "price_desc":
-            return arr.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+            return arr.sort(comparePrice(-1));
         case "newest":
-            // If offers had a createdAt, we'd sort by it; fall through to default for now
-            return arr;
+            return arr.sort((a, b) => {
+                const aDate = a.createdAt ? Date.parse(a.createdAt) : Number.NaN;
+                const bDate = b.createdAt ? Date.parse(b.createdAt) : Number.NaN;
+                const aValid = Number.isFinite(aDate);
+                const bValid = Number.isFinite(bDate);
+                if (aValid !== bValid) return aValid ? -1 : 1;
+                if (aValid && aDate !== bDate) return bDate - aDate;
+                return compareIds(a, b);
+            });
         case "completion_rate_desc":
         case "best_match":
         default:
