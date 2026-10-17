@@ -82,6 +82,8 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_STELLAR_NETWORK=TESTNET
 ```
 
+Change the API URL if your local backend runs on a different host or port.
+
 Then run the app at `http://localhost:3000`:
 
 ```bash
