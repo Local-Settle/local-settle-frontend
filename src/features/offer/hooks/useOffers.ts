@@ -12,7 +12,7 @@ export function useOffers(filters?: Record<string, string>) {
     const [manualFilters, setManualFilters] = useState<Record<string, string> | null>(null);
     const activeFilters = manualFilters ?? filters;
 
-    const { data: offers = [], isLoading } = useQuery<Offer[]>({
+    const { data: offers = [], isLoading, isError, error, refetch, isFetching } = useQuery<Offer[]>({
         queryKey: queryKeys.offers.list(activeFilters),
         queryFn: ({ signal }) => {
             let endpoint = '/offers';
@@ -84,6 +84,10 @@ export function useOffers(filters?: Record<string, string>) {
         createOffer, 
         updateOffer: wrappedUpdateOffer, 
         deleteOffer: wrappedDeleteOffer, 
-        isLoading 
+        isLoading,
+        isError,
+        error,
+        refetch,
+        isFetching,
     };
 }

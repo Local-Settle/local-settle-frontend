@@ -178,7 +178,7 @@ function TradeDashboardInner() {
         [tab, filters]
     );
 
-    const { offers, isLoading } = useOffers(apiFilters);
+    const { offers, isLoading, isError, error, refetch, isFetching } = useOffers(apiFilters);
 
     // Start with non-executed offers (type + assetCode already filtered by backend).
     // paymentMethod, minAmount, maxAmount, and sort are applied here client-side
@@ -339,8 +339,16 @@ function TradeDashboardInner() {
                     <div className="space-y-4">
                         {[1, 2, 3].map(i => <OfferSkeleton key={i} />)}
                     </div>
+                ) : isError && offers.length === 0 ? (
+                    <div role="alert" className="rounded-xl border border-red-500/30 bg-red-950/20 p-6 text-center text-white">
+                        <p>Offers could not be loaded{error instanceof Error ? `: ${error.message}` : "."}</p>
+                        <button type="button" onClick={() => refetch()} disabled={isFetching} className="mt-3 rounded-lg bg-[#55D6BE] px-4 py-2 font-semibold text-black disabled:opacity-60">
+                            {isFetching ? "Retrying…" : "Try again"}
+                        </button>
+                    </div>
                 ) : visibleOffers.length > 0 ? (
                     <div className="space-y-4">
+                        {isError && <p role="status" className="text-amber-300">Could not refresh offers. Showing the last available results.</p>}
                         {visibleOffers.map((offer) => {
                             const paymentMethods = [
                                 ...(offer.payment_methods || []),
