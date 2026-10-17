@@ -101,6 +101,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
   const headerTitle =
     state.step === "success" ? "Transfer Complete" :
     state.step === "error" ? "Transaction Failed" :
+    state.step === "uncertain" ? "Check Transfer Status" :
     state.step === "cancelled" ? "Cancelled" :
     state.step === "confirm" ? "Confirm Send" :
     "Send Funds";
@@ -110,6 +111,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
     state.step === "confirm" ? "Review the details before signing." :
     state.step === "success" ? "Your transfer was successful." :
     state.step === "error" ? "Something went wrong." :
+    state.step === "uncertain" ? "The submission result is not confirmed." :
     state.step === "cancelled" ? "You declined the transaction." : "";
 
   return (
@@ -195,7 +197,7 @@ export function SendFundsModal({ onClose }: CloseModalProps) {
         )}
 
         {/* Loading / Signing / Submitting / Error / Cancelled */}
-        {(isTransacting || state.step === "error" || state.step === "cancelled") && (
+        {(isTransacting || state.step === "error" || state.step === "uncertain" || state.step === "cancelled") && (
           <div className="flex-1 flex flex-col justify-center">
             <SendStatusView
               step={state.step}

@@ -12,6 +12,7 @@ export type SendStep =
   | "submitting"
   | "success"
   | "error"
+  | "uncertain"
   | "cancelled";
 
 export interface RecipientInfo {
@@ -28,6 +29,8 @@ export interface SendState {
   txHash: string | null;
   errorMessage: string | null;
 }
+
+const UNCERTAIN_SUBMISSION_PREFIX = "Submission outcome unknown:";
 
 export function useSend() {
   const { accessToken } = useUser();
@@ -138,15 +141,22 @@ export function useSend() {
       });
       if (!submitRes.ok) {
         const body = await submitRes.json().catch(() => ({}));
+        if (submitRes.status >= 500) {
+          throw new Error(UNCERTAIN_SUBMISSION_PREFIX);
+        }
         throw new Error((body as { message?: string })?.message ?? "Transaction submission failed");
       }
       const result: { hash?: string } = await submitRes.json();
       setState(s => ({ ...s, step: "success", txHash: result.hash ?? null }));
     } catch (err) {
+      const outcomeMayBeUnknown = err instanceof TypeError ||
+        (err instanceof Error && err.message.startsWith(UNCERTAIN_SUBMISSION_PREFIX));
       setState(s => ({
         ...s,
-        step: "error",
-        errorMessage: err instanceof Error ? err.message : "Transaction submission failed",
+        step: outcomeMayBeUnknown ? "uncertain" : "error",
+        errorMessage: outcomeMayBeUnknown
+          ? "The submission response was lost or timed out. The transaction may still have reached Stellar. Check your wallet activity before attempting another transfer."
+          : err instanceof Error ? err.message : "Transaction submission failed",
       }));
     }
   }, [accessToken, apiUrl, signTransaction, network]);
