@@ -146,6 +146,8 @@ function OfferSkeleton() {
 // ----------------------------------------------------------
 function TradeDashboardInner() {
     const [tab, setTab] = useState("Buy");
+    const [page, setPage] = useState(0);
+    const pageSize = 20;
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
 
@@ -174,11 +176,13 @@ function TradeDashboardInner() {
 
     // Build query: type comes from the tab; the rest from active filters
     const apiFilters = useMemo(
-        () => buildOfferQuery(tab === "Buy" ? "sell" : "buy", filters),
-        [tab, filters]
+        () => ({ ...buildOfferQuery(tab === "Buy" ? "sell" : "buy", filters), skip: String(page * pageSize), take: String(pageSize) }),
+        [tab, filters, page]
     );
 
     const { offers, isLoading } = useOffers(apiFilters);
+
+    useEffect(() => { setPage(0); }, [tab, filters]);
 
     // Start with non-executed offers (type + assetCode already filtered by backend).
     // paymentMethod, minAmount, maxAmount, and sort are applied here client-side
@@ -440,6 +444,12 @@ function TradeDashboardInner() {
                     <EmptyState onClear={clearFilters} isFiltered={isFiltered} />
                 )}
             </div>
+
+            <nav className="mt-6 flex items-center justify-center gap-4" aria-label="Marketplace pages">
+                <button type="button" onClick={() => setPage((current) => Math.max(0, current - 1))} disabled={page === 0 || isLoading} className="rounded-lg border border-[#263949] px-4 py-2 text-sm text-white disabled:opacity-40">Previous</button>
+                <span className="text-sm text-gray-400" aria-live="polite">Page {page + 1}</span>
+                <button type="button" onClick={() => setPage((current) => current + 1)} disabled={isLoading || offers.length < pageSize} className="rounded-lg border border-[#263949] px-4 py-2 text-sm text-white disabled:opacity-40">Next</button>
+            </nav>
 
             {isOpen && (
                 <CreateOfferModal onClose={() => setIsOpen(false)} />
