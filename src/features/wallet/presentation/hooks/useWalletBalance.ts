@@ -17,6 +17,7 @@ export interface BalanceState {
   balances: AssetBalance[]; // All balances
   isLoading: boolean;
   error: string | null;
+  hasData: boolean;
   refetch: () => void;
 }
 
@@ -37,6 +38,7 @@ export function useWalletBalance(publicKey: string | null): BalanceState {
     balances: data || [],
     isLoading,
     error: error?.message || null,
+    hasData: data !== undefined,
     refetch,
   };
 }

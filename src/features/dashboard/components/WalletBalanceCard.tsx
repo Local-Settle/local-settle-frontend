@@ -7,6 +7,7 @@ interface WalletBalanceCardProps {
     currency: string;
     isLoading?: boolean;
     error?: string | null;
+    isStale?: boolean;
     onRetry?: () => void;
     actions?: ReactNode;
 }
@@ -16,6 +17,7 @@ export function WalletBalanceCard({
     currency,
     isLoading = false,
     error = null,
+    isStale = false,
     onRetry,
     actions,
 }: WalletBalanceCardProps) {
@@ -45,7 +47,7 @@ export function WalletBalanceCard({
                             aria-label="Loading total balance"
                             className="h-[44px] md:h-[64px] w-[70%] max-w-[360px] rounded-lg bg-white/10 animate-pulse"
                         />
-                    ) : error ? (
+                    ) : error && !isStale ? (
                         <div className="flex flex-col items-start gap-2">
                             <p
                                 role="alert"
@@ -71,6 +73,12 @@ export function WalletBalanceCard({
                             <span className="text-[#D6D2CE] text-[16px] md:text-[22px] font-medium">
                                 {currency}
                             </span>
+                        </div>
+                    )}
+                    {error && isStale && (
+                        <div className="mt-2 flex items-center gap-3 text-xs text-amber-200" role="status">
+                            <span>Showing the last saved balance; refresh failed.</span>
+                            {onRetry && <button type="button" onClick={onRetry} className="underline">Retry</button>}
                         </div>
                     )}
                 </div>

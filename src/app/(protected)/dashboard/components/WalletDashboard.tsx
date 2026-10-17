@@ -21,7 +21,7 @@ const SECONDARY_ACTIONS = [
 
 export function WalletDashboard() {
     const { publicKey } = useWallet();
-    const { viewModel, isLoading, error, retry } = useWalletBalanceViewModel(publicKey);
+    const { viewModel, isLoading, error, isStale, retry } = useWalletBalanceViewModel(publicKey);
 
     const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
     const [isCreateOfferModalOpen, setIsCreateOfferModalOpen] = useState(false);
@@ -91,6 +91,7 @@ export function WalletDashboard() {
                         currency={viewModel.currency}
                         isLoading={isLoading}
                         error={error}
+                        isStale={isStale}
                         onRetry={retry}
                         actions={actions}
                     />
@@ -99,6 +100,7 @@ export function WalletDashboard() {
                         assets={viewModel.assets}
                         isLoading={isLoading}
                         error={error}
+                        isStale={isStale}
                         onRetry={retry}
                     />
                 </div>
