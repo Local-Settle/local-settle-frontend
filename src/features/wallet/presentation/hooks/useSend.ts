@@ -25,6 +25,7 @@ export interface SendState {
   step: SendStep;
   recipient: RecipientInfo | null;
   fee: string | null;
+  network?: string | null;
   txHash: string | null;
   errorMessage: string | null;
 }
@@ -89,7 +90,7 @@ export function useSend() {
         }
 
         preparedXdrRef.current = xdr;
-        setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null }));
+        setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null, network: prepared.network ?? network }));
       } catch (err) {
         setState(s => ({
           ...s,
