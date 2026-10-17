@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { queryKeys } from "@/lib/queryKeys";
+import { parseEscrowSigningResponse } from "@/lib/api/contracts";
+import type { EscrowSigningResponse } from "@/lib/api/generated/contracts";
 
 export interface OpenEscrowParams {
     orderId: string;
@@ -33,29 +35,26 @@ export interface ReleaseEscrowParams {
     releaseSigner: string;
 }
 
-export interface EscrowSigningResponse {
-    unsignedFundTransaction?: string;
-    unsignedTransaction?: string;
-}
+export type { EscrowSigningResponse };
 
 export function useEscrows() {
     const queryClient = useQueryClient();
 
     const { mutateAsync: openEscrow } = useMutation({
-        mutationFn: (params: OpenEscrowParams) => apiFetch<EscrowSigningResponse>('/escrows/open', {
+        mutationFn: async (params: OpenEscrowParams) => parseEscrowSigningResponse(await apiFetch<unknown>('/escrows/open', {
             method: "POST",
             body: params,
-        }),
+        })),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
         }
     });
 
     const { mutateAsync: fundEscrow } = useMutation({
-        mutationFn: (params: FundEscrowParams) => apiFetch<EscrowSigningResponse>('/escrows/fund', {
+        mutationFn: async (params: FundEscrowParams) => parseEscrowSigningResponse(await apiFetch<unknown>('/escrows/fund', {
             method: "POST",
             body: params,
-        }),
+        })),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
         }
@@ -72,20 +71,20 @@ export function useEscrows() {
     });
 
     const { mutateAsync: markFiatSent } = useMutation({
-        mutationFn: ({ escrowId, params }: { escrowId: string, params: FiatSentParams }) => apiFetch<EscrowSigningResponse>(`/escrows/${escrowId}/fiat-sent`, {
+        mutationFn: async ({ escrowId, params }: { escrowId: string, params: FiatSentParams }) => parseEscrowSigningResponse(await apiFetch<unknown>(`/escrows/${escrowId}/fiat-sent`, {
             method: "POST",
             body: params,
-        }),
+        })),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
         }
     });
 
     const { mutateAsync: releaseEscrow } = useMutation({
-        mutationFn: (params: ReleaseEscrowParams) => apiFetch<EscrowSigningResponse>('/escrows/release', {
+        mutationFn: async (params: ReleaseEscrowParams) => parseEscrowSigningResponse(await apiFetch<unknown>('/escrows/release', {
             method: "POST",
             body: params,
-        }),
+        })),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
         }

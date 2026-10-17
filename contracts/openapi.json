@@ -1,0 +1,40 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "LocalSettle frontend API contracts", "version": "1.0.0" },
+  "paths": {
+    "/stellar/balances/{publicKey}": {
+      "get": {
+        "operationId": "getStellarBalances",
+        "responses": { "200": { "description": "Account balances", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/AssetBalance" } } } } } }
+      }
+    },
+    "/escrows/open": {
+      "post": {
+        "operationId": "openEscrow",
+        "responses": { "201": { "description": "Unsigned transaction to authorize", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/EscrowSigningResponse" } } } } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssetBalance": {
+        "type": "object",
+        "required": ["asset_type", "balance"],
+        "properties": {
+          "asset_type": { "type": "string" },
+          "asset_code": { "type": ["string", "null"] },
+          "asset_issuer": { "type": ["string", "null"] },
+          "balance": { "type": "string" },
+          "limit": { "type": ["string", "null"] }
+        }
+      },
+      "EscrowSigningResponse": {
+        "type": "object",
+        "properties": {
+          "unsignedFundTransaction": { "type": "string" },
+          "unsignedTransaction": { "type": "string" }
+        }
+      }
+    }
+  }
+}

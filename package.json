@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "api:contracts:generate": "node scripts/generate-api-contracts.mjs",
+    "api:contracts:check": "node scripts/generate-api-contracts.mjs --check",
     "analyze": "ANALYZE=true next build"
   },
   "dependencies": {

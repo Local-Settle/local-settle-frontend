@@ -35,6 +35,8 @@ jobs:
 
       - run: pnpm run lint
 
+      - run: pnpm run api:contracts:check
+
       - run: pnpm run test
 
   build:

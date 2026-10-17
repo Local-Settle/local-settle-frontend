@@ -3,14 +3,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "@/lib/api";
 import { queryKeys } from "@/lib/queryKeys";
+import { parseAssetBalances } from "@/lib/api/contracts";
+import type { AssetBalance } from "@/lib/api/generated/contracts";
 
-export interface AssetBalance {
-  asset_type: string;
-  asset_code: string | null;
-  asset_issuer: string | null;
-  balance: string;
-  limit?: string | null;
-}
+export type { AssetBalance };
 
 export interface BalanceState {
   balance: string | null; // Native XLM balance
@@ -25,7 +21,7 @@ export function useWalletBalance(publicKey: string | null): BalanceState {
 
   const { data, isLoading, error, refetch } = useQuery<AssetBalance[], Error>({
     queryKey: queryKeys.wallet.balance(publicKey),
-    queryFn: () => apiFetch(`/stellar/balances/${publicKey}`),
+    queryFn: async () => parseAssetBalances(await apiFetch<unknown>(`/stellar/balances/${publicKey}`)),
     enabled: !!publicKey,
   });
 
