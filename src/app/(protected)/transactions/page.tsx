@@ -43,6 +43,12 @@ export default function TransactionsPage() {
         fetchUserOrders(currentUser.userId).finally(() => {
             clearTimeout(timer);
             if (active) setLoading(false);
+        }).sort((a, b) => {
+            const timeDiff = new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+            if (timeDiff !== 0) return timeDiff;
+            const txA = a.escrow?.txHashRelease || a.escrow?.txHashLock || "";
+            const txB = b.escrow?.txHashRelease || b.escrow?.txHashLock || "";
+            return txA.localeCompare(txB) || a.orderId.localeCompare(b.orderId);
         });
 
         return () => {
@@ -251,7 +257,7 @@ export default function TransactionsPage() {
                                         
                                         // Format Date display
                                         const dateStr = o.createdAt
-                                            ? new Date(o.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).toUpperCase()
+                                            ? new Date(o.createdAt).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" }).toUpperCase()
                                             : "N/A";
                                             
                                         // Asset amount format
