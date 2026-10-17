@@ -55,7 +55,7 @@ function isMutatingRequest(method: string | undefined): boolean {
     return MUTATING_METHODS.has((method ?? "GET").toUpperCase());
 }
 
-async function getCsrfToken(): Promise<string | null> {
+export async function getCsrfToken(): Promise<string | null> {
     if (csrfToken) return csrfToken;
 
     try {
