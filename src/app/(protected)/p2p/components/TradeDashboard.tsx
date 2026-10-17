@@ -148,6 +148,7 @@ function TradeDashboardInner() {
     const [tab, setTab] = useState("Buy");
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOffer, setSelectedOffer] = useState<Offer | null>(null);
+    const [compareIds, setCompareIds] = useState<string[]>([]);
 
     const handleTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
         const nextIndex = getRovingFocusIndex(event.key, index, tradeTabs.length, "horizontal");
@@ -416,6 +417,16 @@ function TradeDashboardInner() {
                                             </div>
                                         </div>
                                         <button
+                                            type="button"
+                                            aria-pressed={compareIds.includes(offer.offerId)}
+                                            onClick={() => setCompareIds((ids) => ids.includes(offer.offerId)
+                                                ? ids.filter((id) => id !== offer.offerId)
+                                                : ids.length < 3 ? [...ids, offer.offerId] : ids)}
+                                            className="text-xs text-[#55D6BE] underline underline-offset-2"
+                                        >
+                                            {compareIds.includes(offer.offerId) ? "Remove from comparison" : "Compare offer"}
+                                        </button>
+                                        <button
                                             disabled={!isVerified}
                                             onClick={() => {
                                                 if (!isVerified) {
@@ -440,6 +451,23 @@ function TradeDashboardInner() {
                     <EmptyState onClear={clearFilters} isFiltered={isFiltered} />
                 )}
             </div>
+
+            {compareIds.length > 0 && (
+                <section className="mt-6 overflow-x-auto rounded-xl border border-[#263949] bg-[#0D1D2C] p-4" aria-label="Offer comparison">
+                    <h2 className="mb-3 text-sm font-bold text-white">Compare offers ({compareIds.length}/3)</h2>
+                    <table className="w-full min-w-[560px] text-left text-sm text-white">
+                        <thead><tr className="text-gray-400"><th className="p-2">Offer</th><th className="p-2">Price</th><th className="p-2">Limits</th><th className="p-2">Payment methods</th></tr></thead>
+                        <tbody>{offers.filter((offer) => compareIds.includes(offer.offerId)).map((offer) => (
+                            <tr key={offer.offerId} className="border-t border-[#263949]">
+                                <td className="p-2">{offer.assetCode} {offer.type}</td>
+                                <td className="p-2">{offer.price} USD</td>
+                                <td className="p-2">{offer.minAmount}–{offer.maxAmount} {offer.assetCode}</td>
+                                <td className="p-2">{[...(offer.payment_methods || []), ...(offer.paymentMethods || [])].map(resolvePaymentMethodName).filter(Boolean).join(", ") || "Not specified"}</td>
+                            </tr>
+                        ))}</tbody>
+                    </table>
+                </section>
+            )}
 
             {isOpen && (
                 <CreateOfferModal onClose={() => setIsOpen(false)} />
