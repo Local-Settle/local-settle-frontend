@@ -109,7 +109,8 @@ export function useEscrows() {
     });
 
     const { mutateAsync: uploadEvidenceMutation } = useMutation({
-        mutationFn: ({ escrowId, file }: { escrowId: string, file: File }) => {
+        mutationFn: async ({ escrowId, file }: { escrowId: string, file: File }) => {
+            await assertCorrectNetwork();
             const formData = new FormData();
             formData.append("file", file);
             return apiFetch<{ url: string }>(`/escrows/${escrowId}/evidence`, {
