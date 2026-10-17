@@ -38,7 +38,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
     const router = useRouter();
     const { getOrCreateByWallet } = useUsers();
-    const { setCurrentUser, setAccessToken, logout } = useUser();
+    const { currentUser, setCurrentUser, setAccessToken, logout } = useUser();
     const { notify } = useNotifications();
 
     // Use refs to avoid stale closures in useEffect without triggering re-runs
@@ -46,6 +46,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const setCurrentUserRef = useRef(setCurrentUser);
     useEffect(() => { getOrCreateRef.current = getOrCreateByWallet; }, [getOrCreateByWallet]);
     useEffect(() => { setCurrentUserRef.current = setCurrentUser; }, [setCurrentUser]);
+
+    // A restored or switched wallet must still match the API-authenticated user.
+    useEffect(() => {
+        if (!state.isConnected || !state.publicKey || !currentUser?.publicKey) return;
+        if (state.publicKey.trim().toUpperCase() === currentUser.publicKey.trim().toUpperCase()) return;
+        setState(initialState);
+        logout();
+    }, [state.isConnected, state.publicKey, currentUser?.publicKey, logout]);
 
     const checkNetwork = useCallback(async () => {
         setState((s) => ({ ...s, isCheckingNetwork: true }));
