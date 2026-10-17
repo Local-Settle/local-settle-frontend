@@ -225,6 +225,11 @@ export default function TradePage({ params }: PageProps) {
             <Aside />
             <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
                 <Header description="trading floor" title="p2p marketplace" />
+                {isDemoOrder && (
+                    <div role="status" className="border-b border-amber-400/30 bg-amber-400/10 px-4 py-2 text-center text-sm font-semibold text-amber-100">
+                        Demo mode — simulated order only. No real Stellar or fiat transfer will occur.
+                    </div>
+                )}
                 <main className="flex flex-col md:flex-row items-start w-full h-[calc(100vh-96px)] overflow-hidden bg-[#081521] min-h-0 select-none">
                     
                     {/* COLUMNA IZQUIERDA: Panel de Transacción */}
