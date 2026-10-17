@@ -59,6 +59,9 @@ export function WaitlistGrowth({ timeLine, activeWindow, onWindowChange }: Waitl
 
                     <XAxis
                         dataKey="date"
+                        tickFormatter={(value: string) => /^\d{4}-\d{2}-\d{2}/.test(value)
+                            ? new Date(value.length === 10 ? `${value}T00:00:00Z` : value).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })
+                            : value}
                         axisLine={false}
                         tickLine={false}
                         tick={{ fill: "#6b7280", fontSize: 10 }}
