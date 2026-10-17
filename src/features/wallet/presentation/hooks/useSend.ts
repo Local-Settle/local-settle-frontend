@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useWallet } from "@/features/wallet";
+import { mapWalletError } from "../../utils/wallet-errors";
 
 export type SendStep =
   | "form"
@@ -122,7 +123,7 @@ export function useSend() {
       setState(s => ({
         ...s,
         step: isCancelled ? "cancelled" : "error",
-        errorMessage: isCancelled ? null : msg,
+        errorMessage: isCancelled ? null : mapWalletError(err),
       }));
       return;
     }

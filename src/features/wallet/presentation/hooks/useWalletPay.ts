@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { mapWalletError } from "../../utils/wallet-errors";
 
 interface SendPaymentPayload {
     destination: string;
@@ -43,7 +44,7 @@ export function useWalletPay(publicKey: string | null) {
 
             setState({ isLoading: false, error: null, success: true });
         } catch (err) {
-            const msg = err instanceof Error ? err.message : "Error";
+            const msg = mapWalletError(err);
             setState({ isLoading: false, error: msg, success: false });
         }
     };
