@@ -14,6 +14,9 @@ export interface TradeEvidenceUploaderProps {
     escrowStatus: "pending" | "initialized" | "funded" | "fiat_sent" | "released" | "disputed" | "resolved";
     buyerAddress?: string | null;
     amount: number;
+    currency: string;
+    recipientName: string;
+    isBuyer: boolean;
     evidenceUrl?: string | null;
     onStatusChange: () => void;
     canCancel: boolean;
@@ -25,6 +28,10 @@ export function TradeEvidenceUploader({
     escrowId,
     escrowStatus,
     buyerAddress,
+    amount,
+    currency,
+    recipientName,
+    isBuyer,
     evidenceUrl,
     onStatusChange,
     canCancel,
@@ -43,6 +50,8 @@ export function TradeEvidenceUploader({
 
     const [isDragging, setIsDragging] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+    const submissionLockRef = useRef(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { notify } = useNotifications();
     const sig = useSignatureCancellation();
@@ -167,7 +176,14 @@ export function TradeEvidenceUploader({
     };
 
     const handleAction = async () => {
-        if (isSubmitting || !buyerAddress || !escrowId || !evidenceUrlState) return;
+        if (!isBuyer || escrowStatus !== "funded" || isSubmitting || !buyerAddress || !escrowId || !evidenceUrlState) return;
+        setShowPaymentConfirmation(true);
+    };
+
+    const handleConfirmPaymentSent = async () => {
+        if (!isBuyer || escrowStatus !== "funded" || submissionLockRef.current || !buyerAddress || !escrowId || !evidenceUrlState) return;
+        submissionLockRef.current = true;
+        setShowPaymentConfirmation(false);
         setIsSubmitting(true);
         try {
             if (escrowStatus === "funded") {
@@ -188,6 +204,7 @@ export function TradeEvidenceUploader({
             if (isSignatureCancelled(err)) return;
             alert(`Error processing action: ${err instanceof Error ? err.message : String(err)}`);
         } finally {
+            submissionLockRef.current = false;
             setIsSubmitting(false);
         }
     };
@@ -427,7 +444,7 @@ export function TradeEvidenceUploader({
                     <button type="button" disabled className="bg-[#2A292F] w-full h-[56px] text-[#C2C7D0] font-extrabold text-[16px] leading-[24px] rounded-[12px] uppercase cursor-not-allowed tracking-[-0.4px]">
                         WAITING FOR FUNDING
                     </button>
-                ) : escrowStatus === "funded" ? (
+                ) : escrowStatus === "funded" && isBuyer ? (
                     <button 
                         type="button" 
                         onClick={handleAction}
@@ -464,6 +481,22 @@ export function TradeEvidenceUploader({
                 onRetry={handleSignatureRetry}
                 onCancel={handleSignatureCancel}
             />
+        )}
+        {showPaymentConfirmation && (
+            <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4">
+                <section role="dialog" aria-modal="true" aria-labelledby="payment-confirmation-title" className="w-full max-w-md rounded-xl border border-[#263949] bg-[#081521] p-6 text-[#D7E0E6] shadow-2xl">
+                    <h2 id="payment-confirmation-title" className="text-xl font-bold">Confirm local payment</h2>
+                    <p className="mt-2 text-sm text-[#9BABB7]">Local payment happens directly between you and the seller, outside the escrow contract. Confirm only after you have sent the agreed amount.</p>
+                    <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 break-words text-sm">
+                        <dt className="text-[#9BABB7]">Amount</dt><dd>{amount.toLocaleString()} {currency}</dd>
+                        <dt className="text-[#9BABB7]">Recipient</dt><dd>{recipientName || "Seller"}</dd>
+                    </dl>
+                    <div className="mt-6 flex gap-3">
+                        <button type="button" onClick={() => setShowPaymentConfirmation(false)} className="flex-1 rounded-lg bg-[#2A292F] px-4 py-3 font-semibold">Cancel</button>
+                        <button type="button" onClick={handleConfirmPaymentSent} disabled={isSubmitting} className="flex-1 rounded-lg bg-[#55D6BE] px-4 py-3 font-bold text-[#081521] disabled:opacity-50">I sent the payment</button>
+                    </div>
+                </section>
+            </div>
         )}
         </>
     );

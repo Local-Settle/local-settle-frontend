@@ -275,7 +275,7 @@ export default function TradePage({ params }: PageProps) {
                                         <div className="w-full md:w-[616.2px] h-full shrink-0">
                                             <TradeDetails 
                                                 role={role}
-                                                amount={amountVal}
+                                                amount={totalVal}
                                                 assetCode={order.offer?.assetCode || "USDC"}
                                                 unitPrice={priceVal}
                                                 total={totalVal}
@@ -296,6 +296,9 @@ export default function TradePage({ params }: PageProps) {
                                                 escrowStatus={escrowStatus}
                                                 buyerAddress={buyerAddress}
                                                 amount={amountVal}
+                                                currency={order.seller?.preferredCurrency || "USD"}
+                                                recipientName={accountOwner}
+                                                isBuyer={isBuyer}
                                                 evidenceUrl={order.escrow?.evidenceUrl}
                                                 onStatusChange={fetchOrder}
                                                 canCancel={canCancel}
