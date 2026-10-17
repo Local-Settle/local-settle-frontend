@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Navbar } from "../welcome/components/Navbar";
 import { useStats } from "@/features/stats/hooks/useStats";
 import type { TimeWindow } from "@/features/stats/hooks/useStats";
@@ -11,20 +11,14 @@ const WaitlistGrowth = dynamic(() => import("./components/WaitlistGrowth").then(
 
 export default function StatsPage() {
     const [, setIsConnectModalOpen] = useState(false);
-    const [timeWindow, setTimeWindow] = useState<TimeWindow>("7d");
-    const { stats, getStats } = useStats();
+    const { stats, getStats, from, to, setDateRange, timeWindow } = useStats();
 
     const handleConnectWallet = () => {
         setIsConnectModalOpen(true);
     };
 
     const handleWindowChange = useCallback((w: TimeWindow) => {
-        setTimeWindow(w);
         getStats(w);
-    }, [getStats]);
-
-    useEffect(() => {
-        getStats("7d");
     }, [getStats]);
 
     const escrowsCompleted = stats?.escrows_completed || 0;
@@ -105,6 +99,11 @@ export default function StatsPage() {
                     <div className="xl:col-span-2 flex flex-col bg-[#1A1A1A99] border border-[#FFFFFF0D] rounded-lg p-6 min-h-[380px]">
                         <div className="flex justify-between items-center mb-10">
                             <p className="font-semibold text-xl text-[#E3E2E2]">Waitlist growth</p>
+                            <fieldset className="flex items-center gap-2 text-xs text-gray-300">
+                                <legend className="sr-only">Custom UTC date range</legend>
+                                <label>From <input aria-label="Range start date in UTC" type="date" value={from} max={to || undefined} onChange={e => setDateRange(e.target.value, to)} className="rounded bg-[#11212E] p-1 text-white" /></label>
+                                <label>To <input aria-label="Range end date in UTC" type="date" value={to} min={from || undefined} onChange={e => setDateRange(from, e.target.value)} className="rounded bg-[#11212E] p-1 text-white" /></label>
+                            </fieldset>
                         </div>
                         <div className="flex-1 w-full min-w-0">
                             <WaitlistGrowth
