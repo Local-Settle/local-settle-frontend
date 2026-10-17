@@ -26,7 +26,7 @@ export function ConnectWalletModal({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const { connect, disconnect, isConnected, walletId } = useWalletContext();
+  const { connect, disconnect, isConnected, walletId, error } = useWalletContext();
   const { availability } = useWalletAvailability();
   const router = useRouter();
   const [modalState, setModalState] = useState<
@@ -137,6 +137,11 @@ export function ConnectWalletModal({
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Choose your preferred Stellar provider to access the LocalSettle ecosystem.
             </p>
+            {error?.includes("saved wallet is temporarily unavailable") && (
+              <p role="status" className="mb-4 rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-sm text-amber-100">
+                {error} Select your wallet below to retry.
+              </p>
+            )}
 
             {/* Development Disclaimer Banner */}
             <div className="mb-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex gap-3 text-sm text-blue-200">

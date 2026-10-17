@@ -75,7 +75,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         let cancelled = false;
         walletService.restoreSession().then(async (session) => {
             if (cancelled || !session?.publicKey) {
-                if (!cancelled) setState((s) => ({ ...s, isLoading: false }));
+                if (!cancelled) {
+                    const hasSavedSession = Boolean(
+                        localStorage.getItem("wallet:provider") && localStorage.getItem("wallet:publicKey"),
+                    );
+                    setState((s) => ({
+                        ...s,
+                        isLoading: false,
+                        error: hasSavedSession
+                            ? "Your saved wallet is temporarily unavailable. Reconnect it to restore your session."
+                            : null,
+                    }));
+                }
                 return;
             }
 

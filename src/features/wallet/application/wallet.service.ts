@@ -81,7 +81,9 @@ export const walletService = {
 
             return { publicKey: address, walletId: savedWalletId };
         } catch {
-            this.clearSession();
+            // A temporarily unavailable extension must not erase the saved
+            // provider and account. The caller stays disconnected and can
+            // retry when the wallet becomes available again.
             return null;
         }
     },
