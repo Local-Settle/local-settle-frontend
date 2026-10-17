@@ -165,6 +165,25 @@ describe("useEscrowStatusSync", () => {
         expect(onStatusChange).toHaveBeenCalledTimes(1);
     });
 
+    it("does not notify twice when socket and polling report one status with different event IDs", async () => {
+        const socketEvent = { ...baseEvent, eventId: "socket-event", updatedAt: "2026-08-29T12:00:01.000Z" };
+        const pollEvent = { ...baseEvent, eventId: "poll-event", updatedAt: "2026-08-29T12:00:02.000Z" };
+        (fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => pollEvent,
+        } as Response);
+        const { socket, handlers } = createMockSocket();
+        mockedCreateEscrowSocket.mockReturnValue(socket as unknown as ReturnType<typeof EscrowSocketModule.createEscrowSocket>);
+        const onStatusChange = vi.fn();
+
+        renderHook(() => useEscrowStatusSync({ ...baseOptions, onStatusChange }));
+        await waitFor(() => expect(onStatusChange).toHaveBeenCalledTimes(1));
+        act(() => handlers["escrow-status-updated"]?.(socketEvent));
+
+        expect(onStatusChange).toHaveBeenCalledTimes(1);
+    });
+
     /* ── Terminal state ────────────────────────────────────────────── */
 
     it("stops polling after a terminal status (released)", async () => {

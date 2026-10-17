@@ -62,6 +62,7 @@ export function useEscrowStatusSync({
     const abortRef = useRef<AbortController | null>(null);
     const seenKeysRef = useRef<Set<string>>(new Set());
     const isPollingRef = useRef(false);
+    const refreshAfterReconnectRef = useRef(false);
     const mountedRef = useRef(true);
     const onStatusChangeRef = useRef(onStatusChange);
     const currentStatusRef = useRef<EscrowStatus | null>(null);
@@ -85,13 +86,19 @@ export function useEscrowStatusSync({
         if (seenKeysRef.current.has(key)) return;
         seenKeysRef.current.add(key);
 
+        // Socket and polling can report the same transition with different
+        // timestamps/IDs. Keep the view fresh, but only notify on a real
+        // status transition.
+        const statusChanged = currentStatusRef.current !== event.status;
+        currentStatusRef.current = event.status;
+
         setCurrentStatus(event.status);
         setSyncState((prev) => ({
             ...prev,
             lastUpdated: event.updatedAt,
             status: "synchronized",
         }));
-        onStatusChangeRef.current(event);
+        if (statusChanged) onStatusChangeRef.current(event);
 
         // Stop syncing if terminal.
         if (isTerminalStatus(event.status)) {
@@ -166,6 +173,10 @@ export function useEscrowStatusSync({
             }));
         } finally {
             isPollingRef.current = false;
+            if (refreshAfterReconnectRef.current && mountedRef.current) {
+                refreshAfterReconnectRef.current = false;
+                void pollStatus();
+            }
         }
     }, [escrowId, accessToken, logout, processEvent]);
 
@@ -212,6 +223,10 @@ export function useEscrowStatusSync({
                 }
                 // If subscribe fails, the polling fallback will pick up.
             });
+            // A reconnect may have missed events while disconnected. Refresh
+            // from the authoritative status endpoint after each subscription.
+            if (isPollingRef.current) refreshAfterReconnectRef.current = true;
+            else pollStatus();
         });
 
         socket.on("escrow-status-updated", (event) => {
@@ -244,7 +259,7 @@ export function useEscrowStatusSync({
         });
 
         socket.connect();
-    }, [accessToken, orderId, escrowId, processEvent]);
+    }, [accessToken, orderId, escrowId, processEvent, pollStatus]);
 
     /* ── Visibility handling ────────────────────────────────────── */
 
@@ -322,7 +337,6 @@ export function useEscrowStatusSync({
 
     /* ── Manual refresh (e.g. after a user action) ──────────────── */
     const refresh = useCallback(() => {
-        seenKeysRef.current.clear();
         pollStatus();
     }, [pollStatus]);
 
