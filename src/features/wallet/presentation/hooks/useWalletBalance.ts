@@ -3,6 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "@/lib/api";
 import { queryKeys } from "@/lib/queryKeys";
+import { ApiError } from "@/lib/api";
+import { walletApiErrorMessage } from "@/features/wallet/utils/wallet-api-errors";
 
 export interface AssetBalance {
   asset_type: string;
@@ -36,7 +38,7 @@ export function useWalletBalance(publicKey: string | null): BalanceState {
     balance: data ? balance : null,
     balances: data || [],
     isLoading,
-    error: error?.message || null,
+    error: error ? walletApiErrorMessage(error instanceof ApiError ? error.code : undefined, error.message) : null,
     refetch,
   };
 }

@@ -3,6 +3,13 @@
 import { useCallback, useRef, useState } from "react";
 import { useUser } from "@/features/user/presentation/context/UserContext";
 import { useWallet } from "@/features/wallet";
+import { walletApiErrorMessage } from "@/features/wallet/utils/wallet-api-errors";
+
+async function apiFailure(response: Response, fallback: string): Promise<{ message: string; code?: string }> {
+  const body = await response.json().catch(() => ({})) as { message?: string; code?: string; error?: string };
+  const code = body.code || body.error;
+  return { code, message: walletApiErrorMessage(code, body.message || fallback) };
+}
 
 export type SendStep =
   | "form"
@@ -27,6 +34,7 @@ export interface SendState {
   fee: string | null;
   txHash: string | null;
   errorMessage: string | null;
+  recipientError?: string | null;
 }
 
 export function useSend() {
@@ -47,6 +55,7 @@ export function useSend() {
   const resolveAndPrepare = useCallback(
     async (query: string, amount: string, assetCode?: string) => {
       setState(s => ({ ...s, step: "loading", errorMessage: null }));
+      let resolvingRecipient = true;
       preparedXdrRef.current = null;
 
       try {
@@ -58,10 +67,11 @@ export function useSend() {
           { headers }
         );
         if (!resolveRes.ok) {
-          const body = await resolveRes.json().catch(() => ({}));
-          throw new Error((body as { message?: string })?.message ?? "Could not resolve recipient");
+          const failure = await apiFailure(resolveRes, "Could not resolve recipient");
+          throw Object.assign(new Error(failure.message), { code: failure.code });
         }
         const recipient: RecipientInfo = await resolveRes.json();
+        resolvingRecipient = false;
 
         const prepareBody: { recipient: string; amount: string; asset?: string } = {
           recipient: recipient.address,
@@ -77,8 +87,8 @@ export function useSend() {
           body: JSON.stringify(prepareBody),
         });
         if (!prepareRes.ok) {
-          const body = await prepareRes.json().catch(() => ({}));
-          throw new Error((body as { message?: string })?.message ?? "Failed to prepare transaction");
+          const failure = await apiFailure(prepareRes, "Failed to prepare transaction");
+          throw new Error(failure.message);
         }
         const prepared = await prepareRes.json() as Record<string, string>;
 
@@ -89,13 +99,13 @@ export function useSend() {
         }
 
         preparedXdrRef.current = xdr;
-        setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null }));
+        setState(s => ({ ...s, step: "confirm", recipient, fee: prepared.fee ?? null, recipientError: null }));
       } catch (err) {
-        setState(s => ({
-          ...s,
-          step: "error",
-          errorMessage: err instanceof Error ? err.message : "An unexpected error occurred",
-        }));
+        const code = (err as { code?: string })?.code;
+        const message = err instanceof Error ? walletApiErrorMessage(code, err.message) : "An unexpected error occurred";
+        setState(s => resolvingRecipient
+          ? { ...s, step: "form", recipientError: message, errorMessage: null }
+          : { ...s, step: "error", errorMessage: message });
       }
     },
     [accessToken, apiUrl]
@@ -137,8 +147,8 @@ export function useSend() {
         body: JSON.stringify({ signedXdr }),
       });
       if (!submitRes.ok) {
-        const body = await submitRes.json().catch(() => ({}));
-        throw new Error((body as { message?: string })?.message ?? "Transaction submission failed");
+        const failure = await apiFailure(submitRes, "Transaction submission failed");
+        throw new Error(failure.message);
       }
       const result: { hash?: string } = await submitRes.json();
       setState(s => ({ ...s, step: "success", txHash: result.hash ?? null }));
@@ -153,12 +163,14 @@ export function useSend() {
 
   const reset = useCallback(() => {
     preparedXdrRef.current = null;
-    setState({ step: "form", recipient: null, fee: null, txHash: null, errorMessage: null });
+    setState({ step: "form", recipient: null, fee: null, txHash: null, errorMessage: null, recipientError: null });
   }, []);
+
+  const clearRecipientError = useCallback(() => setState(s => ({ ...s, recipientError: null })), []);
 
   const backToConfirm = useCallback(() => {
     setState(s => ({ ...s, step: "confirm", errorMessage: null }));
   }, []);
 
-  return { state, resolveAndPrepare, confirmSend, reset, backToConfirm };
+  return { state, resolveAndPrepare, confirmSend, reset, backToConfirm, clearRecipientError };
 }
