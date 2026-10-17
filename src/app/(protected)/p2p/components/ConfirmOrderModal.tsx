@@ -24,7 +24,18 @@ interface ConfirmOrderModalProps {
 interface OrderCreateResponse {
     orderId: string;
     unsignedFundTransaction?: string | null;
-    escrow?: { escrowId: string } | null;
+    escrow?: { escrowId: string; contractId?: string | null; platformFee?: string | number | null } | null;
+}
+
+interface FundingReview {
+    orderId: string;
+    escrowId: string;
+    contractId: string;
+    unsignedXdr: string;
+    amount: string;
+    assetCode: string;
+    sellerAddress: string;
+    platformFee?: string | number | null;
 }
 
 export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModalProps) {
@@ -42,6 +53,7 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
     const [errorMsg, setErrorMsg] = useState("");
     const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
     const [pendingEscrowId, setPendingEscrowId] = useState<string | null>(null);
+    const [fundingReview, setFundingReview] = useState<FundingReview | null>(null);
     const paymentDropdownRef = useRef<HTMLDivElement>(null);
     const paymentTriggerRef = useRef<HTMLButtonElement>(null);
     const paymentOptionRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -311,23 +323,17 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                     return;
                 }
 
-                // Sign using connected wallet
-                try {
-                    const signedXdr = await sig.sign(unsignedXdr);
-                    await syncEscrow({ escrowId, action: "fund", signedXdr });
-                    notify("success", "Escrow funded successfully. Redirecting to trade view.");
-                    router.push("/p2p/orders/" + orderData.orderId);
-                    return;
-                } catch (signErr) {
-                    if (isSignatureCancelled(signErr)) {
-                        setPendingOrderId(orderData.orderId);
-                        setPendingEscrowId(escrowId);
-                        return;
-                    }
-                    notify("error", "Failed to sign or sync the escrow transaction. Merchant should fund the escrow from trade page.");
-                    router.push("/p2p/orders/" + orderData.orderId);
-                    return;
-                }
+                setFundingReview({
+                    orderId: orderData.orderId,
+                    escrowId,
+                    contractId: orderData.escrow?.contractId || escrowId,
+                    unsignedXdr,
+                    amount: assetAmountVal.toString(),
+                    assetCode: offer.assetCode || "XLM",
+                    sellerAddress: sellerAddress || "",
+                    platformFee: orderData.escrow?.platformFee,
+                });
+                return;
             }
 
             // If current user is the buyer -> notify and redirect
@@ -338,6 +344,29 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
             console.error(err);
             const msg = err instanceof Error ? err.message : "Error initiating order. Please try again.";
             notify("error", msg);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleConfirmFunding = async () => {
+        if (!fundingReview || isSubmitting) return;
+        const review = fundingReview;
+        setIsSubmitting(true);
+        setFundingReview(null);
+        try {
+            const signedXdr = await sig.sign(review.unsignedXdr);
+            await syncEscrow({ escrowId: review.escrowId, action: "fund", signedXdr });
+            notify("success", "Escrow funded successfully. Redirecting to trade view.");
+            router.push("/p2p/orders/" + review.orderId);
+        } catch (signErr) {
+            if (isSignatureCancelled(signErr)) {
+                setPendingOrderId(review.orderId);
+                setPendingEscrowId(review.escrowId);
+                return;
+            }
+            notify("error", "Failed to sign or sync the escrow transaction. Merchant should fund the escrow from trade page.");
+            router.push("/p2p/orders/" + review.orderId);
         } finally {
             setIsSubmitting(false);
         }
@@ -644,6 +673,30 @@ export function ConfirmOrderModal({ offer, creator, onClose }: ConfirmOrderModal
                     onRetry={handleSignatureRetry}
                     onCancel={handleSignatureCancel}
                 />
+            )}
+            {fundingReview && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4" role="presentation">
+                    <section className="w-full max-w-lg rounded-xl border border-[#263949] bg-[#081521] p-6 text-[#D7E0E6] shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="funding-review-title">
+                        <h2 id="funding-review-title" className="text-xl font-bold">Review escrow funding</h2>
+                        <p className="mt-2 text-sm text-[#9BABB7]">Check the funding details before the wallet asks you to sign.</p>
+                        <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 break-all text-sm">
+                            <dt className="text-[#9BABB7]">Escrow contract</dt><dd>{fundingReview.contractId}</dd>
+                            <dt className="text-[#9BABB7]">Token</dt><dd>{fundingReview.assetCode}</dd>
+                            <dt className="text-[#9BABB7]">Funding amount</dt><dd>{fundingReview.amount} {fundingReview.assetCode}</dd>
+                            <dt className="text-[#9BABB7]">Network</dt><dd className="font-bold text-amber-300">{(process.env.NEXT_PUBLIC_STELLAR_NETWORK || "TESTNET").toUpperCase()}</dd>
+                            <dt className="text-[#9BABB7]">Seller</dt><dd>{fundingReview.sellerAddress || "Unavailable"}</dd>
+                            <dt className="text-[#9BABB7]">Platform fee</dt><dd>{fundingReview.platformFee == null ? "Not returned by escrow service" : `${fundingReview.platformFee} ${fundingReview.assetCode}`}</dd>
+                        </dl>
+                        <div className="mt-6 flex gap-3">
+                            <button type="button" onClick={() => {
+                                const orderId = fundingReview.orderId;
+                                setFundingReview(null);
+                                router.push("/p2p/orders/" + orderId);
+                            }} className="flex-1 rounded-lg bg-[#2A292F] px-4 py-3 font-semibold">Review later</button>
+                            <button type="button" onClick={handleConfirmFunding} className="flex-1 rounded-lg bg-[#55D6BE] px-4 py-3 font-bold text-[#081521]">Confirm and sign</button>
+                        </div>
+                    </section>
+                </div>
             )}
         </div>
     );
